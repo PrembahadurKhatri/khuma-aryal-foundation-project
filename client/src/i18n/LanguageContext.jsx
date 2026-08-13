@@ -17,6 +17,8 @@ export function LanguageProvider({ children }) {
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, language);
+    // Drives the html[lang="ne"] .font-body override in index.css, which swaps
+    // every font-body element over to the Nepali (font-preeti) typeface.
     document.documentElement.lang = language;
   }, [language]);
 

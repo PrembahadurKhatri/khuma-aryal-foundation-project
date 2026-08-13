@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import Container from "./Container.jsx";
-import { siteInfo } from "../data/content.js";
+import { useSiteInfo } from "../contexts/SiteInfoContext.jsx";
 
 const SOCIAL_ICONS = {
   facebook: (
@@ -24,6 +24,7 @@ const SOCIAL_ICONS = {
 
 export default function Footer() {
   const { t, language } = useLanguage();
+  const siteInfo = useSiteInfo();
 
   const quickLinks = [
     { to: "/about", label: t("nav.about") },

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import { pick } from "../../utils/localize.js";
-import { siteInfo } from "../../data/content.js";
+import { useSiteInfo } from "../../contexts/SiteInfoContext.jsx";
 import PlaceholderImage from "../PlaceholderImage.jsx";
 
 function BookIcon() {
@@ -22,6 +22,7 @@ function BookIcon() {
  */
 export default function PresidentFeature({ leader, onRead }) {
   const { t, language } = useLanguage();
+  const siteInfo = useSiteInfo();
   if (!leader) return null;
 
   const name = pick(leader.name, language);

@@ -4,10 +4,11 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import LanguageSwitcher from "./LanguageSwitcher.jsx";
 import Container from "./Container.jsx";
-import { siteInfo } from "../data/content.js";
+import { useSiteInfo } from "../contexts/SiteInfoContext.jsx";
 
 export default function Navbar() {
   const { t, language } = useLanguage();
+  const siteInfo = useSiteInfo();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

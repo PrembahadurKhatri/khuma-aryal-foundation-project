@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
-import { siteInfo } from "../data/content.js";
+import { useSiteInfo } from "../contexts/SiteInfoContext.jsx";
+import { submitMessage } from "../services/messageService.js";
 import Container from "../components/Container.jsx";
 import Reveal from "../components/Reveal.jsx";
 import PlaceholderImage from "../components/PlaceholderImage.jsx";
@@ -108,12 +110,26 @@ const SOCIAL_ICONS = {
 
 export default function About() {
   const { t, language } = useLanguage();
+  const siteInfo = useSiteInfo();
+  const [contactStatus, setContactStatus] = useState("idle"); // idle | sending | sent | error
 
-  // No backend yet (per the frontend-first plan) — this just stops the
-  // browser's default full-page GET submission. Wire this up to a real
-  // endpoint/email service once the backend exists.
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
+    const form = e.target;
+    const payload = {
+      name: form.name.value,
+      email: form.email.value,
+      subject: form.subject.value,
+      message: form.message.value,
+    };
+    setContactStatus("sending");
+    try {
+      await submitMessage(payload);
+      setContactStatus("sent");
+      form.reset();
+    } catch {
+      setContactStatus("error");
+    }
   };
 
   return (
@@ -493,7 +509,7 @@ export default function About() {
                   <input
                     type="text"
                     name="subject"
-                    Placeholder="Topic"
+                    placeholder="Topic"
                     className="rounded-lg border border-forest-100 bg-cream-50 px-3.5 py-2 text-sm text-ink-900 outline-none transition-colors focus:border-gilt-400"
                   />
                 </label>
@@ -511,10 +527,18 @@ export default function About() {
 
                 <button
                   type="submit"
-                  className="mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gilt-400 to-gilt-600 px-6 py-2.5 font-body text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:scale-[1.02] hover:shadow-lift"
+                  disabled={contactStatus === "sending"}
+                  className="mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gilt-400 to-gilt-600 px-6 py-2.5 font-body text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:scale-[1.02] hover:shadow-lift disabled:opacity-60 disabled:hover:scale-100"
                 >
-                  {t("about.formSubmit")}
+                  {contactStatus === "sending" ? t("about.formSending") : t("about.formSubmit")}
                 </button>
+
+                {contactStatus === "sent" && (
+                  <p className="rounded-lg bg-emerald-50 px-3.5 py-2 font-body text-sm text-emerald-700">{t("about.formSuccess")}</p>
+                )}
+                {contactStatus === "error" && (
+                  <p className="rounded-lg bg-red-50 px-3.5 py-2 font-body text-sm text-red-600">{t("about.formError")}</p>
+                )}
               </form>
             </div>
           </Reveal>

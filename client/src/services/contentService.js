@@ -1,36 +1,44 @@
 // ---------------------------------------------------------------------------
 // Content service — the single seam between the UI and its data source.
 //
-// Today every function resolves from the local, bilingual arrays in
-// src/data/content.js. When the Express + MongoDB backend is ready, this is
-// the ONLY file that needs to change: replace each body with a `fetch("/api/...")`
-// call that returns the same shape (arrays of objects with { en, ne } text
-// fields), and every page/component keeps working untouched. That is also
-// where the future CMS's add/delete operations will plug in
-// (createMessage, deleteMessage, etc.) alongside these read operations.
+// getSiteInfo/getProjects/getNews/getGalleryImages now read from the live
+// Express + MongoDB API (see server/) instead of the local content.js
+// arrays — every page/component that already renders this data via
+// pick(field, language) keeps working untouched, because the API returns
+// the exact same { en, ne } bilingual shape those arrays used. Mongo's
+// `_id` is normalized to `id` here (rather than in every component) since
+// the original static data used `id`.
+//
+// getMessages() (the Home page's founder/president/leadership messages) is
+// the one exception — there is no admin CMS screen for that content yet, so
+// it still resolves from the local `leaderMessages` array. Give it the same
+// treatment (model + controller + admin page) if/when that's needed.
 // ---------------------------------------------------------------------------
-import { siteInfo, leaderMessages, projects, newsItems, galleryImages } from "../data/content.js";
+import { leaderMessages } from "../data/content.js";
+import api from "./api.js";
 
-// Simulates network latency so loading states behave the same way they will
-// once this hits a real API. Safe to remove once fetch() replaces it.
-const resolve = (data) => new Promise((res) => setTimeout(() => res(data), 120));
+const withId = (doc) => ({ ...doc, id: doc._id });
 
-export function getSiteInfo() {
-  return resolve(siteInfo);
+export async function getSiteInfo() {
+  const { data } = await api.get("/settings");
+  return data.data;
 }
 
 export function getMessages() {
-  return resolve(leaderMessages);
+  return Promise.resolve(leaderMessages);
 }
 
-export function getProjects() {
-  return resolve(projects);
+export async function getProjects() {
+  const { data } = await api.get("/projects");
+  return data.data.map(withId);
 }
 
-export function getNews() {
-  return resolve(newsItems);
+export async function getNews() {
+  const { data } = await api.get("/news");
+  return data.data.map(withId);
 }
 
-export function getGalleryImages() {
-  return resolve(galleryImages);
+export async function getGalleryImages() {
+  const { data } = await api.get("/gallery");
+  return data.data.map(withId);
 }

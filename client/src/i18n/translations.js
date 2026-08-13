@@ -125,6 +125,9 @@ const translations = {
       formSubjectLabel: "Subject",
       formMessageLabel: "Message",
       formSubmit: "Send Message",
+      formSending: "Sending...",
+      formSuccess: "Thank you — your message has been sent. We'll get back to you shortly.",
+      formError: "Something went wrong sending your message. Please try again.",
       officeTitle: "Visit Our Office",
     },
     gallery: {
@@ -277,6 +280,9 @@ const translations = {
       formSubjectLabel: "विषय",
       formMessageLabel: "सन्देश",
       formSubmit: "सन्देश पठाउनुहोस्",
+      formSending: "पठाइँदैछ...",
+      formSuccess: "धन्यवाद — तपाईंको सन्देश पठाइएको छ। हामी चाँडै तपाईंलाई सम्पर्क गर्नेछौं।",
+      formError: "सन्देश पठाउँदा समस्या भयो। कृपया फेरि प्रयास गर्नुहोस्।",
       officeTitle: "हाम्रो कार्यालयमा जानुहोस्",
     },
     gallery: {

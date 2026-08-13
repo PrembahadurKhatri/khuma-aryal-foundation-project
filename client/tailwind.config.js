@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Only the admin panel (AdminLayout.jsx) toggles a `dark` class on <html>;
+  // the public site never does, so `dark:` utilities are inert there.
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
@@ -59,7 +62,11 @@ export default {
         // defining it here (instead of leaving it undefined) makes that class
         // actually apply Manrope instead of silently falling back to the browser default.
         body: ["'Manrope'", "'Segoe UI'", "system-ui", "sans-serif"],
-        devanagari: ["'Noto Sans Devanagari'", "'Manrope'", "system-ui", "sans-serif"],
+        // Nepali typeface, used site-wide whenever the language is switched to
+        // Nepali (see the html[lang="ne"] override in index.css). Real Unicode
+        // Devanagari font under the hood (Noto Sans Devanagari) — named `preeti`
+        // per request, kept distinct from `body` so English stays on Manrope.
+        preeti: ["'Noto Sans Devanagari'", "'Manrope'", "system-ui", "sans-serif"],
       },
       boxShadow: {
         // Navy-tinted glow + a thin glassy top highlight for a premium sheen.
