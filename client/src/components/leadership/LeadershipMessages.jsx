@@ -24,7 +24,7 @@ function PersonIcon() {
 /** Small navy pill badge sitting above the Founder/President feature cards. */
 function RoleBadge({ children }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-forest-900 px-4 py-2 font-body text-sm font-semibold text-white shadow-soft">
+    <span className="inline-flex items-center gap-2 rounded-full bg-yellow-600 px-4 py-2 font-body text-sm font-semibold text-white shadow-soft">
       <PersonIcon />
       {children}
     </span>
@@ -66,7 +66,7 @@ export default function LeadershipMessages({ messages, loading }) {
           <h2 className="font-body font-bold text-3xl  uppercase tracking-[0.08em] text-forest-900 sm:text-4xl">
             {t("home.leadershipTitle")}
           </h2>
-          <p className="max-w-xl text-sm leading-relaxed text-ink-600 sm:text-base">{t("home.leadershipSubtitle")}</p>
+          <p className="max-w-xl text-sm leading-relaxed text-ink-700 sm:text-base">{t("home.leadershipSubtitle")}</p>
         </Reveal>
 
         {loading || !messages ? (
@@ -75,7 +75,7 @@ export default function LeadershipMessages({ messages, loading }) {
           <>
             {/* Founder — highest hierarchy */}
             {founder && (
-              <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-col items-center gap-6 ">
                 <Reveal>
                   <RoleBadge>{t("home.founderLabel")}</RoleBadge>
                 </Reveal>

@@ -39,7 +39,7 @@ export default function Footer() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <img src="/logo.svg" alt={`${pick(siteInfo.name, language)} logo`} className="h-10 w-10 rounded-full bg-white p-0.5" />
-            <span className="font-display text-lg font-semibold text-white">{pick(siteInfo.name, language)}</span>
+            <span className="font-body text-lg font-semibold text-white">{pick(siteInfo.name, language)}</span>
           </div>
           <p className="text-sm leading-relaxed text-forest-200">{t("footer.tagline")}</p>
           <div className="flex items-center gap-3 pt-1">
@@ -59,7 +59,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-white">{t("common.quickLinks")}</h3>
+          <h3 className="font-body text-sm font-semibold uppercase tracking-wide text-white">{t("common.quickLinks")}</h3>
           <ul className="mt-4 space-y-2 text-sm">
             {quickLinks.map((link) => (
               <li key={link.to}>
@@ -72,7 +72,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-white">{t("common.contactUs")}</h3>
+          <h3 className="font-body text-sm font-semibold uppercase tracking-wide text-white">{t("common.contactUs")}</h3>
           <ul className="mt-4 space-y-3 text-sm text-forest-200">
             <li className="flex gap-2">
               <span className="text-gilt-400">📍</span>
@@ -94,7 +94,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-white">{t("home.exploreTitle")}</h3>
+          <h3 className="font-body text-sm font-semibold uppercase tracking-wide text-white">{t("home.exploreTitle")}</h3>
           <p className="mt-4 text-sm leading-relaxed text-forest-200">{t("footer.tagline")}</p>
         </div>
       </Container>

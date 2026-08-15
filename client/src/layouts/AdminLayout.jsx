@@ -46,7 +46,7 @@ const AdminLayout = () => {
   const sidebarContent = (
     <>
       <div className="flex items-center gap-3 border-b border-forest-100 p-6 dark:border-gray-800">
-        <img src="/logo.svg" alt="Khuma Aryal Foundation" className="h-9 w-9" />
+        <img src="/images/kaf.png" alt="Khuma Aryal Foundation" className="h-9 w-9 rounded-full object-cover" />
         <span className="font-body text-lg font-bold leading-tight text-ink-900 dark:text-gray-100">
           Khuma Aryal
           <span className="block font-body text-sm font-medium text-forest-600 dark:text-forest-400">Admin</span>

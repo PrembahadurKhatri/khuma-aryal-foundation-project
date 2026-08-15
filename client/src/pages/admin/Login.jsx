@@ -56,7 +56,7 @@ const Login = () => {
         }`}
       >
         <div className="mb-6 flex flex-col items-center">
-          <img src="/logo.svg" alt="Khuma Aryal Foundation" className="mb-3 h-16 w-16" />
+          <img src="/images/kaf.png" alt="Khuma Aryal Foundation" className="mb-3 h-16 w-16 rounded-full object-cover" />
           <h1 className="text-2xl font-bold text-forest-700 dark:text-forest-400">Admin Login</h1>
           <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-ink-600"}`}>Khuma Aryal Foundation Dashboard</p>
         </div>

@@ -41,7 +41,7 @@ export default function PlaceholderImage({ src, alt, label, className = "", imgC
         <circle cx="8.5" cy="9.5" r="1.5" fill="currentColor" />
         <path d="M21 16l-5.5-5.5a1 1 0 0 0-1.4 0L5 19" stroke="currentColor" strokeWidth="1.5" />
       </svg>
-      <span className="px-3 text-center text-xs font-medium opacity-70">{label || alt || "Photo coming soon"}</span>
+      <span className="px-3 text-center text-xs font-medium font-body opacity-70">{label || alt || "Photo coming soon"}</span>
     </div>
   );
 }

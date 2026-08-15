@@ -7,21 +7,27 @@ import Button from "./Button.jsx";
 const HERO_IMAGES = [
   "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/612840432_1210440831271300_6264311500156313399_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x1200&ctp=s1600x1200&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=JV7LCZ4OW94Q7kNvwEihMaZ&_nc_oc=Adrlt0rzysaJ8x1dFRNTbSxNeF7YRpk-3IzmcmWppV7Iety99XgQsHc3c-hMsv_pjk93gUSpNyMlLVlFJkQ9yVJs&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=mj_IcuhC2ctsA_YUmmDo8Q&_nc_ss=7b2a8&oh=00_AQE70kvZ8JAobHzaltU47GVmreUgKxl11BSpy6c5ZVcdfQ&oe=6A80D825",
 
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t1.6435-9/70006318_126384342046800_6306612355472031744_n.jpg?stp=dst-jpg_tt6&cstp=mx960x720&ctp=s960x720&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=MES43IWpGKMQ7kNvwHSBGwo&_nc_oc=Adoz9M48qo4HAakJht9tKtopRKaibIyKru13h8Z0-nSj-kCJgLLg06cf6npkY8kcHzZt7rlXvakocHTflJfDLS0J&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=-PMbmTcbXYocfkb0MD5LQA&_nc_ss=7b2a8&oh=00_AQF021_DmI2v5omRDcxHyVySXlRwf3yzo6NQIoNQhoKODQ&oe=6AA2978E",
+  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/635500393_1244924151156301_1995148282506706674_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x1200&ctp=s1600x1200&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEec1llwMXY4jmUjSCzeewgKtIY9i1hTlMq0hj2LWFOU48eDawdJxnNVatqv_Izj3gCYeiyzCqS91PdITiG6QUK&_nc_ohc=t1R9JFQXwb8Q7kNvwHKRpl_&_nc_oc=AdpH-qKrSLrPAv5T9POxCSwN89bZEgQUjOPII4BCnOELm87QQ54B-v7n8BUPFYC-WbFRAD5jBenmbDdKZMrp5Uc5&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=wCdPx4JSlWUwOT6BLDb95A&_nc_ss=7b2a8&oh=00_AQElkd4d8i02zvWGztORI055rCZ2nXEKqWoi5T4gL5PWpQ&oe=6A84A891",
 
   "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/587012697_1176232828025434_1804289357828893127_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=EX1CkDTNNVMQ7kNvwGzJQHj&_nc_oc=AdrM70Sg8qY1EnBXTaYd4rVcfTvAQaAkEOLCaZiRc7Qpnb1BjW0i-Q5uNnFNIHKyInHWgpp_R1iylw1R3pmzYGSN&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=0y5r7pbHXVMUws1EhveltA&_nc_ss=7b2a8&oh=00_AQENxvsQPO8h0YtBdF-uz_MRJynRdcDWmC-X97O9NYp94g&oe=6A80DC35",
+  
+  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/677925899_1301130065535709_607819062010126301_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x948&ctp=s2048x948&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHHEfR9X_f_jROEXcRXMgYFw3mXMO3P-WXDeZcw7c_5ZY-DoV7qKQn7UfHZR46bCoMRbuoabEFwIGVrAglYQ_1s&_nc_ohc=13TV07DBmaUQ7kNvwEOiDBh&_nc_oc=Adq3NTlLazhQDy7XVUU4cJFE1rxfukpU0VzLJLSETAdJjmo9kXIgGr3JTSNIuwariAmpcrXMibPseI1q1gQExvgS&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=VIJegTG3swSBbbcdylBrwA&_nc_ss=7b2a8&oh=00_AQHfXH1qcSlYTwbWSR_Sh8-JZTPDsDPE4lOeBrAORa7BTQ&oe=6A84CA19",
 
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/615910141_1215519864096730_1359532867830095423_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1367&ctp=s2048x1367&_nc_cat=110&ccb=1-7&_nc_sid=f727a1&_nc_ohc=-CDS6oO4F7IQ7kNvwEyROne&_nc_oc=AdoTPvTvJfUKn19CUiRzvU6ePdH9olSQyPI4c6PJOqucYL8VXW1VGoLjB-Lo7uQZ4zFIBg0zEVTLEPCz_OtDBqkl&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=XzlzJo_QC_k8yhhfiIrRZw&_nc_ss=7b2a8&oh=00_AQF23jXrsmiygEzyMDux3HXzAIuNQnrvfJqLpgpvSquTjw&oe=6A80AFE2",
+  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/616193004_1215521387429911_5719217226397333462_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1367&ctp=s2048x1367&_nc_cat=109&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeE68hB2nr1jKaL0IQHw0pOuDuLEefSZBBsO4sR59JkEG0n1B9H-Rlp_BkVt42N6QnvrueLHv9VBGH-UlesfktZ5&_nc_ohc=L9_MzqQQexYQ7kNvwHFricQ&_nc_oc=AdpYFq9JJR4Z-7LjeFK2xXmQqbAfmVG3fzFrc5i6NcX8Dw_ZzpZCTDKtLeV2Q6Mgk4k3tL3Lzgcy5mk0m-e7q31X&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=RBABktXl6KudF6i91itbrQ&_nc_ss=7b2a8&oh=00_AQGVx4M9zKWewRTcVe9XMfW-H8MSBcd2DexE5QK1m_rFvg&oe=6A8646CC",
 
   "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/623262151_1228325699482813_8693485255019400093_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=101&ccb=1-7&_nc_sid=f727a1&_nc_ohc=ABP_UcZNdXYQ7kNvwE6sjpe&_nc_oc=AdooX5Aw9paVDQUumnH-_AsKwDNfky_TMXoK1MzXsf-DPtR6Apo2cU5gorTwZtM-EfJLBnAxhHb2qONoY0-qCDEo&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=UUWvjfA86IND_2zlwsFLqw&_nc_ss=7b2a8&oh=00_AQG-4VesmC64QNsCHAzFKUauW4Nzfkw3NgoOMyvIK15H1w&oe=6A80A359",
+  
 ];
 
 const SLIDE_INTERVAL = 3000;
 
-const PILLAR_KEYS = ["pillarEducation", "pillarHealth", "pillarSports", "pillarEmployment"];
-const PILLAR_ICONS = { pillarEducation: "🎓", pillarHealth: "🩺", pillarSports: "⚽", pillarEmployment: "💼" };
+// The Foundation's 5 focus areas — keys resolve against home.pillar* in
+// translations.js. Must be valid dot-path segments (no spaces/hyphens) or
+// t() silently falls back to rendering the raw, untranslated key string.
+const PILLAR_KEYS = ["pillarEducation", "pillarHealth", "pillarSports", "pillarEmployment", "pillarDisasterManagement"];
+
 const TRUST_KEYS = ["trustBadge1", "trustBadge2", "trustBadge3"];
-const TRUST_ICONS = { trustBadge1: "🏛️", trustBadge2: "📍", trustBadge3: "🤝" };
+
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -70,7 +76,7 @@ export default function Hero() {
           <div className="absolute inset-0 bg-gradient-to-t from-forest-950/85 via-forest-950/25 to-forest-950/55" />
           <div
             className="absolute inset-0"
-            style={{ background: "radial-gradient(120% 90% at 50% 40%, transparent 35%, rgba(11,31,58,0.55) 100%)" }}
+            style={{ background: "radial-gradient(120% 90% at 50% 40%, transparent 35%, rgba(23,59,37,0.55) 100%)" }}
           />
         </div>
 
@@ -103,23 +109,30 @@ export default function Hero() {
           </div>
         </Container>
 
-        {/* Bottom curve, traced with a gold border so the transition reads as a deliberate design flourish */}
+        {/* Bottom curve — a layered wave shared by every hero section (Home,
+            About, Gallery, Projects, News). The green + gold curve shares
+            the exact same control points as the cream curve, only its two
+            endpoints are pulled further out — with a cubic bezier that
+            makes the gap between them largest right at the two corners and
+            shrink to almost nothing by the middle, instead of a band of
+            constant thickness running the full width. */}
         <svg
-          className="absolute bottom-0 left-0 block h-10 w-full text-cream-100 sm:h-14"
+          className="absolute bottom-0 left-0 block h-16 w-full sm:h-24"
           viewBox="0 0 1440 74"
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M0 40C240 74 480 74 720 50C960 26 1200 10 1440 34V74H0V40Z" fill="currentColor" />
+          <path d="M0 6C420 90 1020 -10 1440 34V74H0V6Z" className="fill-forest-800" />
           <path
-            d="M0 40C240 74 480 74 720 50C960 26 1200 10 1440 34"
+            d="M0 6C420 90 1020 -10 1440 34"
             fill="none"
-            stroke="#C9A227"
+            stroke="#C9A65B"
             strokeWidth="3"
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
-            style={{ filter: "drop-shadow(0 1px 2px rgba(201,162,39,0.45))" }}
+            style={{ filter: "drop-shadow(0 1px 2px rgba(201,166,91,0.45))" }}
           />
+          <path d="M0 20C420 90 1020 -10 1440 48V74H0V20Z" className="fill-cream-100" />
         </svg>
       </section>
 
@@ -144,7 +157,7 @@ export default function Hero() {
                 className="flex flex-col items-center gap-5 text-center font-body md:items-start md:text-left -mt-2"
               >
           
-                <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-forest-900 sm:text-2xl lg:text-6xl">
+                <h2 className="text-4xl mt-10 font-bold leading-[1.05] tracking-tight text-forest-900 sm:text-2xl lg:text-6xl">
                   {t("home.heroNameFirst")}
                   <span className="block text-gilt-500">{t("home.heroNameSecond")}</span>
                 </h2>
@@ -158,18 +171,18 @@ export default function Hero() {
                       key={key}
                       className="group relative inline-flex cursor-default items-center gap-1.5
                         overflow-hidden rounded-full
-                        border border-[#C9A227]/25
+                        border border-gilt-500/25
                         bg-white/80 px-4 py-2
                         text-xs font-semibold tracking-wide
-                        text-[#12372A]
-                        shadow-[0_4px_14px_rgba(18,55,42,0.08)]
+                        text-forest-900
+                        shadow-[0_4px_14px_rgba(23,59,37,0.08)]
                         backdrop-blur-sm
                         transition-all duration-300
                         hover:-translate-y-0.5
-                        hover:border-[#C9A227]/60
+                        hover:border-gilt-500/60
                         hover:bg-forest-900
-                        hover:text-[#F7F5EF]
-                        hover:shadow-[0_8px_22px_rgba(18,55,42,0.16)]"
+                        hover:text-cream-100
+                        hover:shadow-[0_8px_22px_rgba(23,59,37,0.16)]"
                     >
                       {t(`home.${key}`)}
                     </span>

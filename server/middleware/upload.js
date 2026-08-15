@@ -2,24 +2,29 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { storage as cloudinaryStorage, isCloudinaryConfigured } from "../config/cloudinary.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadsDir = path.join(__dirname, "../uploads");
 
-// Images are stored on local disk (server/uploads/), served statically from
-// server.js. Simple, no external account needed. If this ever moves to a
-// host with an ephemeral filesystem (e.g. Render's free tier), swap this
-// storage engine for Cloudinary/S3 — every controller here just reads
-// req.file.path, so the swap is contained to this one file.
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadsDir),
-  filename: (req, file, cb) => {
-    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `${unique}${path.extname(file.originalname)}`);
-  },
-});
+// Cloudinary is used whenever CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET are
+// all set in .env (images persist permanently regardless of hosting).
+// Falls back to local disk (server/uploads/, served statically from
+// server.js) if they're not configured — e.g. a fresh clone before
+// Cloudinary is set up — so uploads still work out of the box.
+let storage;
+if (isCloudinaryConfigured) {
+  storage = cloudinaryStorage;
+} else {
+  if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+  storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadsDir),
+    filename: (req, file, cb) => {
+      const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+      cb(null, `${unique}${path.extname(file.originalname)}`);
+    },
+  });
+}
 
 const baseUpload = multer({
   storage,
@@ -32,14 +37,17 @@ const baseUpload = multer({
   },
 });
 
-// Local disk storage leaves req.file.path as an absolute filesystem path —
-// normalize it to the public URL controllers should actually save.
+// Cloudinary storage already leaves req.file.path as a secure_url. Local
+// disk storage leaves it as an absolute filesystem path — normalize that to
+// the public URL controllers should actually save.
 const normalizePaths = (req, res, next) => {
-  if (req.file) req.file.path = `/uploads/${req.file.filename}`;
-  if (req.files) {
-    Object.values(req.files).flat().forEach((f) => {
-      f.path = `/uploads/${f.filename}`;
-    });
+  if (!isCloudinaryConfigured) {
+    if (req.file) req.file.path = `/uploads/${req.file.filename}`;
+    if (req.files) {
+      Object.values(req.files).flat().forEach((f) => {
+        f.path = `/uploads/${f.filename}`;
+      });
+    }
   }
   next();
 };

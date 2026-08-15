@@ -8,7 +8,7 @@ import connectDB from "../config/db.js";
 import User from "../models/User.js";
 import News from "../models/News.js";
 import Project from "../models/Project.js";
-import Gallery from "../models/Gallery.js";
+import Album from "../models/Album.js";
 import Settings from "../models/Settings.js";
 
 dotenv.config();
@@ -28,7 +28,7 @@ const run = async () => {
   }
 
   console.log("Clearing existing demo content...");
-  await Promise.all([News.deleteMany({}), Project.deleteMany({}), Gallery.deleteMany({})]);
+  await Promise.all([News.deleteMany({}), Project.deleteMany({}), Album.deleteMany({})]);
 
   console.log("Seeding news...");
   await News.create([
@@ -114,12 +114,32 @@ const run = async () => {
     },
   ]);
 
-  console.log("Seeding gallery...");
-  await Gallery.create([
-    { src: "/images/gallery/gallery-1.jpg", alt: { en: "School scholarship distribution", ne: "विद्यालय छात्रवृत्ति वितरण" }, createdBy: admin._id },
-    { src: "/images/gallery/gallery-2.jpg", alt: { en: "Community health camp", ne: "सामुदायिक स्वास्थ्य शिविर" }, createdBy: admin._id },
-    { src: "/images/gallery/gallery-3.jpg", alt: { en: "Youth sports league match", ne: "युवा खेलकुद लिग खेल" }, createdBy: admin._id },
-    { src: "/images/gallery/gallery-4.jpg", alt: { en: "Vocational skills training session", ne: "व्यावसायिक सीप तालिम सत्र" }, createdBy: admin._id },
+  console.log("Seeding gallery albums...");
+  await Album.create([
+    {
+      title: { en: "School Scholarship Distribution", ne: "विद्यालय छात्रवृत्ति वितरण" },
+      coverImage: "/images/gallery/gallery-1.jpg",
+      photos: ["/images/gallery/gallery-1.jpg"],
+      createdBy: admin._id,
+    },
+    {
+      title: { en: "Community Health Camp", ne: "सामुदायिक स्वास्थ्य शिविर" },
+      coverImage: "/images/gallery/gallery-2.jpg",
+      photos: ["/images/gallery/gallery-2.jpg"],
+      createdBy: admin._id,
+    },
+    {
+      title: { en: "Youth Sports League", ne: "युवा खेलकुद लिग" },
+      coverImage: "/images/gallery/gallery-3.jpg",
+      photos: ["/images/gallery/gallery-3.jpg"],
+      createdBy: admin._id,
+    },
+    {
+      title: { en: "Vocational Skills Training", ne: "व्यावसायिक सीप तालिम" },
+      coverImage: "/images/gallery/gallery-4.jpg",
+      photos: ["/images/gallery/gallery-4.jpg"],
+      createdBy: admin._id,
+    },
   ]);
 
   console.log("Seeding settings...");

@@ -1,7 +1,19 @@
+// MUST be the very first import. ES modules fully execute every imported
+// file (recursively) before any of THIS file's own top-level code runs —
+// including a `dotenv.config()` call written further down. Several modules
+// imported below (config/cloudinary.js, utils/generateToken.js,
+// utils/fallbackAdmin.js) read process.env.* at module-load time, so if
+// dotenv.config() ran after those imports (as a plain statement further
+// down this file, like it used to), they'd all silently see undefined env
+// vars and fall back to hardcoded defaults — .env would load "successfully"
+// with zero effect. The side-effect import form runs immediately, as the
+// first thing Node does, before any other import in this file is even
+// resolved.
+import "dotenv/config";
+
 import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -16,7 +28,7 @@ import { notFound, errorHandler } from "./middleware/errorHandler.js";
 import authRoutes from "./routes/authRoutes.js";
 import newsRoutes from "./routes/newsRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
-import galleryRoutes from "./routes/galleryRoutes.js";
+import albumRoutes from "./routes/albumRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import visitRoutes from "./routes/visitRoutes.js";
@@ -24,7 +36,6 @@ import visitRoutes from "./routes/visitRoutes.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDistPath = path.join(__dirname, "../client/dist");
 
-dotenv.config();
 connectDB();
 
 const app = express();
@@ -84,7 +95,7 @@ app.get("/", (req, res) => res.send("Server is running 🚀"));
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/projects", projectRoutes);
-app.use("/api/gallery", galleryRoutes);
+app.use("/api/gallery", albumRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/visits", visitRoutes);

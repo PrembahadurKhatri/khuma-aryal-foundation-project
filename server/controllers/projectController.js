@@ -1,27 +1,58 @@
 import asyncHandler from "express-async-handler";
 import Project from "../models/Project.js";
 
+// `title` and `description` are both always required on Project (the schema
+// enforces it) and the admin form always submits both together on every
+// save, so rebuilding them unconditionally is fine there — but any OTHER
+// caller (e.g. an image-only update) that omits them would otherwise blank
+// out the description or fail validation entirely. Every field here is
+// guarded the same way, so a partial update can never silently wipe a
+// field it didn't mean to touch.
 const fromFlatFields = (body) => ({
-  title: { en: body.titleEn, ne: body.titleNe },
-  description: { en: body.descriptionEn, ne: body.descriptionNe },
+  ...(body.titleEn !== undefined || body.titleNe !== undefined ? { title: { en: body.titleEn, ne: body.titleNe } } : {}),
+  ...(body.descriptionEn !== undefined || body.descriptionNe !== undefined
+    ? { description: { en: body.descriptionEn, ne: body.descriptionNe } }
+    : {}),
   ...(body.status ? { status: body.status } : {}),
+  ...(body.category ? { category: body.category } : {}),
+  ...(body.date ? { date: body.date } : {}),
+  ...(body.durationEn !== undefined || body.durationNe !== undefined
+    ? { duration: { en: body.durationEn || "", ne: body.durationNe || "" } }
+    : {}),
+  ...(body.locationEn !== undefined || body.locationNe !== undefined
+    ? { location: { en: body.locationEn || "", ne: body.locationNe || "" } }
+    : {}),
+  ...(body.beneficiariesEn !== undefined || body.beneficiariesNe !== undefined
+    ? { beneficiaries: { en: body.beneficiariesEn || "", ne: body.beneficiariesNe || "" } }
+    : {}),
+  ...(body.objectiveEn !== undefined || body.objectiveNe !== undefined
+    ? { objective: { en: body.objectiveEn || "", ne: body.objectiveNe || "" } }
+    : {}),
+  // "" (the <select>'s "None" option) explicitly clears the link — only a
+  // genuinely absent field leaves the existing album untouched.
+  ...(body.album !== undefined ? { album: body.album || null } : {}),
 });
 
-// @desc   List projects (optional ?status=ongoing|completed)
+// @desc   List projects. ?status=ongoing|completed|upcoming and
+//         ?category=Event (etc, same list as gallery Albums) both filter;
+//         sort=oldest reverses the default newest-first order.
 // @route  GET /api/projects
 export const getProjects = asyncHandler(async (req, res) => {
-  const { status } = req.query;
+  const { status, category, sort } = req.query;
   const query = {};
   if (status) query.status = status;
+  if (category && category !== "All") query.category = category;
 
-  const projects = await Project.find(query).sort("-createdAt");
+  const projects = await Project.find(query).sort(sort === "oldest" ? "createdAt" : "-createdAt");
   res.json({ success: true, count: projects.length, data: projects });
 });
 
-// @desc   Get a single project
+// @desc   Get a single project. `album` is populated (title/coverImage) so
+//         the project detail page can render a real preview card linking
+//         to that album, not just a bare ID.
 // @route  GET /api/projects/:id
 export const getProject = asyncHandler(async (req, res) => {
-  const project = await Project.findById(req.params.id);
+  const project = await Project.findById(req.params.id).populate("album", "title coverImage photos");
   if (!project) {
     res.status(404);
     throw new Error("Project not found");
@@ -47,16 +78,22 @@ export const createProject = asyncHandler(async (req, res) => {
 export const updateProject = asyncHandler(async (req, res) => {
   const payload = fromFlatFields(req.body);
 
-  let keepImages = [];
-  if (req.body.keepImages) {
-    try {
-      keepImages = JSON.parse(req.body.keepImages);
-    } catch {
-      keepImages = [];
-    }
-  }
+  // Only touch `images` if this request actually said something about them
+  // (the admin form always sends keepImages, even as "[]") — otherwise a
+  // caller updating just one other field (e.g. duration) would silently
+  // wipe every existing image. Same guard rationale as title/description/etc above.
   const uploaded = (req.files || []).map((f) => f.path);
-  payload.images = [...keepImages, ...uploaded];
+  if (req.body.keepImages !== undefined || uploaded.length > 0) {
+    let keepImages = [];
+    if (req.body.keepImages) {
+      try {
+        keepImages = JSON.parse(req.body.keepImages);
+      } catch {
+        keepImages = [];
+      }
+    }
+    payload.images = [...keepImages, ...uploaded];
+  }
 
   const project = await Project.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
   if (!project) {

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { fetchNews } from "../../services/newsService.js";
 import { fetchProjects } from "../../services/projectService.js";
-import { fetchGalleryImages } from "../../services/galleryService.js";
+import { fetchAlbums } from "../../services/galleryService.js";
 import { fetchMessages } from "../../services/messageService.js";
 import { fetchVisitStats } from "../../services/visitService.js";
 
@@ -19,7 +19,7 @@ const Dashboard = () => {
 
   const { data: newsData } = useQuery({ queryKey: ["admin-news"], queryFn: fetchNews });
   const { data: projectsData } = useQuery({ queryKey: ["admin-projects"], queryFn: fetchProjects });
-  const { data: galleryData } = useQuery({ queryKey: ["admin-gallery"], queryFn: fetchGalleryImages });
+  const { data: galleryData } = useQuery({ queryKey: ["admin-gallery"], queryFn: fetchAlbums });
   const { data: newMessagesData } = useQuery({
     queryKey: ["admin-new-messages-count"],
     queryFn: () => fetchMessages({ status: "new" }),
@@ -46,7 +46,7 @@ const Dashboard = () => {
       </div>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <StatCard label="Gallery Images" value={galleryData?.count ?? "—"} theme={theme} />
+        <StatCard label="Gallery Albums" value={galleryData?.count ?? "—"} theme={theme} />
       </div>
 
       <div className={`mt-10 rounded-xl border p-6 ${theme === "dark" ? "border-gray-800 bg-gray-900" : "border-forest-100 bg-white shadow-sm"}`}>

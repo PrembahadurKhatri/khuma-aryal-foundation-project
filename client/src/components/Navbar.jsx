@@ -33,13 +33,15 @@ export default function Navbar() {
 
   // Only the link matching the current route is ever "active" (react-router's
   // isActive is exclusive per NavLink), so at most one item shows the solid
-  // navy treatment at a time — every other link stays in its normal state.
+  // green treatment at a time — every other link stays in its normal state.
+  // forest-600 matches the language toggle's active-pill color
+  // (LanguageSwitcher.jsx) rather than the near-black forest-900.
   const linkClasses = ({ isActive }) =>
     `group relative rounded-full px-4 py-2.5 font-body text-sm font-medium
      tracking-[0.01em] transition-all duration-300 ease-out
      ${
        isActive
-         ? "bg-forest-900 text-white shadow-soft"
+         ? "bg-forest-600 text-white shadow-soft"
          : "text-ink-600 hover:bg-forest-900/[0.045] hover:text-forest-900"
      }`;
 
@@ -110,7 +112,7 @@ export default function Navbar() {
               {({ isActive }) => (
                 <span className="relative z-10 flex items-center gap-2">
                   {isActive && (
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,162,39,0.6)]" />
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
                   )}
                   {link.label}
                 </span>
@@ -181,7 +183,7 @@ export default function Navbar() {
                 className={({ isActive }) =>
                   `group flex items-center justify-between rounded-xl px-4 py-3.5 font-body text-sm font-medium tracking-[0.01em] transition-all duration-300 ${
                     isActive
-                      ? "bg-forest-900 text-white shadow-[0_6px_16px_-6px_rgba(31,55,45,0.4)]"
+                      ? "bg-forest-600 text-white shadow-[0_6px_16px_-6px_rgba(63,150,84,0.4)]"
                       : "text-ink-600 hover:bg-forest-900/[0.05] hover:text-forest-900"
                   }`
                 }

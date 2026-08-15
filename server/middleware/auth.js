@@ -29,7 +29,11 @@ export const protect = asyncHandler(async (req, res, next) => {
       return next();
     }
 
-    req.user = await User.findById(decoded.id).select("-password");
+    // Excludes refreshTokens too, not just password — those tokens are only
+    // ever meant to live in the httpOnly cookie, never in a JSON response
+    // (e.g. GET /auth/me) where client-side JS (and therefore XSS) could
+    // read them and bypass the whole point of httpOnly.
+    req.user = await User.findById(decoded.id).select("-password -refreshTokens");
     if (!req.user) {
       res.status(401);
       throw new Error("User no longer exists");

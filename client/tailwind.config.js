@@ -7,52 +7,57 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Navy blue — primary brand color.
-        // NOTE: token is still named "forest" so every existing forest-* class
-        // across the app (Navbar, Footer, cards, etc.) picks up the new color
-        // automatically without having to touch every file.
+        // Premium NGO green palette. NOTE: token is still named "forest" so
+        // every existing forest-* class across the app (Navbar, Footer,
+        // cards, etc.) picks up the new color automatically without having
+        // to touch every file. Exact anchors from the palette: 100 = Soft
+        // Mint #EAF5EC, 400 = Sage #6FAF7A, 600 = Forest Green (primary)
+        // #3F9654, 700 = the darker stop of the hero gradient #2F7D45,
+        // 900 = Deep Forest (dark) #173B25.
         forest: {
-          50: "#f0f5fb",
-          100: "#dbe6f3",
-          200: "#b3c9e6",
-          300: "#85a8d6",
-          400: "#5883c0",
-          500: "#3a63a3",
-          600: "#294c84",
-          700: "#1c3a68",
-          800: "#12294d",
-          900: "#0b1f3a",
-          950: "#071527",
+          50: "#f5faf6",
+          100: "#eaf5ec",
+          200: "#c9e6cd",
+          300: "#9ed2a8",
+          400: "#6faf7a",
+          500: "#58a066",
+          600: "#3f9654",
+          700: "#2f7d45",
+          800: "#235c34",
+          900: "#173b25",
+          950: "#0d2416",
         },
-        // Champagne Gold — 2%, rare premium highlight only (kickers, dividers,
-        // a single standout CTA). Anchored on #C9A227.
+        // Soft Gold accent — anchored on #C9A65B, with Champagne #F3E9CF as
+        // the light tier. Used sparingly (kickers, dividers, one CTA).
         gilt: {
-          50: "#faf6e9",
-          100: "#f3e9c4",
-          200: "#e8d68e",
-          300: "#dcc25c",
-          400: "#d2b03e",
-          500: "#c9a227",
-          600: "#a3831f",
-          700: "#7f6519",
-          800: "#665217",
-          900: "#544313",
+          50: "#fbf7ec",
+          100: "#f3e9cf",
+          200: "#e9d7a8",
+          300: "#ddc37e",
+          400: "#d3b46a",
+          500: "#c9a65b",
+          600: "#a8863f",
+          700: "#866a32",
+          800: "#6d5628",
+          900: "#584622",
         },
-        // Dark Text (#18231E, 8%) and Muted (#66756D, 5%) — both exact hexes,
-        // one ramp for body copy and secondary/muted text.
+        // Heading (Charcoal Green #18241D) and body/muted (Muted Gray
+        // #5F6862) — both exact hexes, one ramp for body copy and
+        // secondary/muted text.
         ink: {
           50: "#f5f7f5",
           100: "#e6eae6",
           400: "#93a099",
-          600: "#66756d",
-          800: "#34413b",
-          900: "#18231e",
+          600: "#5f6862",
+          800: "#33403a",
+          900: "#18241d",
         },
-        // Warm Ivory background — 55%. Anchored on #F7F5EF.
+        // Warm Ivory background — anchored on #F8F7F2, with Pure White as
+        // the lightest tier.
         cream: {
           50: "#ffffff",
-          100: "#f7f5ef",
-          200: "#efebe0",
+          100: "#f8f7f2",
+          200: "#efece3",
         },
       },
       fontFamily: {
@@ -69,10 +74,10 @@ export default {
         preeti: ["'Noto Sans Devanagari'", "'Manrope'", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        // Navy-tinted glow + a thin glassy top highlight for a premium sheen.
-        soft: "0 8px 30px -8px rgba(11, 31, 58, 0.20), inset 0 1px 0 rgba(255,255,255,0.5)",
-        card: "0 4px 18px -6px rgba(11, 31, 58, 0.14), inset 0 1px 0 rgba(255,255,255,0.5)",
-        lift: "0 20px 45px -15px rgba(11, 31, 58, 0.32), inset 0 1px 0 rgba(255,255,255,0.6)",
+        // Deep-forest-tinted glow + a thin glassy top highlight for a premium sheen.
+        soft: "0 8px 30px -8px rgba(23, 59, 37, 0.20), inset 0 1px 0 rgba(255,255,255,0.5)",
+        card: "0 4px 18px -6px rgba(23, 59, 37, 0.14), inset 0 1px 0 rgba(255,255,255,0.5)",
+        lift: "0 20px 45px -15px rgba(23, 59, 37, 0.32), inset 0 1px 0 rgba(255,255,255,0.6)",
       },
       borderRadius: {
         xl2: "1.5rem",

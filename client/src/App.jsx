@@ -7,7 +7,9 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Gallery from "./pages/Gallery.jsx";
+import AlbumDetail from "./pages/AlbumDetail.jsx";
 import Projects from "./pages/Projects.jsx";
+import ProjectDetail from "./pages/ProjectDetail.jsx";
 import News from "./pages/News.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
@@ -29,7 +31,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/gallery/:id" element={<AlbumDetail />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/news" element={<News />} />
           <Route path="*" element={<NotFound />} />
         </Route>

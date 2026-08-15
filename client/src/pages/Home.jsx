@@ -17,10 +17,10 @@ const PILLARS = [
 ];
 
 const EXPLORE_LINKS = [
-  { to: "/about", titleKey: "exploreAbout", descKey: "exploreAboutDesc", icon: "📖" },
-  { to: "/gallery", titleKey: "exploreGallery", descKey: "exploreGalleryDesc", icon: "🖼️" },
-  { to: "/projects", titleKey: "exploreProjects", descKey: "exploreProjectsDesc", icon: "🌱" },
-  { to: "/news", titleKey: "exploreNews", descKey: "exploreNewsDesc", icon: "📰" },
+  { to: "/about", titleKey: "exploreAbout", descKey: "exploreAboutDesc" },
+  { to: "/gallery", titleKey: "exploreGallery", descKey: "exploreGalleryDesc" },
+  { to: "/projects", titleKey: "exploreProjects", descKey: "exploreProjectsDesc" },
+  { to: "/news", titleKey: "exploreNews", descKey: "exploreNewsDesc"},
 ];
 
 const STATS = [

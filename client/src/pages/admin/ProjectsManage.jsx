@@ -2,13 +2,49 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { fetchProjects, createProject, updateProject, deleteProject } from "../../services/projectService.js";
+import { fetchAlbums } from "../../services/galleryService.js";
 import useToast from "../../hooks/useToast.js";
 
-const emptyForm = { titleEn: "", titleNe: "", descriptionEn: "", descriptionNe: "", status: "ongoing", keepImages: [], newImageFiles: [] };
+// Same category list as gallery Albums (see admin/GalleryManage.jsx) — value
+// is what's stored (and used for the public Projects page's gallery.category*
+// translation lookups, so must stay space-free), label is admin-display-only.
+const CATEGORIES = [
+  { value: "Event", label: "Event" },
+  { value: "Education", label: "Education" },
+  { value: "Health", label: "Health" },
+  { value: "Community", label: "Community" },
+  { value: "Distribution", label: "Distribution" },
+  { value: "DisasterRelief", label: "Disaster Relief" },
+];
+
+const emptyForm = {
+  titleEn: "",
+  titleNe: "",
+  descriptionEn: "",
+  descriptionNe: "",
+  status: "ongoing",
+  category: "Event",
+  date: "",
+  durationEn: "",
+  durationNe: "",
+  locationEn: "",
+  locationNe: "",
+  beneficiariesEn: "",
+  beneficiariesNe: "",
+  objectiveEn: "",
+  objectiveNe: "",
+  album: "",
+  keepImages: [],
+  newImageFiles: [],
+};
+
+// Mongo gives back a full ISO datetime; <input type="date"> needs "YYYY-MM-DD".
+const toDateInput = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
 
 const statusTone = {
   ongoing: "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300",
   completed: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
+  upcoming: "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300",
 };
 
 const ProjectsManage = () => {
@@ -20,6 +56,8 @@ const ProjectsManage = () => {
   const [showForm, setShowForm] = useState(false);
 
   const { data, isLoading } = useQuery({ queryKey: ["admin-projects"], queryFn: fetchProjects });
+  const { data: albumsData } = useQuery({ queryKey: ["admin-gallery"], queryFn: fetchAlbums });
+  const albums = albumsData?.data || [];
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-projects"] });
   const onError = (err) => toast.error(err.response?.data?.message || "Something went wrong.");
@@ -69,6 +107,20 @@ const ProjectsManage = () => {
       descriptionEn: project.description?.en || "",
       descriptionNe: project.description?.ne || "",
       status: project.status,
+      category: project.category || "Event",
+      date: toDateInput(project.date),
+      durationEn: project.duration?.en || "",
+      durationNe: project.duration?.ne || "",
+      locationEn: project.location?.en || "",
+      locationNe: project.location?.ne || "",
+      beneficiariesEn: project.beneficiaries?.en || "",
+      beneficiariesNe: project.beneficiaries?.ne || "",
+      objectiveEn: project.objective?.en || "",
+      objectiveNe: project.objective?.ne || "",
+      // Could be a populated object ({_id, title, ...}) or a plain ID
+      // string depending on where this project object came from — normalize
+      // to just the ID string the <select> needs.
+      album: (typeof project.album === "object" ? project.album?._id : project.album) || "",
       keepImages: project.images || [],
       newImageFiles: [],
     });
@@ -113,6 +165,7 @@ const ProjectsManage = () => {
               <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
                 <tr>
                   <th className="px-4 py-3">Title (EN)</th>
+                  <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Images</th>
                   <th className="px-4 py-3 text-right">Actions</th>
@@ -121,7 +174,7 @@ const ProjectsManage = () => {
               <tbody>
                 {data?.data?.length === 0 && (
                   <tr>
-                    <td colSpan={4} className={`px-4 py-6 text-center ${mutedClass}`}>
+                    <td colSpan={5} className={`px-4 py-6 text-center ${mutedClass}`}>
                       No projects yet.
                     </td>
                   </tr>
@@ -129,6 +182,7 @@ const ProjectsManage = () => {
                 {data?.data?.map((project) => (
                   <tr key={project._id} className={`border-t ${rowClass}`}>
                     <td className="px-4 py-3">{project.title?.en}</td>
+                    <td className="px-4 py-3">{CATEGORIES.find((c) => c.value === project.category)?.label || "Event"}</td>
                     <td className="px-4 py-3">
                       <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusTone[project.status] || ""}`}>{project.status}</span>
                     </td>
@@ -176,7 +230,84 @@ const ProjectsManage = () => {
             <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className={inputClass}>
               <option value="ongoing">Ongoing</option>
               <option value="completed">Completed</option>
+              <option value="upcoming">Upcoming</option>
             </select>
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Category</label>
+              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputClass}>
+                {CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Date</label>
+              <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className={inputClass} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                placeholder="Duration e.g. 6 Months"
+                value={form.durationEn}
+                onChange={(e) => setForm({ ...form, durationEn: e.target.value })}
+                className={inputClass}
+              />
+              <input placeholder="अवधि (नेपाली)" value={form.durationNe} onChange={(e) => setForm({ ...form, durationNe: e.target.value })} className={inputClass} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <input placeholder="Location (English)" value={form.locationEn} onChange={(e) => setForm({ ...form, locationEn: e.target.value })} className={inputClass} />
+              <input placeholder="स्थान (नेपाली)" value={form.locationNe} onChange={(e) => setForm({ ...form, locationNe: e.target.value })} className={inputClass} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                placeholder="Beneficiaries e.g. 120+ Students"
+                value={form.beneficiariesEn}
+                onChange={(e) => setForm({ ...form, beneficiariesEn: e.target.value })}
+                className={inputClass}
+              />
+              <input
+                placeholder="लाभान्वित (नेपाली)"
+                value={form.beneficiariesNe}
+                onChange={(e) => setForm({ ...form, beneficiariesNe: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+
+            <textarea
+              rows={2}
+              placeholder="Objective (English)"
+              value={form.objectiveEn}
+              onChange={(e) => setForm({ ...form, objectiveEn: e.target.value })}
+              className={inputClass}
+            />
+            <textarea
+              rows={2}
+              placeholder="उद्देश्य (नेपाली)"
+              value={form.objectiveNe}
+              onChange={(e) => setForm({ ...form, objectiveNe: e.target.value })}
+              className={inputClass}
+            />
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Linked Gallery Album (optional)</label>
+              <select value={form.album} onChange={(e) => setForm({ ...form, album: e.target.value })} className={inputClass}>
+                <option value="">None</option>
+                {albums.map((a) => (
+                  <option key={a._id} value={a._id}>
+                    {a.title?.en}
+                  </option>
+                ))}
+              </select>
+              <p className={`mt-1 text-xs ${mutedClass}`}>
+                Lets visitors jump from this project's page to that album's full photo collection under Gallery.
+              </p>
+            </div>
 
             {form.keepImages.length > 0 && (
               <div>

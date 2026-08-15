@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Content service — the single seam between the UI and its data source.
 //
-// getSiteInfo/getProjects/getNews/getGalleryImages now read from the live
+// getSiteInfo/getProjects/getNews/getGalleryAlbums now read from the live
 // Express + MongoDB API (see server/) instead of the local content.js
 // arrays — every page/component that already renders this data via
 // pick(field, language) keeps working untouched, because the API returns
@@ -33,12 +33,30 @@ export async function getProjects() {
   return data.data.map(withId);
 }
 
+// Used by ProjectDetail.jsx. `album`, if the project has one linked, comes
+// back populated (title/coverImage/photos) — normalize its _id too so
+// `project.album.id` works the same way `project.id` does.
+export async function getProject(id) {
+  const { data } = await api.get(`/projects/${id}`);
+  const project = withId(data.data);
+  if (project.album) project.album = withId(project.album);
+  return project;
+}
+
 export async function getNews() {
   const { data } = await api.get("/news");
   return data.data.map(withId);
 }
 
-export async function getGalleryImages() {
-  const { data } = await api.get("/gallery");
+// Gallery is organized as albums: a thumbnail grid of cover photo + title
+// (getGalleryAlbums, used by Gallery.jsx), opening into every photo in that
+// album (getGalleryAlbum, used by AlbumDetail.jsx).
+export async function getGalleryAlbums(params) {
+  const { data } = await api.get("/gallery", { params });
   return data.data.map(withId);
+}
+
+export async function getGalleryAlbum(id) {
+  const { data } = await api.get(`/gallery/${id}`);
+  return withId(data.data);
 }

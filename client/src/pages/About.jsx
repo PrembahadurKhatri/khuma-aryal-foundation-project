@@ -138,7 +138,7 @@ export default function About() {
       <PageHero label={t("about.title")} />
 
       {/* ================= FOUNDATION PROFILE ================= */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cream-50 via-white to-cream-100 py-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-cream-100 via-cream to-cream-100 py-24">
         {/* Decorative Background */}
         <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-gilt-200/20 blur-3xl" />
         <div className="absolute -right-40 bottom-0 h-[450px] w-[450px] rounded-full bg-forest-100/30 blur-3xl" />
@@ -159,7 +159,7 @@ export default function About() {
             </div>
           </Reveal>
 
-          <div className="h-px w-full bg-forest-100" aria-hidden="true" />
+          <div className="h-px w-full bg-cream-100" aria-hidden="true" />
 
           {/* Image (left, sticky) + profile text (right, scrolls past it) —
               sticky positioning is what actually solves the "short image next
@@ -292,8 +292,8 @@ export default function About() {
 
       {/* ==================== Mission ==================== */}
 
-      <Reveal>
-        <div className="group relative overflow-hidden rounded-[32px] border border-forest-100 bg-white p-10 shadow-xl transition-all duration-700 hover:-translate-y-3 hover:border-gilt-300 hover:shadow-[0_35px_80px_rgba(0,0,0,0.12)]">
+      <Reveal className="h-full">
+        <div className="group relative flex h-full flex-col overflow-hidden rounded-[32px] border border-forest-100 bg-white p-10 shadow-xl transition-all duration-700 hover:-translate-y-3 hover:border-gilt-300 hover:shadow-[0_35px_80px_rgba(0,0,0,0.12)]">
 
           {/* Animated Gold Border */}
           <div className="absolute left-0 top-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-gilt-500 via-yellow-400 to-gilt-500 transition-transform duration-700 group-hover:scale-x-100" />
@@ -306,8 +306,8 @@ export default function About() {
             <div className="absolute -left-[140%] top-0 h-full w-1/2 rotate-12 bg-white/30 blur-xl transition-all duration-1000 group-hover:left-[160%]" />
           </div>
 
-       
-          <div className="relative">
+
+          <div className="relative flex flex-1 flex-col">
 
             <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-[22px] bg-gradient-to-br from-red-900 to-red-500 text-white shadow-xl ring-8 ring-gilt-400/10 transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
               <TargetIcon />
@@ -328,8 +328,8 @@ export default function About() {
 
       {/* ==================== Vision ==================== */}
 
-      <Reveal delay={0.15}>
-        <div className="group relative overflow-hidden rounded-[32px] border border-forest-100 bg-white p-10 shadow-xl transition-all duration-700 hover:-translate-y-3 hover:border-gilt-300 hover:shadow-[0_35px_80px_rgba(0,0,0,0.12)]">
+      <Reveal delay={0.15} className="h-full">
+        <div className="group relative flex h-full flex-col overflow-hidden rounded-[32px] border border-forest-100 bg-white p-10 shadow-xl transition-all duration-700 hover:-translate-y-3 hover:border-gilt-300 hover:shadow-[0_35px_80px_rgba(0,0,0,0.12)]">
 
           <div className="absolute left-0 top-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-gilt-500 via-yellow-400 to-gilt-500 transition-transform duration-700 group-hover:scale-x-100" />
 
@@ -350,7 +350,7 @@ export default function About() {
           </div>
 
 
-          <div className="relative">
+          <div className="relative flex flex-1 flex-col">
 
             <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-[22px] bg-gradient-to-br from-red-900 to-red-500 text-white shadow-xl ring-8 ring-gilt-400/10 transition-all duration-500 group-hover:-rotate-6 group-hover:scale-110">
               <EyeIcon />
@@ -509,7 +509,7 @@ export default function About() {
                   <input
                     type="text"
                     name="subject"
-                    placeholder="Topic"
+                    placeholder="Enter Subject"
                     className="rounded-lg border border-forest-100 bg-cream-50 px-3.5 py-2 text-sm text-ink-900 outline-none transition-colors focus:border-gilt-400"
                   />
                 </label>

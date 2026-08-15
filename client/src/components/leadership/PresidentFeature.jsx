@@ -56,7 +56,7 @@ export default function PresidentFeature({ leader, onRead }) {
             </span>
           </div>
 
-          <p className="font-body text-xl italic leading-relaxed text-forest-900 sm:text-2xl">
+          <p className="font-body text-lg  leading-relaxed text-forest-900 sm:text-xl">
             &ldquo;{message}&rdquo;
           </p>
 
