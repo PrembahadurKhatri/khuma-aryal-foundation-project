@@ -161,8 +161,14 @@ export default function ProjectDetail() {
     <>
       <PageHero label={loading ? t("projects.title") : title} />
 
-      <section className="py-20 sm:py-24">
-        <Container>
+      <section className="relative overflow-hidden py-20 sm:py-24">
+        {/* Decorative glows + grain — same premium background treatment used
+            on About/Home, so this page doesn't read as bare compared to them. */}
+        <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-forest-100/40 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />
+
+        <Container className="relative">
           <Link
             to="/projects"
             className="group mb-8 inline-flex items-center gap-2 rounded-full border border-forest-100 bg-white py-2.5 pl-3 pr-5 font-body text-sm font-semibold text-forest-700 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-forest-700 hover:bg-forest-700 hover:text-white hover:shadow-lift"
@@ -176,19 +182,18 @@ export default function ProjectDetail() {
           </Link>
 
           {loading || !project ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="aspect-square animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
-              ))}
+            <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+              <div className="h-64 animate-pulse rounded-xl3 border border-forest-100 bg-forest-50/60" />
+              <div className="h-64 animate-pulse rounded-xl3 border border-forest-100 bg-forest-50/60" />
             </div>
           ) : (
             <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
               {/* ================= LEFT: Overview + Objective + Photos ================= */}
-              <div className="flex flex-col gap-10">
+              <div className="flex flex-col gap-8">
                 <Reveal>
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-7 shadow-card sm:p-9">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600">
+                      <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">
                         <TagIcon />
                         {t(`gallery.category${category}`)}
                       </span>
@@ -196,27 +201,35 @@ export default function ProjectDetail() {
                         {t(`common.${status}`)}
                       </span>
                     </div>
-                    <h2 className="font-body text-2xl font-bold text-forest-900">{t("projects.overview")}</h2>
+                    <div className="flex flex-col gap-3">
+                      <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-gilt-600">{t("projects.overview")}</span>
+                      <h1 className="font-body text-3xl font-bold leading-tight text-forest-900 sm:text-4xl">{title}</h1>
+                      <span className="h-1 w-14 rounded-full bg-gilt-500" aria-hidden="true" />
+                    </div>
                     <p className="font-body text-base leading-relaxed text-ink-600 sm:text-lg">{description}</p>
                   </div>
                 </Reveal>
 
                 {objective && (
                   <Reveal delay={0.05}>
-                    <div className="flex flex-col gap-3 rounded-xl2 border border-forest-100 bg-white p-6 shadow-card">
-                      <span className="inline-flex items-center gap-2 font-body text-sm font-semibold text-forest-700">
+                    <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
+                      <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gilt-400/10 blur-2xl" aria-hidden="true" />
+                      <span className="inline-flex w-fit items-center gap-2 rounded-full bg-forest-50 px-3 py-1.5 font-body text-sm font-semibold text-forest-700">
                         <TargetIcon />
                         {t("projects.objective")}
                       </span>
-                      <p className="font-body text-sm leading-relaxed text-ink-600">{objective}</p>
+                      <p className="font-body text-sm leading-relaxed text-ink-600 sm:text-base">{objective}</p>
                     </div>
                   </Reveal>
                 )}
 
                 {photos.length > 0 && (
                   <Reveal delay={0.1}>
-                    <div className="flex flex-col gap-4">
-                      <h2 className="font-body text-xl font-bold text-forest-900">{t("gallery.photosLabel")}</h2>
+                    <div className="flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
+                      <div className="flex items-center justify-between">
+                        <h2 className="font-body text-xl font-bold text-forest-900">{t("gallery.photosLabel")}</h2>
+                        <span className="rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">{photos.length}</span>
+                      </div>
                       <GalleryGrid images={photos} />
                     </div>
                   </Reveal>
@@ -227,12 +240,14 @@ export default function ProjectDetail() {
               <div className="flex flex-col gap-6">
                 {infoItems.length > 0 && (
                   <Reveal delay={0.05} className="h-fit">
-                    <div className="rounded-xl2 border border-forest-100 bg-white p-6 shadow-card">
-                      <h2 className="mb-5 font-body text-lg font-bold text-forest-900">{t("projects.information")}</h2>
-                      <dl className="flex flex-col gap-4">
+                    <div className="overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card">
+                      <div className="border-b border-forest-100 bg-forest-50/60 px-6 py-4">
+                        <h2 className="font-body text-lg font-bold text-forest-900">{t("projects.information")}</h2>
+                      </div>
+                      <dl className="flex flex-col divide-y divide-forest-50 px-2 py-2">
                         {infoItems.map((item) => (
-                          <div key={item.label} className="flex items-start gap-3">
-                            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-forest-50 text-forest-600">{item.icon}</span>
+                          <div key={item.label} className="flex items-start gap-3 rounded-xl2 px-4 py-3 transition-colors duration-200 hover:bg-forest-50/50">
+                            <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-forest-50 text-forest-600">{item.icon}</span>
                             <div className="flex flex-col">
                               <dt className="font-body text-xs font-medium uppercase tracking-wide text-ink-400">{item.label}</dt>
                               <dd className="font-body text-sm font-semibold text-ink-900">{item.value}</dd>
@@ -251,7 +266,7 @@ export default function ProjectDetail() {
                   <Reveal delay={0.1} className="h-fit">
                     <Link
                       to={`/gallery/${album.id}`}
-                      className="group flex flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+                      className="group flex flex-col overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
                     >
                       <div className="relative h-36 w-full overflow-hidden">
                         <PlaceholderImage src={album.coverImage} alt={albumTitle} label={albumTitle} imgClassName="transition-transform duration-500 group-hover:scale-105" />

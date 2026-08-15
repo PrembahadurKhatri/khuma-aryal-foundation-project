@@ -75,17 +75,17 @@ export default function Footer() {
           <h3 className="font-body text-sm font-semibold uppercase tracking-wide text-white">{t("common.contactUs")}</h3>
           <ul className="mt-4 space-y-3 text-sm text-forest-200">
             <li className="flex gap-2">
-              <span className="text-gilt-400">📍</span>
+             
               <span>{pick(siteInfo.address, language)}</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-gilt-400">📞</span>
+            
               <a href={`tel:${siteInfo.phone}`} className="hover:text-white">
                 {siteInfo.phone}
               </a>
             </li>
             <li className="flex gap-2">
-              <span className="text-gilt-400">✉️</span>
+             
               <a href={`mailto:${siteInfo.email}`} className="hover:text-white">
                 {siteInfo.email}
               </a>
