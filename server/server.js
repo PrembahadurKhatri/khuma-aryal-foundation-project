@@ -12,6 +12,7 @@
 import "dotenv/config";
 
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import express from "express";
 import cors from "cors";
@@ -110,8 +111,13 @@ app.use("/api/stories", storyRoutes);
 app.use("/api/downloads", downloadRoutes);
 app.use("/api/vacancies", vacancyRoutes);
 
-// Serve the built React app in production so frontend + API share one origin.
-if (process.env.NODE_ENV === "production") {
+// Serve the built React app in production so frontend + API share one
+// origin — but only if client/dist is actually present. On a split
+// deployment (this server on Render, the client built separately on
+// Vercel), client/dist never exists here, so skip this block entirely
+// rather than registering a catch-all route that would crash with
+// ENOENT on every non-/api request.
+if (process.env.NODE_ENV === "production" && fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
   app.get(/^(?!\/api).*/, (req, res) => {
     res.sendFile(path.join(clientDistPath, "index.html"));
