@@ -20,6 +20,11 @@ import ProjectsManage from "./pages/admin/ProjectsManage.jsx";
 import GalleryManage from "./pages/admin/GalleryManage.jsx";
 import MessagesManage from "./pages/admin/MessagesManage.jsx";
 import SettingsManage from "./pages/admin/SettingsManage.jsx";
+import NoticesManage from "./pages/admin/NoticesManage.jsx";
+import EventsManage from "./pages/admin/EventsManage.jsx";
+import StoriesManage from "./pages/admin/StoriesManage.jsx";
+import DownloadsManage from "./pages/admin/DownloadsManage.jsx";
+import VacanciesManage from "./pages/admin/VacanciesManage.jsx";
 
 export default function App() {
   return (
@@ -50,6 +55,11 @@ export default function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="news" element={<NewsManage />} />
+          <Route path="notices" element={<NoticesManage />} />
+          <Route path="events" element={<EventsManage />} />
+          <Route path="stories" element={<StoriesManage />} />
+          <Route path="downloads" element={<DownloadsManage />} />
+          <Route path="vacancies" element={<VacanciesManage />} />
           <Route path="projects" element={<ProjectsManage />} />
           <Route path="gallery" element={<GalleryManage />} />
           <Route path="messages" element={<MessagesManage />} />

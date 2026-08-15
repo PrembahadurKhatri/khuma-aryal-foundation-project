@@ -60,3 +60,34 @@ export async function getGalleryAlbum(id) {
   const { data } = await api.get(`/gallery/${id}`);
   return withId(data.data);
 }
+
+// "Important Notices" — office/holiday/scholarship-style announcements
+// shown on the News page, separate from News itself. See models/Notice.js.
+export async function getNotices() {
+  const { data } = await api.get("/notices");
+  return data.data.map(withId);
+}
+
+// "Upcoming Events" — see models/Event.js.
+export async function getEvents() {
+  const { data } = await api.get("/events");
+  return data.data.map(withId);
+}
+
+// "Impact / Success Stories" — see models/Story.js.
+export async function getStories() {
+  const { data } = await api.get("/stories");
+  return data.data.map(withId);
+}
+
+// "Downloads" — useful documents (annual report, brochure, etc). See models/Download.js.
+export async function getDownloads() {
+  const { data } = await api.get("/downloads");
+  return data.data.map(withId);
+}
+
+// "Job Vacancies" — open positions shown on the News page. See models/Vacancy.js.
+export async function getVacancies() {
+  const { data } = await api.get("/vacancies");
+  return data.data.map(withId);
+}

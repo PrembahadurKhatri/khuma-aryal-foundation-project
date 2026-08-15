@@ -6,11 +6,18 @@ import mongoose from "mongoose";
 // working untouched.
 const bilingual = { en: { type: String, required: true, trim: true }, ne: { type: String, required: true, trim: true } };
 
+// Category pills + emoji shown on the News page (News.jsx) and its
+// filter bar. Values stay space-free — same reasoning as ALBUM_CATEGORIES
+// in models/Album.js, since these get interpolated into `news.category${value}`
+// translation keys.
+export const NEWS_CATEGORIES = ["Health", "Education", "Sports", "SelfEmployment", "DisasterRelief", "CommunityDevelopment", "General"];
+
 const newsSchema = new mongoose.Schema(
   {
     title: { type: bilingual, required: true },
     description: { type: bilingual, required: true },
     date: { type: Date, required: true, default: Date.now },
+    category: { type: String, enum: NEWS_CATEGORIES, default: "General" },
     image: { type: String },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },

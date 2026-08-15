@@ -38,7 +38,7 @@ export default function Footer() {
       <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <img src="/logo.svg" alt={`${pick(siteInfo.name, language)} logo`} className="h-10 w-10 rounded-full bg-white p-0.5" />
+            <img src="/images/logo.jpg" alt={`${pick(siteInfo.name, language)} logo`} className="h-10 w-10 rounded-full bg-white p-0.5" />
             <span className="font-body text-lg font-semibold text-white">{pick(siteInfo.name, language)}</span>
           </div>
           <p className="text-sm leading-relaxed text-forest-200">{t("footer.tagline")}</p>

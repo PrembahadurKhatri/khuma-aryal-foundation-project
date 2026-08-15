@@ -12,13 +12,23 @@ import {
   Sun,
   Menu,
   X,
+  Megaphone,
+  CalendarDays,
+  Heart,
+  Download as DownloadIcon,
+  Briefcase,
 } from "lucide-react";
 import useAuth from "../hooks/useAuth.js";
 import { ToastProvider } from "../contexts/ToastContext.jsx";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/admin/news", label: "News / Notice", icon: Newspaper },
+  { to: "/admin/news", label: "News", icon: Newspaper },
+  { to: "/admin/notices", label: "Notices", icon: Megaphone },
+  { to: "/admin/events", label: "Events", icon: CalendarDays },
+  { to: "/admin/stories", label: "Impact Stories", icon: Heart },
+  { to: "/admin/downloads", label: "Downloads", icon: DownloadIcon },
+  { to: "/admin/vacancies", label: "Job Vacancies", icon: Briefcase },
   { to: "/admin/projects", label: "Projects", icon: FolderKanban },
   { to: "/admin/gallery", label: "Gallery", icon: Image },
   { to: "/admin/messages", label: "Messages", icon: Mail },

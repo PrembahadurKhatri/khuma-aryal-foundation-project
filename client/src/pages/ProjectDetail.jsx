@@ -204,7 +204,7 @@ export default function ProjectDetail() {
                     <div className="flex flex-col gap-3">
                       <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-gilt-600">{t("projects.overview")}</span>
                       <h1 className="font-body text-3xl font-bold leading-tight text-forest-900 sm:text-4xl">{title}</h1>
-                      <span className="h-1 w-14 rounded-full bg-gilt-500" aria-hidden="true" />
+                  
                     </div>
                     <p className="font-body text-base leading-relaxed text-ink-600 sm:text-lg">{description}</p>
                   </div>

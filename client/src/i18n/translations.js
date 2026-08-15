@@ -90,9 +90,25 @@ const translations = {
       statBeneficiaries: "Youth Supported",
       statProjects: "Projects Completed",
       statVolunteers: "Active Volunteers",
-      ctaTitle: "Join us in building a better future",
+      // "Latest Updates" — 3-column teaser section below Leadership Messages
+      // (see LeadershipMessages in Home.jsx), each column linking through to
+      // its own full page.
+      updatesKicker: "Stay Connected",
+      updatesTitle: "Latest Updates",
+      updatesProjectsTitle: "Latest Projects",
+      updatesNewsTitle: "Latest News",
+      updatesNoticesTitle: "Important Notices",
+      updatesEventsTitle: "Upcoming Events",
+      readMore: "Read More",
+      updatesEmptyProjects: "No projects yet.",
+      updatesEmptyNews: "No news yet.",
+      updatesEmptyNotices: "No notices at the moment.",
+      updatesEmptyEvents: "No upcoming events.",
+      // Footer CTA — moved here from the News page per request, shown as the
+      // last section on Home, right above the site Footer.
+      ctaTitle: "Want to make a difference?",
       ctaSubtitle:
-        "Whether through volunteering, partnership or donation, your support helps us reach more young people.",
+        "Join us as a volunteer, partner, or donor to support our mission of improving lives through health, education, sports, self-employment, and disaster relief.",
       ctaButton: "Get Involved",
     },
     about: {
@@ -164,6 +180,11 @@ const translations = {
       backToProjects: "Back to Projects",
       loadMore: "Show More Projects",
       categoryLabel: "Category",
+      // Overrides gallery.categoryAll ("All Photos") for this page's "All"
+      // filter pill — the category *names* (Event/Education/...) are still
+      // reused straight from gallery.category* since those are shared, but
+      // "All Photos" doesn't make sense in a Projects context.
+      categoryAll: "All Projects",
       overview: "Project Overview",
       information: "Project Information",
       date: "Date",
@@ -179,6 +200,80 @@ const translations = {
       kicker: "Stay Informed",
       title: "News & Notices",
       subtitle: "Announcements, updates and notices from Khuma Aryal Foundation.",
+
+      // Section headings, in page order.
+      sectionLatestNews: "Latest News",
+      sectionNotices: "Important Notices",
+      sectionEvents: "Upcoming Events",
+      sectionActivities: "Recent Activities",
+      sectionStories: "Success Stories",
+      sectionGallery: "Photo Gallery",
+      sectionDownloads: "Downloads",
+      sectionVacancies: "Job Vacancies",
+
+      // Job Vacancies.
+      deadline: "Deadline",
+      applyNow: "Apply Now",
+      emptyVacancies: "No open positions at the moment.",
+      vacancyFullTime: "Full-Time",
+      vacancyPartTime: "Part-Time",
+      vacancyVolunteer: "Volunteer",
+      vacancyInternship: "Internship",
+      vacancyContract: "Contract",
+
+      // Search & filter bar (Latest News).
+      searchPlaceholder: "Search news...",
+      filterCategory: "Category",
+      filterYear: "Year",
+      filterAll: "All",
+      sortLatest: "Latest First",
+      sortOldest: "Oldest First",
+      noResults: "No news matches your search.",
+      loadMore: "Show More",
+
+      // Category pills — matches server/models/News.js's NEWS_CATEGORIES.
+      categoryHealth: "Health",
+      categoryEducation: "Education",
+      categorySports: "Sports",
+      categorySelfEmployment: "Self-Employment",
+      categoryDisasterRelief: "Disaster Relief",
+      categoryCommunityDevelopment: "Community Development",
+      categoryGeneral: "General News",
+
+      readMore: "Read More",
+      readLess: "Read Less",
+
+      // Important Notices.
+      priorityImportant: "Important",
+      priorityNew: "New",
+      priorityUrgent: "Urgent",
+      viewAttachment: "View Attachment",
+      emptyNotices: "No notices at the moment.",
+
+      // Upcoming Events.
+      register: "Register",
+      emptyEvents: "No upcoming events at the moment.",
+
+      // Recent Activities (reuses completed Projects).
+      viewAllActivities: "View All Projects",
+      emptyActivities: "No completed activities yet.",
+
+      // Success Stories.
+      emptyStories: "No stories shared yet.",
+
+      // Photo Gallery preview.
+      viewFullGallery: "View Full Gallery",
+
+      // Downloads.
+      download: "Download",
+      emptyDownloads: "No downloads available yet.",
+
+      // Sidebar (desktop).
+      sidebarLatestNews: "Latest News",
+      sidebarEvents: "Upcoming Events",
+      sidebarNotices: "Important Notices",
+      sidebarCategories: "Categories",
+      sidebarArchives: "Archives",
     },
     footer: {
       tagline: "Working for Education, Healthcare, Sports & Employment — guiding young people away from problems through good counselling.",
@@ -278,8 +373,19 @@ const translations = {
       statBeneficiaries: "सहयोग पाएका युवाहरू",
       statProjects: "सम्पन्न परियोजनाहरू",
       statVolunteers: "सक्रिय स्वयंसेवकहरू",
-      ctaTitle: "उज्ज्वल भविष्य निर्माणमा सहभागी हुनुहोस्",
-      ctaSubtitle: "स्वयंसेवा, साझेदारी वा आर्थिक सहयोगमार्फत, तपाईंको साथले हामीलाई थप युवासम्म पुग्न मद्दत गर्दछ।",
+      updatesKicker: "जोडिइरहनुहोस्",
+      updatesTitle: "पछिल्ला अपडेटहरू",
+      updatesProjectsTitle: "पछिल्ला परियोजनाहरू",
+      updatesNewsTitle: "पछिल्ला समाचार",
+      updatesNoticesTitle: "महत्त्वपूर्ण सूचनाहरू",
+      updatesEventsTitle: "आगामी कार्यक्रमहरू",
+      readMore: "थप पढ्नुहोस्",
+      updatesEmptyProjects: "अहिलेसम्म कुनै परियोजना छैन।",
+      updatesEmptyNews: "अहिलेसम्म कुनै समाचार छैन।",
+      updatesEmptyNotices: "हाल कुनै सूचना छैन।",
+      updatesEmptyEvents: "हाल कुनै आगामी कार्यक्रम छैन।",
+      ctaTitle: "परिवर्तन ल्याउन चाहनुहुन्छ?",
+      ctaSubtitle: "स्वास्थ्य, शिक्षा, खेलकुद, स्वरोजगार र विपद् राहतमार्फत जीवनस्तर सुधार्ने हाम्रो अभियानमा स्वयंसेवक, साझेदार वा दाताको रूपमा सामेल हुनुहोस्।",
       ctaButton: "सहभागी हुनुहोस्",
     },
     about: {
@@ -351,6 +457,7 @@ const translations = {
       backToProjects: "परियोजनाहरूमा फर्कनुहोस्",
       loadMore: "थप परियोजना हेर्नुहोस्",
       categoryLabel: "श्रेणी",
+      categoryAll: "सबै परियोजनाहरू",
       overview: "परियोजना विवरण",
       information: "परियोजना जानकारी",
       date: "मिति",
@@ -366,6 +473,69 @@ const translations = {
       kicker: "जानकारीमा रहनुहोस्",
       title: "समाचार र सूचनाहरू",
       subtitle: "खुमा अर्याल फाउन्डेशनका घोषणा, अपडेट र सूचनाहरू।",
+
+      sectionLatestNews: "पछिल्ला समाचार",
+      sectionNotices: "महत्त्वपूर्ण सूचनाहरू",
+      sectionEvents: "आगामी कार्यक्रमहरू",
+      sectionActivities: "हालैका गतिविधिहरू",
+      sectionStories: "सफलताका कथाहरू",
+      sectionGallery: "फोटो ग्यालरी",
+      sectionDownloads: "डाउनलोडहरू",
+      sectionVacancies: "जागिर खुल्ला पदहरू",
+
+      deadline: "अन्तिम मिति",
+      applyNow: "आवेदन दिनुहोस्",
+      emptyVacancies: "हाल कुनै खुल्ला पद छैन।",
+      vacancyFullTime: "पूर्ण-समय",
+      vacancyPartTime: "आंशिक-समय",
+      vacancyVolunteer: "स्वयंसेवक",
+      vacancyInternship: "इन्टर्नशिप",
+      vacancyContract: "करार",
+
+      searchPlaceholder: "समाचार खोज्नुहोस्...",
+      filterCategory: "श्रेणी",
+      filterYear: "वर्ष",
+      filterAll: "सबै",
+      sortLatest: "पहिले नयाँ",
+      sortOldest: "पहिले पुरानो",
+      noResults: "तपाईंको खोजसँग मिल्ने समाचार भेटिएन।",
+      loadMore: "थप देखाउनुहोस्",
+
+      categoryHealth: "स्वास्थ्य",
+      categoryEducation: "शिक्षा",
+      categorySports: "खेलकुद",
+      categorySelfEmployment: "स्वरोजगार",
+      categoryDisasterRelief: "विपद् राहत",
+      categoryCommunityDevelopment: "सामुदायिक विकास",
+      categoryGeneral: "साधारण समाचार",
+
+      readMore: "थप पढ्नुहोस्",
+      readLess: "कम देखाउनुहोस्",
+
+      priorityImportant: "महत्त्वपूर्ण",
+      priorityNew: "नयाँ",
+      priorityUrgent: "अत्यावश्यक",
+      viewAttachment: "संलग्नक हेर्नुहोस्",
+      emptyNotices: "हाल कुनै सूचना छैन।",
+
+      register: "दर्ता गर्नुहोस्",
+      emptyEvents: "हाल कुनै आगामी कार्यक्रम छैन।",
+
+      viewAllActivities: "सबै परियोजना हेर्नुहोस्",
+      emptyActivities: "अहिलेसम्म कुनै सम्पन्न गतिविधि छैन।",
+
+      emptyStories: "अहिलेसम्म कुनै कथा साझा गरिएको छैन।",
+
+      viewFullGallery: "पूर्ण ग्यालरी हेर्नुहोस्",
+
+      download: "डाउनलोड",
+      emptyDownloads: "हाल कुनै डाउनलोड उपलब्ध छैन।",
+
+      sidebarLatestNews: "पछिल्ला समाचार",
+      sidebarEvents: "आगामी कार्यक्रमहरू",
+      sidebarNotices: "महत्त्वपूर्ण सूचनाहरू",
+      sidebarCategories: "श्रेणीहरू",
+      sidebarArchives: "अभिलेखहरू",
     },
     footer: {
       tagline: "शिक्षा, स्वास्थ्य, खेलकुद र रोजगारीका लागि काम — राम्रो परामर्शमार्फत युवालाई समस्याबाट टाढा राख्दै।",

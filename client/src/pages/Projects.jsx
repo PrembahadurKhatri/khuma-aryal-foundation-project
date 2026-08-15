@@ -119,7 +119,7 @@ export default function Projects() {
                   }`}
                 >
                   {key === "All" ? <GridIcon /> : <TagIcon />}
-                  {t(`gallery.category${key}`)}
+                  {key === "All" ? t("projects.categoryAll") : t(`gallery.category${key}`)}
                 </button>
               ))}
             </div>

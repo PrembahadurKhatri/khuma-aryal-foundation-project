@@ -22,4 +22,17 @@ export const storage = new CloudinaryStorage({
   },
 });
 
+// Separate storage for non-image documents (Notice attachments, Downloads).
+// `resource_type: "raw"` is required for Cloudinary to accept/serve
+// PDFs/docs — the image storage above defaults to "image" and would reject
+// them.
+export const documentStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "khuma-aryal-foundation/documents",
+    resource_type: "raw",
+    allowed_formats: ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
+  },
+});
+
 export default cloudinary;

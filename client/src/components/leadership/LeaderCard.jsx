@@ -27,7 +27,7 @@ export default function LeaderCard({ leader, onRead, delay = 0 }) {
         <div>
           <p className="font-display text-lg font-bold text-forest-900">{name}</p>
           <p className="font-body text-xs font-semibold uppercase tracking-wide text-gilt-600">{title}</p>
-          <span className="mt-1 block h-px w-8 bg-gilt-400/60" aria-hidden="true" />
+
         </div>
       </div>
 

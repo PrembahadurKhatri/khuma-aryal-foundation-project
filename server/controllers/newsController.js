@@ -5,10 +5,17 @@ import News from "../models/News.js";
 // rather than nested "title[en]" — multipart/form-data (multer) doesn't
 // auto-parse bracket notation into nested objects the way Express's
 // urlencoded parser does, so this is the simplest reliable wire format.
+// title/description are guarded (only rebuilt if actually sent) the same
+// way every other controller in this app is — see Project/Album's
+// identical fromFlatFields — so a partial update (e.g. category-only)
+// can't blank out required fields and fail validation.
 const fromFlatFields = (body) => ({
-  title: { en: body.titleEn, ne: body.titleNe },
-  description: { en: body.descriptionEn, ne: body.descriptionNe },
+  ...(body.titleEn !== undefined || body.titleNe !== undefined ? { title: { en: body.titleEn, ne: body.titleNe } } : {}),
+  ...(body.descriptionEn !== undefined || body.descriptionNe !== undefined
+    ? { description: { en: body.descriptionEn, ne: body.descriptionNe } }
+    : {}),
   ...(body.date ? { date: body.date } : {}),
+  ...(body.category ? { category: body.category } : {}),
 });
 
 // @desc   List news/notices, newest first

@@ -60,13 +60,18 @@ export default function PageHero({ label, images }) {
       <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-gilt-500/15 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />
 
-      {/* Transparent glass pill, top-left over the photo */}
+      {/* Glass pill, top-left over the photo. Background is a dark
+          forest tint (not plain white/10) specifically so the white label
+          text stays legible even over bright/white-heavy photos (e.g. the
+          News page's kafnews.png) — it can't rely on the gradient overlay
+          above alone, since that's deliberately kept light. */}
       <Container className="absolute inset-x-0 top-6 z-10 sm:top-8">
         <motion.span
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 rounded-full border border-gilt-400/40 bg-white/10 px-4 py-1.5 font-body text-xs font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md"
+          className="inline-flex items-center gap-2 rounded-full border border-gilt-400/40 bg-forest-950/55 px-4 py-1.5 font-body text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-soft backdrop-blur-md"
+          style={{ textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-gilt-400" />
           {label}

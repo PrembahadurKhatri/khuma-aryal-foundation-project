@@ -32,6 +32,11 @@ import albumRoutes from "./routes/albumRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import visitRoutes from "./routes/visitRoutes.js";
+import noticeRoutes from "./routes/noticeRoutes.js";
+import eventRoutes from "./routes/eventRoutes.js";
+import storyRoutes from "./routes/storyRoutes.js";
+import downloadRoutes from "./routes/downloadRoutes.js";
+import vacancyRoutes from "./routes/vacancyRoutes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDistPath = path.join(__dirname, "../client/dist");
@@ -99,6 +104,11 @@ app.use("/api/gallery", albumRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/visits", visitRoutes);
+app.use("/api/notices", noticeRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/stories", storyRoutes);
+app.use("/api/downloads", downloadRoutes);
+app.use("/api/vacancies", vacancyRoutes);
 
 // Serve the built React app in production so frontend + API share one origin.
 if (process.env.NODE_ENV === "production") {

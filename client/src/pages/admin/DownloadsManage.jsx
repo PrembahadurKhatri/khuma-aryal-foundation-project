@@ -1,26 +1,24 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
-import { fetchNews, createNews, updateNews, deleteNews } from "../../services/newsService.js";
-import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
+import { fetchDownloads, createDownload, updateDownload, deleteDownload } from "../../services/downloadService.js";
+import FileSourceField from "../../components/admin/FileSourceField.jsx";
 import useToast from "../../hooks/useToast.js";
 
-// Matches server/models/News.js's NEWS_CATEGORIES.
-const CATEGORIES = ["General", "Health", "Education", "Sports", "SelfEmployment", "DisasterRelief", "CommunityDevelopment"];
-const CATEGORY_LABELS = {
-  General: "General News",
-  Health: "Health",
-  Education: "Education",
-  Sports: "Sports",
-  SelfEmployment: "Self-Employment",
-  DisasterRelief: "Disaster Relief",
-  CommunityDevelopment: "Community Development",
+const TYPES = ["AnnualReport", "Brochure", "PressRelease", "RegistrationForm", "Newsletter", "Other"];
+const TYPE_LABELS = {
+  AnnualReport: "Annual Report",
+  Brochure: "Event Brochure",
+  PressRelease: "Press Release",
+  RegistrationForm: "Registration Form",
+  Newsletter: "Newsletter",
+  Other: "Other",
 };
-const emptyForm = { titleEn: "", titleNe: "", descriptionEn: "", descriptionNe: "", date: "", category: "General", imageFile: null };
+const emptyForm = { titleEn: "", titleNe: "", type: "Other", date: "", fileFile: null };
 
 const toDateInput = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
 
-const NewsManage = () => {
+const DownloadsManage = () => {
   const queryClient = useQueryClient();
   const { theme } = useOutletContext();
   const toast = useToast();
@@ -28,32 +26,32 @@ const NewsManage = () => {
   const [form, setForm] = useState(emptyForm);
   const [showForm, setShowForm] = useState(false);
 
-  const { data, isLoading } = useQuery({ queryKey: ["admin-news"], queryFn: fetchNews });
+  const { data, isLoading } = useQuery({ queryKey: ["admin-downloads"], queryFn: fetchDownloads });
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-news"] });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-downloads"] });
   const onError = (err) => toast.error(err.response?.data?.message || "Something went wrong.");
 
   const createMutation = useMutation({
-    mutationFn: createNews,
+    mutationFn: createDownload,
     onSuccess: () => {
       invalidate();
-      toast.success("News item created.");
+      toast.success("Download created.");
     },
     onError,
   });
   const updateMutation = useMutation({
-    mutationFn: ({ id, payload }) => updateNews(id, payload),
+    mutationFn: ({ id, payload }) => updateDownload(id, payload),
     onSuccess: () => {
       invalidate();
-      toast.success("News item updated.");
+      toast.success("Download updated.");
     },
     onError,
   });
   const deleteMutation = useMutation({
-    mutationFn: deleteNews,
+    mutationFn: deleteDownload,
     onSuccess: () => {
       invalidate();
-      toast.success("News item deleted.");
+      toast.success("Download deleted.");
     },
     onError,
   });
@@ -63,10 +61,6 @@ const NewsManage = () => {
   const mutedClass = theme === "dark" ? "text-gray-400" : "text-ink-600";
   const inputClass =
     theme === "dark" ? "w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100" : "w-full rounded-lg border border-forest-100 bg-white px-3 py-2 text-ink-900";
-  const ghostBtnClass =
-    theme === "dark" ? "flex-1 min-h-[40px] rounded-lg bg-gray-800 text-sm font-medium text-gray-100" : "flex-1 min-h-[40px] rounded-lg bg-cream-100 text-sm font-medium text-ink-900";
-  const dangerBtnClass =
-    theme === "dark" ? "flex-1 min-h-[40px] rounded-lg bg-red-950/40 text-sm font-medium text-red-400" : "flex-1 min-h-[40px] rounded-lg bg-red-50 text-sm font-medium text-red-500";
 
   const openCreate = () => {
     setEditing(null);
@@ -79,11 +73,9 @@ const NewsManage = () => {
     setForm({
       titleEn: item.title?.en || "",
       titleNe: item.title?.ne || "",
-      descriptionEn: item.description?.en || "",
-      descriptionNe: item.description?.ne || "",
+      type: item.type || "Other",
       date: toDateInput(item.date),
-      category: item.category || "General",
-      imageFile: null,
+      fileFile: null,
     });
     setShowForm(true);
   };
@@ -93,13 +85,17 @@ const NewsManage = () => {
     if (editing) {
       await updateMutation.mutateAsync({ id: editing._id, payload: form });
     } else {
+      if (!form.fileFile) {
+        toast.error("A file is required.");
+        return;
+      }
       await createMutation.mutateAsync(form);
     }
     setShowForm(false);
   };
 
   const handleDelete = async (id) => {
-    if (confirm("Delete this news item? This cannot be undone.")) {
+    if (confirm("Delete this download? This cannot be undone.")) {
       await deleteMutation.mutateAsync(id);
     }
   };
@@ -107,9 +103,9 @@ const NewsManage = () => {
   return (
     <div>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="font-body text-2xl font-bold">News / Notice</h1>
+        <h1 className="font-body text-2xl font-bold">Downloads</h1>
         <button onClick={openCreate} className="w-full rounded-lg bg-forest-700 px-4 py-2.5 font-semibold text-white shadow-soft hover:bg-forest-800 sm:w-auto sm:py-2">
-          + New Item
+          + New Download
         </button>
       </div>
 
@@ -122,6 +118,7 @@ const NewsManage = () => {
               <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
                 <tr>
                   <th className="px-4 py-3">Title (EN)</th>
+                  <th className="px-4 py-3">Type</th>
                   <th className="px-4 py-3">Date</th>
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
@@ -129,14 +126,15 @@ const NewsManage = () => {
               <tbody>
                 {data?.data?.length === 0 && (
                   <tr>
-                    <td colSpan={3} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No news items yet.
+                    <td colSpan={4} className={`px-4 py-6 text-center ${mutedClass}`}>
+                      No downloads yet.
                     </td>
                   </tr>
                 )}
                 {data?.data?.map((item) => (
                   <tr key={item._id} className={`border-t ${rowClass}`}>
                     <td className="px-4 py-3">{item.title?.en}</td>
+                    <td className="px-4 py-3">{TYPE_LABELS[item.type] || item.type}</td>
                     <td className="px-4 py-3">{new Date(item.date).toLocaleDateString()}</td>
                     <td className="space-x-3 px-4 py-3 text-right">
                       <button onClick={() => openEdit(item)} className="text-forest-700 hover:underline dark:text-forest-400">
@@ -157,49 +155,34 @@ const NewsManage = () => {
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/60 sm:items-center sm:p-4">
           <form onSubmit={handleSubmit} className={`my-0 max-h-[92vh] w-full space-y-3 overflow-y-auto rounded-t-2xl border p-6 sm:my-8 sm:max-w-lg sm:rounded-2xl ${panelClass}`}>
-            <h2 className="mb-2 font-body text-lg font-semibold">{editing ? "Edit News Item" : "New News Item"}</h2>
+            <h2 className="mb-2 font-body text-lg font-semibold">{editing ? "Edit Download" : "New Download"}</h2>
 
             <input required placeholder="Title (English)" value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} className={inputClass} />
             <input required placeholder="शीर्षक (नेपाली)" value={form.titleNe} onChange={(e) => setForm({ ...form, titleNe: e.target.value })} className={inputClass} />
-            <textarea
-              required
-              rows={3}
-              placeholder="Description (English)"
-              value={form.descriptionEn}
-              onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })}
-              className={inputClass}
-            />
-            <textarea
-              required
-              rows={3}
-              placeholder="विवरण (नेपाली)"
-              value={form.descriptionNe}
-              onChange={(e) => setForm({ ...form, descriptionNe: e.target.value })}
-              className={inputClass}
-            />
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Type</label>
+              <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className={inputClass}>
+                {TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {TYPE_LABELS[t]}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <div>
               <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Date</label>
               <input type="date" required value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className={inputClass} />
             </div>
 
-            <div>
-              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Category</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputClass}>
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {CATEGORY_LABELS[c]}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <ImageSourceField
+            <FileSourceField
               theme={theme}
-              label="Image (optional)"
-              existingUrl={editing?.image}
-              fileValue={form.imageFile}
-              onFileChange={(f) => setForm((prev) => ({ ...prev, imageFile: f }))}
+              label="File"
+              required={!editing}
+              existingUrl={editing?.file}
+              fileValue={form.fileFile}
+              onFileChange={(f) => setForm((prev) => ({ ...prev, fileFile: f }))}
             />
 
             <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end sm:gap-3">
@@ -207,7 +190,7 @@ const NewsManage = () => {
                 Cancel
               </button>
               <button type="submit" className="w-full rounded-lg bg-forest-700 px-4 py-2.5 font-semibold text-white shadow-soft hover:bg-forest-800 sm:w-auto sm:py-2">
-                {editing ? "Save Changes" : "Create Item"}
+                {editing ? "Save Changes" : "Create Download"}
               </button>
             </div>
           </form>
@@ -217,4 +200,4 @@ const NewsManage = () => {
   );
 };
 
-export default NewsManage;
+export default DownloadsManage;
