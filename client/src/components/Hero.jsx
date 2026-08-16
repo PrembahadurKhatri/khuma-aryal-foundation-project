@@ -15,7 +15,6 @@ const HERO_IMAGES = [
 
   "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/616193004_1215521387429911_5719217226397333462_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1367&ctp=s2048x1367&_nc_cat=109&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeE68hB2nr1jKaL0IQHw0pOuDuLEefSZBBsO4sR59JkEG0n1B9H-Rlp_BkVt42N6QnvrueLHv9VBGH-UlesfktZ5&_nc_ohc=L9_MzqQQexYQ7kNvwHFricQ&_nc_oc=AdpYFq9JJR4Z-7LjeFK2xXmQqbAfmVG3fzFrc5i6NcX8Dw_ZzpZCTDKtLeV2Q6Mgk4k3tL3Lzgcy5mk0m-e7q31X&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=RBABktXl6KudF6i91itbrQ&_nc_ss=7b2a8&oh=00_AQGVx4M9zKWewRTcVe9XMfW-H8MSBcd2DexE5QK1m_rFvg&oe=6A8646CC",
 
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/623262151_1228325699482813_8693485255019400093_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=101&ccb=1-7&_nc_sid=f727a1&_nc_ohc=ABP_UcZNdXYQ7kNvwE6sjpe&_nc_oc=AdooX5Aw9paVDQUumnH-_AsKwDNfky_TMXoK1MzXsf-DPtR6Apo2cU5gorTwZtM-EfJLBnAxhHb2qONoY0-qCDEo&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=UUWvjfA86IND_2zlwsFLqw&_nc_ss=7b2a8&oh=00_AQG-4VesmC64QNsCHAzFKUauW4Nzfkw3NgoOMyvIK15H1w&oe=6A80A359",
   
 ];
 
