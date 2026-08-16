@@ -28,6 +28,17 @@ export const errorHandler = (err, req, res, next) => {
     message = Object.values(err.errors).map((val) => val.message).join(", ");
   }
 
+  // Multer's own errors (file too large, too many files, etc) and the
+  // fileFilter rejections thrown in middleware/upload.js (wrong mimetype)
+  // both surface here as plain Errors with no distinguishing status —
+  // previously fell through to a generic 500. Cloudinary's own rejections
+  // (e.g. "An unknown file format not allowed" for a corrupt/unsupported
+  // upload) also come through as a plain Error with this http_code, so
+  // check that too rather than just err.name.
+  if (err.name === "MulterError" || err.http_code === 400) {
+    statusCode = 400;
+  }
+
   res.status(statusCode).json({
     success: false,
     message,

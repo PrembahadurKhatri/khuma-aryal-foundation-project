@@ -61,6 +61,14 @@ export async function getGalleryAlbum(id) {
   return withId(data.data);
 }
 
+// Gallery videos — shown alongside photo Albums on the Gallery page, either
+// an embedded link (YouTube/Vimeo/etc) or a directly-uploaded file. See
+// models/Video.js.
+export async function getGalleryVideos(params) {
+  const { data } = await api.get("/videos", { params });
+  return data.data.map(withId);
+}
+
 // "Important Notices" — office/holiday/scholarship-style announcements
 // shown on the News page, separate from News itself. See models/Notice.js.
 export async function getNotices() {

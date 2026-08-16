@@ -2,7 +2,12 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import { storage as cloudinaryStorage, documentStorage as cloudinaryDocumentStorage, isCloudinaryConfigured } from "../config/cloudinary.js";
+import {
+  storage as cloudinaryStorage,
+  documentStorage as cloudinaryDocumentStorage,
+  mediaStorage as cloudinaryMediaStorage,
+  isCloudinaryConfigured,
+} from "../config/cloudinary.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadsDir = path.join(__dirname, "../uploads");
@@ -59,6 +64,26 @@ const baseDocumentUpload = multer({
   },
 });
 
+// Gallery videos — a single multer instance handling both the "video" field
+// (the actual video file, potentially large) and an optional "thumbnail"
+// image field together. Cloudinary routing per-field is handled by
+// mediaStorage's params function (see config/cloudinary.js); the fileFilter
+// here just checks each field got the right kind of file.
+const mediaStorage = isCloudinaryConfigured ? cloudinaryMediaStorage : diskStorage;
+const baseMediaUpload = multer({
+  storage: mediaStorage,
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB — videos run much bigger than images
+  fileFilter: (req, file, cb) => {
+    if (file.fieldname === "video" && !file.mimetype.startsWith("video/")) {
+      return cb(new Error("Only video files are allowed for the video field"));
+    }
+    if (file.fieldname === "thumbnail" && !file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only image files are allowed for the thumbnail field"));
+    }
+    cb(null, true);
+  },
+});
+
 // Cloudinary storage already leaves req.file.path as a secure_url. Local
 // disk storage leaves it as an absolute filesystem path — normalize that to
 // the public URL controllers should actually save.
@@ -79,6 +104,7 @@ const upload = {
   array: (field, maxCount) => [baseUpload.array(field, maxCount), normalizePaths],
   fields: (fieldsConfig) => [baseUpload.fields(fieldsConfig), normalizePaths],
   document: (field) => [baseDocumentUpload.single(field), normalizePaths],
+  media: (fieldsConfig) => [baseMediaUpload.fields(fieldsConfig), normalizePaths],
 };
 
 export default upload;

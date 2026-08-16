@@ -166,6 +166,11 @@ const translations = {
       sortLatest: "Latest First",
       sortOldest: "Oldest First",
       loadMore: "Load More Photos",
+      tabPhotos: "Photos",
+      tabVideos: "Videos",
+      emptyVideos: "No videos here yet.",
+      loadMoreVideos: "Load More Videos",
+      categoryAllVideos: "All Videos",
     },
     projects: {
       kicker: "Our Work",
@@ -443,6 +448,11 @@ const translations = {
       sortLatest: "पछिल्लो अघि",
       sortOldest: "पुरानो अघि",
       loadMore: "थप फोटो हेर्नुहोस्",
+      tabPhotos: "फोटोहरू",
+      tabVideos: "भिडियोहरू",
+      emptyVideos: "अहिलेसम्म कुनै भिडियो छैन।",
+      loadMoreVideos: "थप भिडियो हेर्नुहोस्",
+      categoryAllVideos: "सबै भिडियो",
     },
     projects: {
       kicker: "हाम्रो काम",

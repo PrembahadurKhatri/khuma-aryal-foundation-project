@@ -25,6 +25,7 @@ import EventsManage from "./pages/admin/EventsManage.jsx";
 import StoriesManage from "./pages/admin/StoriesManage.jsx";
 import DownloadsManage from "./pages/admin/DownloadsManage.jsx";
 import VacanciesManage from "./pages/admin/VacanciesManage.jsx";
+import VideosManage from "./pages/admin/VideosManage.jsx";
 
 export default function App() {
   return (
@@ -60,6 +61,7 @@ export default function App() {
           <Route path="stories" element={<StoriesManage />} />
           <Route path="downloads" element={<DownloadsManage />} />
           <Route path="vacancies" element={<VacanciesManage />} />
+          <Route path="videos" element={<VideosManage />} />
           <Route path="projects" element={<ProjectsManage />} />
           <Route path="gallery" element={<GalleryManage />} />
           <Route path="messages" element={<MessagesManage />} />

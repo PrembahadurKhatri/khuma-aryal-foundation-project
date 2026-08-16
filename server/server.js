@@ -38,6 +38,7 @@ import eventRoutes from "./routes/eventRoutes.js";
 import storyRoutes from "./routes/storyRoutes.js";
 import downloadRoutes from "./routes/downloadRoutes.js";
 import vacancyRoutes from "./routes/vacancyRoutes.js";
+import videoRoutes from "./routes/videoRoutes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDistPath = path.join(__dirname, "../client/dist");
@@ -53,6 +54,16 @@ app.use(
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
         "img-src": ["'self'", "data:", "https:"],
+        // Without this, helmet's default CSP falls back frame-src to
+        // default-src 'self' — blocking every embedded video iframe on the
+        // Gallery page (YouTube/Vimeo), even a correctly-formed embed URL.
+        "frame-src": [
+          "'self'",
+          "https://www.youtube.com",
+          "https://www.youtube-nocookie.com",
+          "https://player.vimeo.com",
+          "https://www.facebook.com",
+        ],
       },
     },
   })
@@ -110,6 +121,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/stories", storyRoutes);
 app.use("/api/downloads", downloadRoutes);
 app.use("/api/vacancies", vacancyRoutes);
+app.use("/api/videos", videoRoutes);
 
 // Serve the built React app in production so frontend + API share one
 // origin — but only if client/dist is actually present. On a split

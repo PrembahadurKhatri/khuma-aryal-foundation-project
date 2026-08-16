@@ -35,4 +35,28 @@ export const documentStorage = new CloudinaryStorage({
   },
 });
 
+// Gallery videos — a single multer .fields() call uploads both the video
+// file and an optional thumbnail image together, so this storage needs to
+// route each field to different Cloudinary params. `params` as a function
+// (rather than a static object, like the storages above) lets it branch on
+// `file.fieldname`: "video" gets resource_type "video" (required for
+// Cloudinary to accept/transcode video), anything else (the "thumbnail"
+// field) gets treated as a normal image.
+export const mediaStorage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => {
+    if (file.fieldname === "video") {
+      return {
+        folder: "khuma-aryal-foundation/videos",
+        resource_type: "video",
+        allowed_formats: ["mp4", "webm", "mov", "avi", "mkv"],
+      };
+    }
+    return {
+      folder: "khuma-aryal-foundation",
+      allowed_formats: ["jpg", "jpeg", "png", "webp", "avif"],
+    };
+  },
+});
+
 export default cloudinary;
