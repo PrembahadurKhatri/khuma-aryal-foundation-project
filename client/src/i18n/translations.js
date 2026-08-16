@@ -252,6 +252,9 @@ const translations = {
       sortOldest: "Oldest First",
       noResults: "No news matches your search.",
       loadMore: "Show More",
+      moreLatestNews: "More Latest News",
+      moreNotices: "More Notices",
+      moreStories: "More Stories",
 
       // Category pills — matches server/models/News.js's NEWS_CATEGORIES.
       categoryHealth: "Health",
@@ -544,6 +547,9 @@ const translations = {
       sortOldest: "पहिले पुरानो",
       noResults: "तपाईंको खोजसँग मिल्ने समाचार भेटिएन।",
       loadMore: "थप देखाउनुहोस्",
+      moreLatestNews: "थप पछिल्ला समाचार",
+      moreNotices: "थप सूचनाहरू",
+      moreStories: "थप कथाहरू",
 
       categoryHealth: "स्वास्थ्य",
       categoryEducation: "शिक्षा",

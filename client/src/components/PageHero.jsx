@@ -5,67 +5,92 @@ import Container from "./Container.jsx";
 const SLIDE_INTERVAL = 3000;
 
 /**
- * Full-bleed photo hero used at the top of every inner page (About, Gallery,
- * Projects, News/Notice, ...): a h-[62vh] background photo, a dark gradient
- * + vignette overlay so text stays readable, a small transparent glass pill
- * label top-left (instead of a solid heading placed on the photo), and the
- * same gold-traced curve used on the Home hero. Kept as one shared component
- * so every inner page's hero looks and behaves identically — change it once
- * here and every page picks it up.
+ * Full-bleed hero used at the top of every inner page (About, Gallery,
+ * Projects, News/Notice, ...): a h-[62vh] background, a small transparent
+ * glass pill label top-left (instead of a solid heading placed on the
+ * photo), and the same gold-traced curve used on the Home hero. Kept as one
+ * shared component so every inner page's hero looks and behaves identically
+ * — change it once here and every page picks it up.
  *
  * Pass `images` (an array of URLs) to get the same auto-sliding crossfade
  * the Home hero uses (see components/Hero.jsx) instead of one static photo —
  * used by Gallery.jsx. Omit it (or pass a single-item array) to keep the
  * plain static photo every other page uses.
+ *
+ * Pass `colorBackground` to skip the photo entirely and use a solid
+ * gradient instead — the same dark forest gradient as About.jsx's Contact
+ * section (`from-forest-950 via-forest-900 to-forest-800`), for pages that
+ * want a calmer, photo-free hero. `description` adds a line of real copy
+ * under the label pill (most pages only show the small kicker-style label).
+ *
+ * Pass `title` for a full premium hero treatment: `label` becomes a small
+ * kicker pill, `title` renders as a large heading below it (with a gold
+ * accent bar), then `description`, then an optional `badges` row of small
+ * glass pills (same look as the Home hero's trust strip). Content is
+ * vertically centered instead of pinned to the top-left, since there's
+ * enough copy to anchor the section on its own. Pages that only pass
+ * `label` keep the original compact top-left pill, unchanged.
  */
-export default function PageHero({ label, images }) {
+export default function PageHero({ label, images, colorBackground = false, title, description, badges }) {
   const slides = images && images.length > 0 ? images : ["/images/khumalogo.png"];
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (slides.length < 2) return;
+    if (colorBackground || slides.length < 2) return;
     const id = setInterval(() => {
       setIndex((i) => (i + 1) % slides.length);
     }, SLIDE_INTERVAL);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slides.length]);
+  }, [slides.length, colorBackground]);
 
   return (
     <section className="relative h-[62vh] overflow-hidden">
       <div className="absolute inset-0">
-        <AnimatePresence initial={false} mode="popLayout">
-          <motion.img
-            key={index}
-            src={slides[index]}
-            alt={label}
-            initial={slides.length > 1 ? { x: "100%", opacity: 0 } : false}
-            animate={{ x: "0%", opacity: 1 }}
-            exit={{ x: "-100%", opacity: 0 }}
-            transition={{ duration: 0.9, ease: [0.65, 0, 0.35, 1] }}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </AnimatePresence>
-        {/* Kept light on purpose so the photo reads as a real, natural photo
-            rather than a green-tinted wash — the label pill has its own
-            glass background/blur below, so it stays legible without the
-            whole image needing to be darkened for contrast. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-forest-950/55 via-forest-950/5 to-forest-950/25" />
-        <div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(120% 90% at 20% 40%, transparent 30%, rgba(23,59,37,0.2) 100%)" }}
-        />
+        {colorBackground ? (
+          <div className="absolute inset-0 bg-gradient-to-br from-forest-950 via-forest-900 to-forest-800" />
+        ) : (
+          <>
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.img
+                key={index}
+                src={slides[index]}
+                alt={label}
+                initial={slides.length > 1 ? { x: "100%", opacity: 0 } : false}
+                animate={{ x: "0%", opacity: 1 }}
+                exit={{ x: "-100%", opacity: 0 }}
+                transition={{ duration: 0.9, ease: [0.65, 0, 0.35, 1] }}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </AnimatePresence>
+            {/* Kept light on purpose so the photo reads as a real, natural
+                photo rather than a green-tinted wash — the label pill has
+                its own glass background/blur below, so it stays legible
+                without the whole image needing to be darkened for contrast. */}
+            <div className="absolute inset-0 bg-gradient-to-t from-forest-950/55 via-forest-950/5 to-forest-950/25" />
+            <div
+              className="absolute inset-0"
+              style={{ background: "radial-gradient(120% 90% at 20% 40%, transparent 30%, rgba(23,59,37,0.2) 100%)" }}
+            />
+          </>
+        )}
       </div>
 
       <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-gilt-500/15 blur-3xl" aria-hidden="true" />
+      {colorBackground && <div className="pointer-events-none absolute -left-16 -top-16 h-72 w-72 rounded-full bg-forest-400/20 blur-3xl" aria-hidden="true" />}
       <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />
 
-      {/* Glass pill, top-left over the photo. Background is a dark
-          forest tint (not plain white/10) specifically so the white label
-          text stays legible even over bright/white-heavy photos (e.g. the
-          News page's kafnews.png) — it can't rely on the gradient overlay
+      {/* Glass pill. Background is a dark forest tint (not plain white/10)
+          specifically so the white label text stays legible even over
+          bright/white-heavy photos — it can't rely on the gradient overlay
           above alone, since that's deliberately kept light. */}
-      <Container className="absolute inset-x-0 top-6 z-10 sm:top-8">
+      <Container
+        className={
+          title
+            ? "absolute inset-0 z-10 flex flex-col items-start justify-center gap-4"
+            : "absolute inset-x-0 top-6 z-10 flex flex-col items-start gap-3 sm:top-8"
+        }
+      >
         <motion.span
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,6 +101,46 @@ export default function PageHero({ label, images }) {
           <span className="h-1.5 w-1.5 rounded-full bg-gilt-400" />
           {label}
         </motion.span>
+
+        {title && (
+          <motion.h1
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08 }}
+            className="max-w-2xl font-body text-4xl font-bold leading-[1.05] text-white sm:text-5xl lg:text-6xl"
+            style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
+          >
+            {title}
+          </motion.h1>
+        )}
+
+        {description && (
+          <motion.p
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: title ? 0.2 : 0.1 }}
+            className={`font-body leading-relaxed text-white/85 ${title ? "max-w-xl text-base sm:text-lg" : "max-w-lg text-sm sm:text-base"}`}
+            style={{ textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}
+          >
+            {description}
+          </motion.p>
+        )}
+
+        {badges && badges.length > 0 && (
+          <div className="mt-1 flex flex-wrap gap-2.5">
+            {badges.map((badge, i) => (
+              <motion.span
+                key={badge}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 font-body text-xs font-semibold text-white shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md"
+              >
+                {badge}
+              </motion.span>
+            ))}
+          </div>
+        )}
       </Container>
 
       {/* Bottom curve — a layered wave shared by every hero section (Home,

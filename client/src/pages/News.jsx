@@ -13,13 +13,13 @@ import EventCard from "../components/EventCard.jsx";
 import StoryCard from "../components/StoryCard.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
 import VacancyCard from "../components/VacancyCard.jsx";
-import NewsSidebar from "../components/NewsSidebar.jsx";
 
-// Dedicated local hero photo for this page — same idea as
-// PROJECTS_HERO_IMAGES/GALLERY_HERO_IMAGES.
-const NEWS_HERO_IMAGES = ["/images/kafnews.png"];
-
-const PAGE_SIZE = 6;
+// Each of these sections shows a capped preview with a "More X" button in
+// its header (not incremental "load +N more" pagination) — clicking it just
+// reveals everything at once.
+const NEWS_CAP = 6;
+const NOTICES_CAP = 6;
+const STORIES_CAP = 3;
 const ACTIVITIES_COUNT = 3;
 
 function GridIcon() {
@@ -51,11 +51,15 @@ function SearchIcon() {
   );
 }
 
-function RefreshIcon() {
+// Header-row "More X" button — only rendered by the caller when there's
+// actually more to reveal. A plain state toggle (not a Link, not
+// incremental "+N" pagination): clicking it just shows everything at once.
+function MoreButton({ label, onClick }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
-      <path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <button type="button" onClick={onClick} className="group inline-flex items-center gap-1 font-body text-sm font-semibold text-forest-600 hover:text-forest-800">
+      {label}
+      <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+    </button>
   );
 }
 
@@ -87,7 +91,9 @@ export default function News() {
   const [category, setCategory] = useState("All");
   const [year, setYear] = useState("All");
   const [sort, setSort] = useState("latest");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [newsShowAll, setNewsShowAll] = useState(false);
+  const [noticesShowAll, setNoticesShowAll] = useState(false);
+  const [storiesShowAll, setStoriesShowAll] = useState(false);
 
   const filteredNews = useMemo(() => {
     if (!news) return [];
@@ -105,7 +111,9 @@ export default function News() {
     return [...list].sort((a, b) => (sort === "oldest" ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date)));
   }, [news, search, category, year, sort]);
 
-  const visibleNews = filteredNews.slice(0, visibleCount);
+  const visibleNews = newsShowAll ? filteredNews : filteredNews.slice(0, NEWS_CAP);
+  const visibleNotices = noticesShowAll ? notices || [] : (notices || []).slice(0, NOTICES_CAP);
+  const visibleStories = storiesShowAll ? stories || [] : (stories || []).slice(0, STORIES_CAP);
 
   const upcomingEvents = useMemo(() => {
     if (!events) return [];
@@ -132,14 +140,26 @@ export default function News() {
   }, [vacancies]);
 
   const resetFilters = (updates) => {
-    setVisibleCount(PAGE_SIZE);
+    setNewsShowAll(false);
     if (updates.category !== undefined) setCategory(updates.category);
     if (updates.year !== undefined) setYear(updates.year);
   };
 
   return (
     <>
-      <PageHero label={t("news.title")} images={NEWS_HERO_IMAGES} />
+      <PageHero
+        label={t("news.kicker")}
+        title={t("news.title")}
+        colorBackground
+        description={t("news.subtitle")}
+        badges={[
+          t("news.sectionLatestNews"),
+          t("news.sectionNotices"),
+          t("news.sectionEvents"),
+          t("news.sectionActivities"),
+          t("news.sectionStories"),
+        ]}
+      />
 
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />
@@ -147,109 +167,99 @@ export default function News() {
         <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />
 
         <Container className="relative">
-          {/* ================= Latest News + Search/Filter + Sidebar ================= */}
-          <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-            <div>
-              <SectionHeader title={t("news.sectionLatestNews")} />
+          {/* ================= Latest News heading + Search/Filter (full width) ================= */}
+          <SectionHeader
+            title={t("news.sectionLatestNews")}
+            action={
+              !newsShowAll && filteredNews.length > NEWS_CAP && <MoreButton label={t("news.moreLatestNews")} onClick={() => setNewsShowAll(true)} />
+            }
+          />
 
-              <div className="mb-8 flex flex-col gap-4">
-                <div className="flex items-center gap-2 rounded-full border border-forest-100 bg-white px-4 py-2.5 shadow-card">
-                  <SearchIcon />
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      setVisibleCount(PAGE_SIZE);
-                    }}
-                    placeholder={t("news.searchPlaceholder")}
-                    className="w-full bg-transparent font-body text-sm text-ink-800 outline-none placeholder:text-ink-400"
-                  />
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => resetFilters({ category: "All" })}
-                      className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
-                        category === "All" ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
-                      }`}
-                    >
-                      <GridIcon />
-                      {t("news.filterAll")}
-                    </button>
-                    {NEWS_CATEGORIES.map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        onClick={() => resetFilters({ category: c })}
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
-                          category === c ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
-                        }`}
-                      >
-                        <TagIcon />
-                        {t(`news.category${c}`)}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="relative inline-flex w-fit items-center">
-                    <select
-                      value={sort}
-                      onChange={(e) => setSort(e.target.value)}
-                      className="appearance-none rounded-full border border-forest-100 bg-white py-2 pl-4 pr-9 font-body text-sm font-medium text-ink-800 outline-none transition-colors focus:border-gilt-400"
-                    >
-                      <option value="latest">{t("news.sortLatest")}</option>
-                      <option value="oldest">{t("news.sortOldest")}</option>
-                    </select>
-                    <svg viewBox="0 0 24 24" fill="none" className="pointer-events-none absolute right-3 h-4 w-4 text-ink-400" aria-hidden="true">
-                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {newsLoading || !news ? (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-72 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
-                  ))}
-                </div>
-              ) : filteredNews.length === 0 ? (
-                <p className="rounded-xl2 border border-forest-100 bg-white py-10 text-center font-body text-sm text-ink-600 shadow-card">{t("news.noResults")}</p>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    {visibleNews.map((item, i) => (
-                      <Reveal key={item.id} delay={(i % 4) * 0.05} className="h-full">
-                        <NewsCard news={item} />
-                      </Reveal>
-                    ))}
-                  </div>
-
-                  {visibleCount < filteredNews.length && (
-                    <div className="mt-10 flex justify-center">
-                      <button
-                        type="button"
-                        onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                        className="inline-flex items-center gap-2 rounded-full bg-forest-700 px-6 py-2.5 font-body text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:scale-[1.02] hover:bg-forest-800 hover:shadow-lift"
-                      >
-                        <RefreshIcon />
-                        {t("news.loadMore")}
-                      </button>
-                    </div>
-                  )}
-                </>
-              )}
+          <div className="mb-10 flex flex-col gap-4">
+            <div className="flex items-center gap-2 rounded-full border border-forest-100 bg-white px-4 py-2.5 shadow-card">
+              <SearchIcon />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setNewsShowAll(false);
+                }}
+                placeholder={t("news.searchPlaceholder")}
+                className="w-full bg-transparent font-body text-sm text-ink-800 outline-none placeholder:text-ink-400"
+              />
             </div>
 
-            <NewsSidebar news={news || []} events={upcomingEvents} notices={notices || []} year={year} onYearChange={(y) => resetFilters({ year: y })} />
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => resetFilters({ category: "All" })}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
+                    category === "All" ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
+                  }`}
+                >
+                  <GridIcon />
+                  {t("news.filterAll")}
+                </button>
+                {NEWS_CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => resetFilters({ category: c })}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
+                      category === c ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
+                    }`}
+                  >
+                    <TagIcon />
+                    {t(`news.category${c}`)}
+                  </button>
+                ))}
+              </div>
+
+              <div className="relative inline-flex w-fit items-center">
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="appearance-none rounded-full border border-forest-100 bg-white py-2 pl-4 pr-9 font-body text-sm font-medium text-ink-800 outline-none transition-colors focus:border-gilt-400"
+                >
+                  <option value="latest">{t("news.sortLatest")}</option>
+                  <option value="oldest">{t("news.sortOldest")}</option>
+                </select>
+                <svg viewBox="0 0 24 24" fill="none" className="pointer-events-none absolute right-3 h-4 w-4 text-ink-400" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </div>
           </div>
+
+          {/* ================= News grid ================= */}
+          {newsLoading || !news ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-72 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
+              ))}
+            </div>
+          ) : filteredNews.length === 0 ? (
+            <p className="rounded-xl2 border border-forest-100 bg-white py-10 text-center font-body text-sm text-ink-600 shadow-card">{t("news.noResults")}</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {visibleNews.map((item, i) => (
+                <Reveal key={item.id} delay={(i % 6) * 0.05} className="h-full">
+                  <NewsCard news={item} />
+                </Reveal>
+              ))}
+            </div>
+          )}
 
           {/* ================= Important Notices ================= */}
           <div className="mt-20">
-            <SectionHeader title={t("news.sectionNotices")} />
+            <SectionHeader
+              title={t("news.sectionNotices")}
+              action={
+                !noticesShowAll && (notices?.length || 0) > NOTICES_CAP && <MoreButton label={t("news.moreNotices")} onClick={() => setNoticesShowAll(true)} />
+              }
+            />
             {noticesLoading || !notices ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {Array.from({ length: 4 }).map((_, i) => (
@@ -260,7 +270,7 @@ export default function News() {
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("news.emptyNotices")}</p>
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {notices.map((notice, i) => (
+                {visibleNotices.map((notice, i) => (
                   <Reveal key={notice.id} delay={(i % 4) * 0.05}>
                     <NoticeCard notice={notice} />
                   </Reveal>
@@ -269,27 +279,29 @@ export default function News() {
             )}
           </div>
 
-          {/* ================= Job Vacancies ================= */}
-          <div className="mt-20">
-            <SectionHeader title={t("news.sectionVacancies")} />
-            {vacanciesLoading || !vacancies ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="h-56 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
-                ))}
-              </div>
-            ) : openVacancies.length === 0 ? (
-              <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("news.emptyVacancies")}</p>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {openVacancies.map((vacancy, i) => (
-                  <Reveal key={vacancy.id} delay={(i % 3) * 0.05} className="h-full">
-                    <VacancyCard vacancy={vacancy} />
-                  </Reveal>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* ================= Job Vacancies — section is skipped entirely
+              (not even shown with an empty-state message) once loaded with
+              zero open positions ================= */}
+          {(vacanciesLoading || !vacancies || openVacancies.length > 0) && (
+            <div className="mt-20">
+              <SectionHeader title={t("news.sectionVacancies")} />
+              {vacanciesLoading || !vacancies ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="h-56 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {openVacancies.map((vacancy, i) => (
+                    <Reveal key={vacancy.id} delay={(i % 3) * 0.05} className="h-full">
+                      <VacancyCard vacancy={vacancy} />
+                    </Reveal>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* ================= Upcoming Events ================= */}
           <div className="mt-20">
@@ -344,7 +356,12 @@ export default function News() {
 
           {/* ================= Success Stories ================= */}
           <div className="mt-20">
-            <SectionHeader title={t("news.sectionStories")} />
+            <SectionHeader
+              title={t("news.sectionStories")}
+              action={
+                !storiesShowAll && (stories?.length || 0) > STORIES_CAP && <MoreButton label={t("news.moreStories")} onClick={() => setStoriesShowAll(true)} />
+              }
+            />
             {storiesLoading || !stories ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 3 }).map((_, i) => (
@@ -355,7 +372,7 @@ export default function News() {
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("news.emptyStories")}</p>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {stories.map((story, i) => (
+                {visibleStories.map((story, i) => (
                   <Reveal key={story.id} delay={(i % 3) * 0.05} className="h-full">
                     <StoryCard story={story} />
                   </Reveal>
