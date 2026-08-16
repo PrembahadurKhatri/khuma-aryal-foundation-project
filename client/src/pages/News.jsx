@@ -112,9 +112,18 @@ export default function News() {
     return [...events].filter((e) => new Date(e.date) >= new Date(new Date().toDateString())).sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [events]);
 
-  const completedProjects = useMemo(() => {
+  // "Recent Activities" — projects from the last 30 days (falls back to
+  // createdAt when a project has no explicit `date` set), any status, newest
+  // first, capped at 3. Not restricted to status="completed" — the section
+  // is about what's recently happened/been added, not specifically finished
+  // work.
+  const recentActivities = useMemo(() => {
     if (!projects) return [];
-    return projects.filter((p) => p.status === "completed").slice(0, ACTIVITIES_COUNT);
+    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    return projects
+      .filter((p) => new Date(p.date || p.createdAt).getTime() >= cutoff)
+      .sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt))
+      .slice(0, ACTIVITIES_COUNT);
   }, [projects]);
 
   const openVacancies = useMemo(() => {
@@ -304,7 +313,7 @@ export default function News() {
             )}
           </div>
 
-          {/* ================= Recent Activities (completed Projects) ================= */}
+          {/* ================= Recent Activities (Projects, last 30 days) ================= */}
           <div className="mt-20">
             <SectionHeader
               title={t("news.sectionActivities")}
@@ -320,11 +329,11 @@ export default function News() {
                   <div key={i} className="h-72 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
                 ))}
               </div>
-            ) : completedProjects.length === 0 ? (
+            ) : recentActivities.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("news.emptyActivities")}</p>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {completedProjects.map((project, i) => (
+                {recentActivities.map((project, i) => (
                   <Reveal key={project.id} delay={(i % 3) * 0.05} className="h-full">
                     <ProjectCard project={project} />
                   </Reveal>

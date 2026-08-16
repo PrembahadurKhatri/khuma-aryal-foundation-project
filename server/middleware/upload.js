@@ -6,6 +6,7 @@ import {
   storage as cloudinaryStorage,
   documentStorage as cloudinaryDocumentStorage,
   mediaStorage as cloudinaryMediaStorage,
+  applicationStorage as cloudinaryApplicationStorage,
   isCloudinaryConfigured,
 } from "../config/cloudinary.js";
 
@@ -84,6 +85,27 @@ const baseMediaUpload = multer({
   },
 });
 
+// Job applications — "resume" (PDF/Word) and "coverLetter" (a PDF *or* an
+// image — applicants upload a scanned/photographed cover letter instead of
+// typing one) uploaded together. Cloudinary routing per-field is handled by
+// applicationStorage's params function (see config/cloudinary.js).
+const APPLICATION_MIMETYPES = {
+  resume: DOCUMENT_MIMETYPES,
+  coverLetter: ["application/pdf", "image/jpeg", "image/png", "image/webp"],
+};
+const applicationStorage = isCloudinaryConfigured ? cloudinaryApplicationStorage : diskStorage;
+const baseApplicationUpload = multer({
+  storage: applicationStorage,
+  limits: { fileSize: 25 * 1024 * 1024 }, // 25MB
+  fileFilter: (req, file, cb) => {
+    const allowed = APPLICATION_MIMETYPES[file.fieldname];
+    if (allowed && !allowed.includes(file.mimetype)) {
+      return cb(new Error(`Only PDF/image files are allowed for the ${file.fieldname} field`));
+    }
+    cb(null, true);
+  },
+});
+
 // Cloudinary storage already leaves req.file.path as a secure_url. Local
 // disk storage leaves it as an absolute filesystem path — normalize that to
 // the public URL controllers should actually save.
@@ -105,6 +127,7 @@ const upload = {
   fields: (fieldsConfig) => [baseUpload.fields(fieldsConfig), normalizePaths],
   document: (field) => [baseDocumentUpload.single(field), normalizePaths],
   media: (fieldsConfig) => [baseMediaUpload.fields(fieldsConfig), normalizePaths],
+  application: (fieldsConfig) => [baseApplicationUpload.fields(fieldsConfig), normalizePaths],
 };
 
 export default upload;

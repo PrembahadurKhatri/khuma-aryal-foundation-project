@@ -6,7 +6,7 @@ import FileSourceField from "../../components/admin/FileSourceField.jsx";
 import useToast from "../../hooks/useToast.js";
 
 const PRIORITIES = ["important", "new", "urgent"];
-const emptyForm = { titleEn: "", titleNe: "", date: "", priority: "important", attachmentFile: null };
+const emptyForm = { titleEn: "", titleNe: "", descriptionEn: "", descriptionNe: "", date: "", priority: "important", attachmentFile: null };
 
 const toDateInput = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
 
@@ -65,6 +65,8 @@ const NoticesManage = () => {
     setForm({
       titleEn: item.title?.en || "",
       titleNe: item.title?.ne || "",
+      descriptionEn: item.description?.en || "",
+      descriptionNe: item.description?.ne || "",
       date: toDateInput(item.date),
       priority: item.priority || "important",
       attachmentFile: null,
@@ -147,6 +149,21 @@ const NoticesManage = () => {
 
             <input required placeholder="Title (English)" value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} className={inputClass} />
             <input required placeholder="शीर्षक (नेपाली)" value={form.titleNe} onChange={(e) => setForm({ ...form, titleNe: e.target.value })} className={inputClass} />
+
+            <textarea
+              rows={3}
+              placeholder="Full details (English, optional) — shown on the notice's own page"
+              value={form.descriptionEn}
+              onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })}
+              className={inputClass}
+            />
+            <textarea
+              rows={3}
+              placeholder="पूर्ण विवरण (नेपाली, वैकल्पिक)"
+              value={form.descriptionNe}
+              onChange={(e) => setForm({ ...form, descriptionNe: e.target.value })}
+              className={inputClass}
+            />
 
             <div>
               <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Date</label>

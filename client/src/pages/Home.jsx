@@ -2,15 +2,15 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { useContent } from "../hooks/useContent.js";
-import { getMessages, getProjects, getNews, getNotices, getEvents, getSiteInfo } from "../services/contentService.js";
+import { getMessages, getProjects, getNews, getNotices, getSiteInfo } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import Hero from "../components/Hero.jsx";
 import Reveal from "../components/Reveal.jsx";
 import LeadershipMessages from "../components/leadership/LeadershipMessages.jsx";
 import NewsCard from "../components/NewsCard.jsx";
 import NoticeCard from "../components/NoticeCard.jsx";
-import EventCard from "../components/EventCard.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
+import CountUpStat from "../components/CountUpStat.jsx";
 
 const UPDATES_COUNT = 3;
 
@@ -69,11 +69,14 @@ const EXPLORE_LINKS = [
   { to: "/news", titleKey: "exploreNews", descKey: "exploreNewsDesc"},
 ];
 
+// `statField` maps to Settings.stats.<field> (see admin's Settings page,
+// "Homepage Stats") — `fallback` covers a freshly-created Settings document
+// or a field the admin hasn't filled in yet.
 const STATS = [
-  { key: "statYears", value: "10+" },
-  { key: "statBeneficiaries", value: "5,000+" },
-  { key: "statProjects", value: "40+" },
-  { key: "statVolunteers", value: "120+" },
+  { key: "statYears", statField: "years", fallback: "10+" },
+  { key: "statBeneficiaries", statField: "beneficiaries", fallback: "5,000+" },
+  { key: "statProjects", statField: "projects", fallback: "40+" },
+  { key: "statVolunteers", statField: "volunteers", fallback: "120+" },
 ];
 
 export default function Home() {
@@ -82,19 +85,13 @@ export default function Home() {
   const { data: projects, loading: projectsLoading } = useContent(getProjects);
   const { data: news, loading: newsLoading } = useContent(getNews);
   const { data: notices, loading: noticesLoading } = useContent(getNotices);
-  const { data: events, loading: eventsLoading } = useContent(getEvents);
   const { data: siteInfo } = useContent(getSiteInfo);
 
   // Projects/News/Notices come back newest-first already (see
-  // contentService.js) — just take the top 3 of each. Events are filtered
-  // to only ones still upcoming, then sorted soonest-first.
+  // contentService.js) — just take the top 3 of each.
   const latestNews = useMemo(() => (news || []).slice(0, UPDATES_COUNT), [news]);
   const latestNotices = useMemo(() => (notices || []).slice(0, UPDATES_COUNT), [notices]);
   const latestProjects = useMemo(() => (projects || []).slice(0, UPDATES_COUNT), [projects]);
-  const upcomingEvents = useMemo(() => {
-    const list = (events || []).filter((e) => new Date(e.date) >= new Date(new Date().toDateString()));
-    return list.sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, UPDATES_COUNT);
-  }, [events]);
 
   return (
     <>
@@ -104,8 +101,10 @@ export default function Home() {
         <Container>
           <div className="grid grid-cols-2  text-center sm:grid-cols-4">
             {STATS.map((stat, i) => (
-              <Reveal key={stat.key} delay={i * 0.06} className="flex flex-col gap-1">
-                <span className="font-display text-3xl font-semibold text-white sm:text-4xl">{stat.value}</span>
+              <Reveal key={stat.key} delay={i * 0.08} variant="scale" className="flex flex-col gap-1">
+                <span className="font-display text-3xl font-semibold text-white sm:text-4xl">
+                  <CountUpStat value={siteInfo?.stats?.[stat.statField] || stat.fallback} />
+                </span>
                 <span className="text-xs font-medium uppercase tracking-wide text-forest-200 sm:text-sm">{t(`home.${stat.key}`)}</span>
               </Reveal>
             ))}
@@ -115,11 +114,11 @@ export default function Home() {
       {/* Leadership messages */}
       <LeadershipMessages messages={messages} loading={loading} />
 
-      {/* Latest News / Notices / Events / Projects — four separate teaser
-          sections, each using the exact same card component as its own full
-          page (NewsCard/NoticeCard/EventCard/ProjectCard), not a simplified
-          summary — so a card here looks identical to the one a visitor sees
-          after clicking through. */}
+      {/* Latest News / Notices / Projects — three separate teaser sections,
+          each using the exact same card component as its own full page
+          (NewsCard/NoticeCard/ProjectCard), not a simplified summary — so a
+          card here looks identical to the one a visitor sees after clicking
+          through. */}
       <section className="relative overflow-hidden bg-cream-100 py-20 sm:py-24">
         <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-gilt-200/20 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-forest-100/40 blur-3xl" aria-hidden="true" />
@@ -158,24 +157,6 @@ export default function Home() {
                 {latestNotices.map((notice, i) => (
                   <Reveal key={notice.id} delay={i * 0.08}>
                     <NoticeCard notice={notice} />
-                  </Reveal>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Upcoming Events */}
-          <div className="mt-20">
-            <SectionHeader title={t("home.updatesEventsTitle")} action={<ViewAllLink to="/news" label={t("home.readMore")} />} />
-            {eventsLoading || !events ? (
-              <CardSkeleton />
-            ) : upcomingEvents.length === 0 ? (
-              <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyEvents")}</p>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {upcomingEvents.map((event, i) => (
-                  <Reveal key={event.id} delay={i * 0.08} className="h-full">
-                    <EventCard event={event} />
                   </Reveal>
                 ))}
               </div>

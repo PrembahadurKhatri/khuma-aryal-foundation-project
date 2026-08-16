@@ -14,6 +14,11 @@ const vacancySchema = new mongoose.Schema(
     description: { type: bilingual, required: true },
     type: { type: String, enum: VACANCY_TYPES, default: "FullTime" },
     location: { type: optionalBilingual, default: () => ({}) },
+    // Free text, one item per line — rendered as a bulleted list on
+    // VacancyDetail.jsx. Both optional since not every posting needs them
+    // spelled out separately from the main description.
+    requirements: { type: optionalBilingual, default: () => ({}) },
+    education: { type: optionalBilingual, default: () => ({}) },
     deadline: { type: Date, required: true },
     // External application link (Google Form, mailto:, etc.) the "Apply
     // Now" button opens. Left empty, the card just doesn't show a button.

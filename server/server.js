@@ -39,6 +39,7 @@ import storyRoutes from "./routes/storyRoutes.js";
 import downloadRoutes from "./routes/downloadRoutes.js";
 import vacancyRoutes from "./routes/vacancyRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDistPath = path.join(__dirname, "../client/dist");
@@ -122,6 +123,7 @@ app.use("/api/stories", storyRoutes);
 app.use("/api/downloads", downloadRoutes);
 app.use("/api/vacancies", vacancyRoutes);
 app.use("/api/videos", videoRoutes);
+app.use("/api/applications", applicationRoutes);
 
 // Serve the built React app in production so frontend + API share one
 // origin — but only if client/dist is actually present. On a split

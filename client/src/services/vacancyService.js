@@ -5,7 +5,8 @@ export const fetchVacancies = async () => {
   return data;
 };
 
-// payload: { titleEn, titleNe, descriptionEn, descriptionNe, type, locationEn, locationNe, deadline, applyLink }
+// payload: { titleEn, titleNe, descriptionEn, descriptionNe, type, locationEn, locationNe,
+//            requirementsEn, requirementsNe, educationEn, educationNe, deadline, applyLink }
 // No files involved here, unlike most other services — plain JSON is fine.
 export const createVacancy = async (payload) => {
   const { data } = await api.post("/vacancies", payload);

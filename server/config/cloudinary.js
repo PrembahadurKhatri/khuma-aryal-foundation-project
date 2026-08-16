@@ -59,4 +59,28 @@ export const mediaStorage = new CloudinaryStorage({
   },
 });
 
+// Job application uploads — a "resume" field (PDF/Word, always a raw
+// document) and a "coverLetter" field (a PDF *or* an image, since the
+// application form lets applicants upload a photographed/scanned cover
+// letter instead of typing one). Same per-fieldname routing idea as
+// mediaStorage above. `resource_type: "auto"` on the coverLetter field lets
+// Cloudinary detect image vs raw (PDF) itself rather than hardcoding one.
+export const applicationStorage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => {
+    if (file.fieldname === "coverLetter") {
+      return {
+        folder: "khuma-aryal-foundation/applications",
+        resource_type: "auto",
+        allowed_formats: ["pdf", "jpg", "jpeg", "png", "webp"],
+      };
+    }
+    return {
+      folder: "khuma-aryal-foundation/applications",
+      resource_type: "raw",
+      allowed_formats: ["pdf", "doc", "docx"],
+    };
+  },
+});
+
 export default cloudinary;

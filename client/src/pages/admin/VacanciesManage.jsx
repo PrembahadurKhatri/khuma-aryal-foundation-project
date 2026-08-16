@@ -6,7 +6,21 @@ import useToast from "../../hooks/useToast.js";
 
 const TYPES = ["FullTime", "PartTime", "Volunteer", "Internship", "Contract"];
 const TYPE_LABELS = { FullTime: "Full-Time", PartTime: "Part-Time", Volunteer: "Volunteer", Internship: "Internship", Contract: "Contract" };
-const emptyForm = { titleEn: "", titleNe: "", descriptionEn: "", descriptionNe: "", type: "FullTime", locationEn: "", locationNe: "", deadline: "", applyLink: "" };
+const emptyForm = {
+  titleEn: "",
+  titleNe: "",
+  descriptionEn: "",
+  descriptionNe: "",
+  type: "FullTime",
+  locationEn: "",
+  locationNe: "",
+  requirementsEn: "",
+  requirementsNe: "",
+  educationEn: "",
+  educationNe: "",
+  deadline: "",
+  applyLink: "",
+};
 
 const toDateInput = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
 
@@ -70,6 +84,10 @@ const VacanciesManage = () => {
       type: item.type || "FullTime",
       locationEn: item.location?.en || "",
       locationNe: item.location?.ne || "",
+      requirementsEn: item.requirements?.en || "",
+      requirementsNe: item.requirements?.ne || "",
+      educationEn: item.education?.en || "",
+      educationNe: item.education?.ne || "",
       deadline: toDateInput(item.deadline),
       applyLink: item.applyLink || "",
     });
@@ -188,6 +206,40 @@ const VacanciesManage = () => {
 
             <input placeholder="Location (English, optional)" value={form.locationEn} onChange={(e) => setForm({ ...form, locationEn: e.target.value })} className={inputClass} />
             <input placeholder="स्थान (नेपाली, वैकल्पिक)" value={form.locationNe} onChange={(e) => setForm({ ...form, locationNe: e.target.value })} className={inputClass} />
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Requirements / Skills (optional, one per line)</label>
+              <textarea
+                rows={3}
+                placeholder={"English — e.g.\nStrong communication skills\n2+ years of project coordination experience"}
+                value={form.requirementsEn}
+                onChange={(e) => setForm({ ...form, requirementsEn: e.target.value })}
+                className={inputClass}
+              />
+              <textarea
+                rows={3}
+                placeholder="नेपाली (वैकल्पिक, एक हरफमा एक)"
+                value={form.requirementsNe}
+                onChange={(e) => setForm({ ...form, requirementsNe: e.target.value })}
+                className={`mt-2 ${inputClass}`}
+              />
+            </div>
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Education (optional)</label>
+              <input
+                placeholder="e.g. Bachelor's degree in Public Health or related field"
+                value={form.educationEn}
+                onChange={(e) => setForm({ ...form, educationEn: e.target.value })}
+                className={inputClass}
+              />
+              <input
+                placeholder="नेपाली (वैकल्पिक)"
+                value={form.educationNe}
+                onChange={(e) => setForm({ ...form, educationNe: e.target.value })}
+                className={`mt-2 ${inputClass}`}
+              />
+            </div>
 
             <div>
               <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Apply Link (optional)</label>

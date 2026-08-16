@@ -20,7 +20,10 @@ export const getSettings = asyncHandler(async (req, res) => {
 export const updateSettings = asyncHandler(async (req, res) => {
   const settings = await getOrCreate();
 
-  const { nameEn, nameNe, taglineEn, taglineNe, addressEn, addressNe, officeHoursEn, officeHoursNe, phone, email, facebook, instagram, youtube } = req.body;
+  const {
+    nameEn, nameNe, taglineEn, taglineNe, addressEn, addressNe, officeHoursEn, officeHoursNe, phone, email, facebook, instagram, youtube,
+    statYears, statBeneficiaries, statProjects, statVolunteers,
+  } = req.body;
 
   settings.name = { en: nameEn ?? settings.name?.en, ne: nameNe ?? settings.name?.ne };
   settings.tagline = { en: taglineEn ?? settings.tagline?.en, ne: taglineNe ?? settings.tagline?.ne };
@@ -32,6 +35,12 @@ export const updateSettings = asyncHandler(async (req, res) => {
     facebook: facebook ?? settings.social?.facebook ?? "",
     instagram: instagram ?? settings.social?.instagram ?? "",
     youtube: youtube ?? settings.social?.youtube ?? "",
+  };
+  settings.stats = {
+    years: statYears ?? settings.stats?.years,
+    beneficiaries: statBeneficiaries ?? settings.stats?.beneficiaries,
+    projects: statProjects ?? settings.stats?.projects,
+    volunteers: statVolunteers ?? settings.stats?.volunteers,
   };
 
   await settings.save();

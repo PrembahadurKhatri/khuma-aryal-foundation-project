@@ -2,7 +2,10 @@ import asyncHandler from "express-async-handler";
 import Notice from "../models/Notice.js";
 
 const fromFlatFields = (body) => ({
-  title: { en: body.titleEn, ne: body.titleNe },
+  ...(body.titleEn !== undefined || body.titleNe !== undefined ? { title: { en: body.titleEn, ne: body.titleNe } } : {}),
+  ...(body.descriptionEn !== undefined || body.descriptionNe !== undefined
+    ? { description: { en: body.descriptionEn || "", ne: body.descriptionNe || "" } }
+    : {}),
   ...(body.date ? { date: body.date } : {}),
   ...(body.priority ? { priority: body.priority } : {}),
 });

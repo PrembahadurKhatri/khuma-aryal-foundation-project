@@ -18,6 +18,7 @@ import {
   Download as DownloadIcon,
   Briefcase,
   Video as VideoIcon,
+  ClipboardList,
 } from "lucide-react";
 import useAuth from "../hooks/useAuth.js";
 import { ToastProvider } from "../contexts/ToastContext.jsx";
@@ -30,6 +31,7 @@ const navItems = [
   { to: "/admin/stories", label: "Impact Stories", icon: Heart },
   { to: "/admin/downloads", label: "Downloads", icon: DownloadIcon },
   { to: "/admin/vacancies", label: "Job Vacancies", icon: Briefcase },
+  { to: "/admin/applications", label: "Applications", icon: ClipboardList },
   { to: "/admin/projects", label: "Projects", icon: FolderKanban },
   { to: "/admin/gallery", label: "Gallery", icon: Image },
   { to: "/admin/videos", label: "Gallery Videos", icon: VideoIcon },

@@ -292,7 +292,7 @@ export default function About() {
 
       {/* ==================== Mission ==================== */}
 
-      <Reveal className="h-full">
+      <Reveal variant="left" className="h-full">
         <div className="group relative flex h-full flex-col overflow-hidden rounded-[32px] border border-forest-100 bg-white p-10 shadow-xl transition-all duration-700 hover:-translate-y-3 hover:border-gilt-300 hover:shadow-[0_35px_80px_rgba(0,0,0,0.12)]">
 
           {/* Animated Gold Border */}
@@ -328,7 +328,7 @@ export default function About() {
 
       {/* ==================== Vision ==================== */}
 
-      <Reveal delay={0.15} className="h-full">
+      <Reveal delay={0.15} variant="right" className="h-full">
         <div className="group relative flex h-full flex-col overflow-hidden rounded-[32px] border border-forest-100 bg-white p-10 shadow-xl transition-all duration-700 hover:-translate-y-3 hover:border-gilt-300 hover:shadow-[0_35px_80px_rgba(0,0,0,0.12)]">
 
           <div className="absolute left-0 top-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-gilt-500 via-yellow-400 to-gilt-500 transition-transform duration-700 group-hover:scale-x-100" />

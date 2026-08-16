@@ -2,11 +2,19 @@ import asyncHandler from "express-async-handler";
 import Vacancy from "../models/Vacancy.js";
 
 const fromFlatFields = (body) => ({
-  title: { en: body.titleEn, ne: body.titleNe },
-  description: { en: body.descriptionEn, ne: body.descriptionNe },
+  ...(body.titleEn !== undefined || body.titleNe !== undefined ? { title: { en: body.titleEn, ne: body.titleNe } } : {}),
+  ...(body.descriptionEn !== undefined || body.descriptionNe !== undefined
+    ? { description: { en: body.descriptionEn, ne: body.descriptionNe } }
+    : {}),
   ...(body.type ? { type: body.type } : {}),
   ...(body.locationEn !== undefined || body.locationNe !== undefined
     ? { location: { en: body.locationEn || "", ne: body.locationNe || "" } }
+    : {}),
+  ...(body.requirementsEn !== undefined || body.requirementsNe !== undefined
+    ? { requirements: { en: body.requirementsEn || "", ne: body.requirementsNe || "" } }
+    : {}),
+  ...(body.educationEn !== undefined || body.educationNe !== undefined
+    ? { education: { en: body.educationEn || "", ne: body.educationNe || "" } }
     : {}),
   ...(body.deadline ? { deadline: body.deadline } : {}),
   ...(body.applyLink !== undefined ? { applyLink: body.applyLink } : {}),

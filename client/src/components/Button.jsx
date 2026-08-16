@@ -9,14 +9,32 @@ const VARIANTS = {
   ghost: "border-2 border-forest-200 text-forest-700 hover:border-forest-600 hover:bg-forest-50",
 };
 
+// Diagonal light sweep that slides across on hover — shared by every button
+// variant so the whole site's CTAs get the same little flourish rather than
+// just sitting there with a flat color change.
+function Shine() {
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-y-0 left-0 z-0 w-1/3 -translate-x-[200%] -skew-x-12 bg-white/25 transition-transform duration-700 ease-out group-hover:translate-x-[380%]"
+    />
+  );
+}
+
 /** Renders a <Link> when `to` is given, an <a> when `href` is given, else a <button>. */
 export default function Button({ children, to, href, onClick, type = "button", variant = "primary", className = "" }) {
-  const classes = `inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 ${VARIANTS[variant]} ${className}`;
+  const classes = `group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift active:translate-y-0 active:duration-100 ${VARIANTS[variant]} ${className}`;
+  const content = (
+    <>
+      <Shine />
+      <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+    </>
+  );
 
   if (to) {
     return (
       <Link to={to} className={classes}>
-        {children}
+        {content}
       </Link>
     );
   }
@@ -24,14 +42,14 @@ export default function Button({ children, to, href, onClick, type = "button", v
   if (href) {
     return (
       <a href={href} className={classes} target="_blank" rel="noopener noreferrer">
-        {children}
+        {content}
       </a>
     );
   }
 
   return (
     <button type={type} onClick={onClick} className={classes}>
-      {children}
+      {content}
     </button>
   );
 }

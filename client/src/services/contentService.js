@@ -48,6 +48,12 @@ export async function getNews() {
   return data.data.map(withId);
 }
 
+// Used by NewsDetail.jsx.
+export async function getNewsItem(id) {
+  const { data } = await api.get(`/news/${id}`);
+  return withId(data.data);
+}
+
 // Gallery is organized as albums: a thumbnail grid of cover photo + title
 // (getGalleryAlbums, used by Gallery.jsx), opening into every photo in that
 // album (getGalleryAlbum, used by AlbumDetail.jsx).
@@ -76,16 +82,34 @@ export async function getNotices() {
   return data.data.map(withId);
 }
 
+// Used by NoticeDetail.jsx.
+export async function getNotice(id) {
+  const { data } = await api.get(`/notices/${id}`);
+  return withId(data.data);
+}
+
 // "Upcoming Events" — see models/Event.js.
 export async function getEvents() {
   const { data } = await api.get("/events");
   return data.data.map(withId);
 }
 
+// Used by EventDetail.jsx.
+export async function getEvent(id) {
+  const { data } = await api.get(`/events/${id}`);
+  return withId(data.data);
+}
+
 // "Impact / Success Stories" — see models/Story.js.
 export async function getStories() {
   const { data } = await api.get("/stories");
   return data.data.map(withId);
+}
+
+// Used by StoryDetail.jsx.
+export async function getStory(id) {
+  const { data } = await api.get(`/stories/${id}`);
+  return withId(data.data);
 }
 
 // "Downloads" — useful documents (annual report, brochure, etc). See models/Download.js.
@@ -98,4 +122,10 @@ export async function getDownloads() {
 export async function getVacancies() {
   const { data } = await api.get("/vacancies");
   return data.data.map(withId);
+}
+
+// Used by VacancyDetail.jsx.
+export async function getVacancy(id) {
+  const { data } = await api.get(`/vacancies/${id}`);
+  return withId(data.data);
 }

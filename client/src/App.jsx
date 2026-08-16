@@ -11,6 +11,11 @@ import AlbumDetail from "./pages/AlbumDetail.jsx";
 import Projects from "./pages/Projects.jsx";
 import ProjectDetail from "./pages/ProjectDetail.jsx";
 import News from "./pages/News.jsx";
+import NewsDetail from "./pages/NewsDetail.jsx";
+import NoticeDetail from "./pages/NoticeDetail.jsx";
+import EventDetail from "./pages/EventDetail.jsx";
+import StoryDetail from "./pages/StoryDetail.jsx";
+import VacancyDetail from "./pages/VacancyDetail.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 import Login from "./pages/admin/Login.jsx";
@@ -26,6 +31,7 @@ import StoriesManage from "./pages/admin/StoriesManage.jsx";
 import DownloadsManage from "./pages/admin/DownloadsManage.jsx";
 import VacanciesManage from "./pages/admin/VacanciesManage.jsx";
 import VideosManage from "./pages/admin/VideosManage.jsx";
+import ApplicationsManage from "./pages/admin/ApplicationsManage.jsx";
 
 export default function App() {
   return (
@@ -41,6 +47,11 @@ export default function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/news" element={<News />} />
+          <Route path="/news/:id" element={<NewsDetail />} />
+          <Route path="/notices/:id" element={<NoticeDetail />} />
+          <Route path="/events/:id" element={<EventDetail />} />
+          <Route path="/stories/:id" element={<StoryDetail />} />
+          <Route path="/vacancies/:id" element={<VacancyDetail />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 
@@ -61,6 +72,7 @@ export default function App() {
           <Route path="stories" element={<StoriesManage />} />
           <Route path="downloads" element={<DownloadsManage />} />
           <Route path="vacancies" element={<VacanciesManage />} />
+          <Route path="applications" element={<ApplicationsManage />} />
           <Route path="videos" element={<VideosManage />} />
           <Route path="projects" element={<ProjectsManage />} />
           <Route path="gallery" element={<GalleryManage />} />

@@ -7,6 +7,7 @@ import useToast from "../../hooks/useToast.js";
 const emptyForm = {
   nameEn: "", nameNe: "", taglineEn: "", taglineNe: "", addressEn: "", addressNe: "",
   officeHoursEn: "", officeHoursNe: "", phone: "", email: "", facebook: "", instagram: "", youtube: "",
+  statYears: "", statBeneficiaries: "", statProjects: "", statVolunteers: "",
 };
 
 const SettingsManage = () => {
@@ -27,6 +28,8 @@ const SettingsManage = () => {
       officeHoursEn: s.officeHours?.en || "", officeHoursNe: s.officeHours?.ne || "",
       phone: s.phone || "", email: s.email || "",
       facebook: s.social?.facebook || "", instagram: s.social?.instagram || "", youtube: s.social?.youtube || "",
+      statYears: s.stats?.years || "", statBeneficiaries: s.stats?.beneficiaries || "",
+      statProjects: s.stats?.projects || "", statVolunteers: s.stats?.volunteers || "",
     });
   }, [data]);
 
@@ -123,6 +126,29 @@ const SettingsManage = () => {
             <div>
               <label className={labelClass}>YouTube URL</label>
               <input value={form.youtube} onChange={(e) => setForm({ ...form, youtube: e.target.value })} className={inputClass} />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-3 font-body font-semibold">Homepage Stats</h2>
+          <p className={`mb-3 text-xs ${mutedClass}`}>Shown as the animated counter strip on the home page. Free text — keep the "+"/commas exactly how you want them displayed.</p>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <label className={labelClass}>Years of Service</label>
+              <input placeholder="10+" value={form.statYears} onChange={(e) => setForm({ ...form, statYears: e.target.value })} className={inputClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Youth Supported</label>
+              <input placeholder="5,000+" value={form.statBeneficiaries} onChange={(e) => setForm({ ...form, statBeneficiaries: e.target.value })} className={inputClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Projects Completed</label>
+              <input placeholder="40+" value={form.statProjects} onChange={(e) => setForm({ ...form, statProjects: e.target.value })} className={inputClass} />
+            </div>
+            <div>
+              <label className={labelClass}>Active Volunteers</label>
+              <input placeholder="120+" value={form.statVolunteers} onChange={(e) => setForm({ ...form, statVolunteers: e.target.value })} className={inputClass} />
             </div>
           </div>
         </div>

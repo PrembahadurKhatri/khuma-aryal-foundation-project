@@ -19,6 +19,17 @@ const settingsSchema = new mongoose.Schema(
       instagram: { type: String, default: "" },
       youtube: { type: String, default: "" },
     },
+    // Home page's stat counters (Hero.jsx's "Years of Service" strip) —
+    // free text rather than plain numbers so the admin keeps control of
+    // formatting (e.g. "5,000+", "10+"). The client parses the leading
+    // digits out of each to animate a count-up and re-appends whatever
+    // follows (the "+", commas, etc.) unchanged.
+    stats: {
+      years: { type: String, default: "10+" },
+      beneficiaries: { type: String, default: "5,000+" },
+      projects: { type: String, default: "40+" },
+      volunteers: { type: String, default: "120+" },
+    },
   },
   { timestamps: true }
 );
