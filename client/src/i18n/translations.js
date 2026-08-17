@@ -204,6 +204,9 @@ const translations = {
     news: {
       kicker: "Stay Informed",
       title: "News & Notices",
+      // Word inside `title` to render in gold in the hero heading (must
+      // match a substring of `title` above) — see PageHero.jsx.
+      titleHighlight: "Notices",
       subtitle: "Announcements, updates and notices from Khuma Aryal Foundation.",
 
       // Section headings, in page order.
@@ -503,6 +506,7 @@ const translations = {
     news: {
       kicker: "जानकारीमा रहनुहोस्",
       title: "समाचार र सूचनाहरू",
+      titleHighlight: "सूचनाहरू",
       subtitle: "खुमा अर्याल फाउन्डेशनका घोषणा, अपडेट र सूचनाहरू।",
 
       sectionLatestNews: "पछिल्ला समाचार",

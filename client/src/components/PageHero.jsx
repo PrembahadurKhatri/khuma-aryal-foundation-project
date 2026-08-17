@@ -30,10 +30,28 @@ const SLIDE_INTERVAL = 3000;
  * vertically centered instead of pinned to the top-left, since there's
  * enough copy to anchor the section on its own. Pages that only pass
  * `label` keep the original compact top-left pill, unchanged.
+ *
+ * `titleHighlight` colors a substring of `title` gold instead of white
+ * (must be an exact substring — silently ignored otherwise).
+ *
+ * `badges` accepts either plain strings (small glass pills) or
+ * `{ icon, label }` objects (small square icon cards, icon on top of a
+ * one/two-line label) — the two can't be mixed within one array.
+ *
+ * `strongOverlay` swaps the default light, top/bottom-only photo tint for a
+ * fuller, more saturated forest-green wash — for backgrounds that need a
+ * deliberate, uniform tint to read as intentional (e.g. a pale logo/graphic
+ * rather than a natural photo) instead of the light default meant to keep a
+ * real photo's subjects visible.
  */
-export default function PageHero({ label, images, colorBackground = false, title, description, badges }) {
+export default function PageHero({ label, images, colorBackground = false, title, titleHighlight, description, badges, strongOverlay = false }) {
   const slides = images && images.length > 0 ? images : ["/images/khumalogo.png"];
   const [index, setIndex] = useState(0);
+
+  const [titleBefore, titleAfter] =
+    titleHighlight && title?.includes(titleHighlight) ? title.split(titleHighlight) : [title, null];
+
+  const badgesAreIcons = badges && badges.length > 0 && typeof badges[0] === "object";
 
   useEffect(() => {
     if (colorBackground || slides.length < 2) return;
@@ -63,15 +81,24 @@ export default function PageHero({ label, images, colorBackground = false, title
                 className="absolute inset-0 h-full w-full object-cover"
               />
             </AnimatePresence>
-            {/* Kept light on purpose so the photo reads as a real, natural
-                photo rather than a green-tinted wash — the label pill has
-                its own glass background/blur below, so it stays legible
-                without the whole image needing to be darkened for contrast. */}
-            <div className="absolute inset-0 bg-gradient-to-t from-forest-950/55 via-forest-950/5 to-forest-950/25" />
-            <div
-              className="absolute inset-0"
-              style={{ background: "radial-gradient(120% 90% at 20% 40%, transparent 30%, rgba(23,59,37,0.2) 100%)" }}
-            />
+            {strongOverlay ? (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-r from-forest-950/92 via-forest-950/70 to-forest-950/40" />
+                <div className="absolute inset-0 bg-forest-900/30 mix-blend-multiply" />
+              </>
+            ) : (
+              // Kept light on purpose so the photo reads as a real, natural
+              // photo rather than a green-tinted wash — the label pill has
+              // its own glass background/blur below, so it stays legible
+              // without the whole image needing to be darkened for contrast.
+              <>
+                <div className="absolute inset-0 bg-gradient-to-t from-forest-950/55 via-forest-950/5 to-forest-950/25" />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "radial-gradient(120% 90% at 20% 40%, transparent 30%, rgba(23,59,37,0.2) 100%)" }}
+                />
+              </>
+            )}
           </>
         )}
       </div>
@@ -110,7 +137,15 @@ export default function PageHero({ label, images, colorBackground = false, title
             className="max-w-2xl font-body text-4xl font-bold leading-[1.05] text-white sm:text-5xl lg:text-6xl"
             style={{ textShadow: "0 2px 12px rgba(0,0,0,0.35)" }}
           >
-            {title}
+            {titleAfter !== null ? (
+              <>
+                {titleBefore}
+                <span className="text-gilt-400">{titleHighlight}</span>
+                {titleAfter}
+              </>
+            ) : (
+              title
+            )}
           </motion.h1>
         )}
 
@@ -128,17 +163,30 @@ export default function PageHero({ label, images, colorBackground = false, title
 
         {badges && badges.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-2.5">
-            {badges.map((badge, i) => (
-              <motion.span
-                key={badge}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 font-body text-xs font-semibold text-white shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md"
-              >
-                {badge}
-              </motion.span>
-            ))}
+            {badgesAreIcons
+              ? badges.map((badge, i) => (
+                  <motion.div
+                    key={badge.label}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
+                    className="flex w-[4.5rem] flex-col items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2 py-3 text-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md sm:w-20"
+                  >
+                    <span className="text-white">{badge.icon}</span>
+                    <span className="font-body text-[10px] font-semibold leading-tight text-white sm:text-[11px]">{badge.label}</span>
+                  </motion.div>
+                ))
+              : badges.map((badge, i) => (
+                  <motion.span
+                    key={badge}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 font-body text-xs font-semibold text-white shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md"
+                  >
+                    {badge}
+                  </motion.span>
+                ))}
           </div>
         )}
       </Container>
