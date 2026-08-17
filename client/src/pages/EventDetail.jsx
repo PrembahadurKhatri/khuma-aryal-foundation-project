@@ -112,7 +112,7 @@ export default function EventDetail() {
                 )}
                 <div className="flex flex-col gap-5 p-7 sm:p-9">
                   <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{name}</h1>
-                  <span className="h-1 w-14 rounded-full bg-gilt-500" aria-hidden="true" />
+                
 
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-body text-sm text-ink-600">
                     <span className="inline-flex items-center gap-1.5">

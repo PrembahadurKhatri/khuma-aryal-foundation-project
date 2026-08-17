@@ -76,7 +76,7 @@ export default function StoryDetail() {
                   )}
                 </div>
                 <div className="flex flex-col gap-5 p-7 sm:p-9">
-                  <span className="h-1 w-14 rounded-full bg-gilt-500" aria-hidden="true" />
+             
                   <p className="whitespace-pre-line font-body text-base leading-relaxed text-ink-600">{summary}</p>
                 </div>
               </div>

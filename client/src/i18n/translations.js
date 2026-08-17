@@ -269,6 +269,7 @@ const translations = {
       readLess: "Read Less",
 
       // Important Notices.
+      noticesSubtitle: "Stay updated with the latest announcements and events.",
       priorityImportant: "Important",
       priorityNew: "New",
       priorityUrgent: "Urgent",
@@ -562,6 +563,7 @@ const translations = {
       readMore: "थप पढ्नुहोस्",
       readLess: "कम देखाउनुहोस्",
 
+      noticesSubtitle: "नवीनतम घोषणा र कार्यक्रमहरूको जानकारी राख्नुहोस्।",
       priorityImportant: "महत्त्वपूर्ण",
       priorityNew: "नयाँ",
       priorityUrgent: "अत्यावश्यक",

@@ -254,7 +254,7 @@ export default function VacancyDetail() {
                   </div>
 
                   <h1 className="relative font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{title}</h1>
-                  <span className="relative h-1 w-14 rounded-full bg-gilt-500" aria-hidden="true" />
+             
 
                   <div className="relative flex flex-wrap items-center gap-x-5 gap-y-2 font-body text-sm text-ink-600">
                     <span className="inline-flex items-center gap-1.5">
@@ -320,11 +320,11 @@ export default function VacancyDetail() {
 
                   <form onSubmit={handleSubmit} className="relative flex flex-col gap-5">
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <IconInput id="applicantName" name="applicantName" type="text" required label={t("news.formFullName")} icon={<UserIcon />} />
-                      <IconInput id="email" name="email" type="email" required label={t("news.formEmail")} icon={<MailIcon />} />
+                      <IconInput id="applicantName" name="applicantName" type="text" placeholder="Enter your fullname" required label={t("news.formFullName")} icon={<UserIcon />} />
+                      <IconInput id="email" name="email" type="email" placeholder="Enter your email" required label={t("news.formEmail")} icon={<MailIcon />} />
                     </div>
 
-                    <IconInput id="phone" name="phone" type="tel" label={t("news.formPhone")} icon={<PhoneIcon />} />
+                    <IconInput id="phone" name="phone" type="tel" placeholder="Enter your number"  label={t("news.formPhone")} icon={<PhoneIcon />} />
 
                     <FileDropField
                       name="coverLetter"

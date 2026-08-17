@@ -64,17 +64,37 @@ function MoreButton({ label, onClick }) {
 }
 
 // Small local heading used by every section below the Latest News grid —
-// kicker-style label + title, matching the visual language used on
-// ProjectDetail/About (gold accent bar under a bold heading).
-function SectionHeader({ title, action }) {
+// title (+ optional short subtitle) on the left, an optional action
+// (MoreButton/ViewAllButton) on the right.
+function SectionHeader({ title, subtitle, action }) {
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         <h2 className="font-body text-2xl font-bold text-forest-900 sm:text-3xl">{title}</h2>
-      
+        {subtitle && <p className="font-body text-sm text-ink-600">{subtitle}</p>}
       </div>
       {action}
     </div>
+  );
+}
+
+// Pill-style "View All X" button (white, bordered, chevron-in-a-circle) —
+// used where a section wants a more prominent call-to-action than
+// MoreButton's plain text link (e.g. Important Notices).
+function ViewAllButton({ label, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group inline-flex items-center gap-2 rounded-full border border-forest-200 bg-white py-2 pl-4 pr-2 font-body text-sm font-semibold text-forest-700 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-forest-700 hover:shadow-lift"
+    >
+      {label}
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-forest-50 text-forest-600 transition-all duration-300 group-hover:translate-x-0.5 group-hover:bg-forest-700 group-hover:text-white">
+        <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+          <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    </button>
   );
 }
 
@@ -256,8 +276,9 @@ export default function News() {
           <div className="mt-20">
             <SectionHeader
               title={t("news.sectionNotices")}
+              subtitle={t("news.noticesSubtitle")}
               action={
-                !noticesShowAll && (notices?.length || 0) > NOTICES_CAP && <MoreButton label={t("news.moreNotices")} onClick={() => setNoticesShowAll(true)} />
+                !noticesShowAll && (notices?.length || 0) > NOTICES_CAP && <ViewAllButton label={t("news.moreNotices")} onClick={() => setNoticesShowAll(true)} />
               }
             />
             {noticesLoading || !notices ? (

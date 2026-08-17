@@ -102,7 +102,7 @@ export default function NoticeDetail() {
                 </div>
 
                 <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{title}</h1>
-                <span className="h-1 w-14 rounded-full bg-gilt-500" aria-hidden="true" />
+                
 
                 {description && <p className="whitespace-pre-line font-body text-base leading-relaxed text-ink-600">{description}</p>}
 
