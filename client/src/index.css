@@ -10,13 +10,45 @@ body {
   @apply bg-cream-100 font-sans text-ink-800 antialiased;
 }
 
-/* Nepali mode: swap every font-body element (headings, paragraphs, buttons,
-   nav, cards, ...) over to font-preeti in one place, without touching each
-   component. Needs to target .font-body directly (not just `body`) because
-   an element's own class always wins over an inherited font-family. */
+/* Nepali mode: swap every font-body AND font-display element (headings,
+   paragraphs, buttons, nav, cards, names, ...) over to font-preeti in one
+   place, without touching each component. Needs to target the classes
+   directly (not just `body`) because an element's own class always wins
+   over an inherited font-family — font-display (Fraunces, used for
+   headings/names) doesn't inherit font-body's override, so it needs its
+   own line here too; left as Fraunces it has no Devanagari glyphs at all
+   and falls back to a font that doesn't shape conjuncts correctly. */
 html[lang="ne"] body,
-html[lang="ne"] .font-body {
+html[lang="ne"] .font-body,
+html[lang="ne"] .font-display {
   @apply font-preeti;
+}
+
+/* Devanagari conjuncts (क्ष, ज्ञ, त्र, ...) only fuse into a single joined
+   glyph when characters sit directly adjacent — any letter-spacing breaks
+   the shaping engine's ability to detect them as adjacent, so wide-tracking
+   kicker labels etc. rendered as visibly unjoined letters. Devanagari has
+   no letter-spacing convention anyway, so just reset it site-wide. */
+html[lang="ne"] * {
+  letter-spacing: normal !important;
+}
+
+/* Noto Sans Devanagari sits noticeably smaller in its em-box than Manrope at
+   the same font-size — headings (text-lg and up) already read fine, but
+   small body copy (text-xs/sm/base — descriptions, captions, paragraphs)
+   turns hard to read. Bump just those three sizes for Nepali, leaving
+   headings alone. */
+html[lang="ne"] .text-xs {
+  font-size: 0.85rem;
+  line-height: 1.15rem;
+}
+html[lang="ne"] .text-sm {
+  font-size: 0.975rem;
+  line-height: 1.4rem;
+}
+html[lang="ne"] .text-base {
+  font-size: 1.08rem;
+  line-height: 1.65rem;
 }
 
 ::selection {

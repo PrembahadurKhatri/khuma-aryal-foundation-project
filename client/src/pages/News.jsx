@@ -151,6 +151,25 @@ function ViewAllButton({ label, onClick }) {
   );
 }
 
+// Solid pill "View All X" link — for actions that navigate to another page
+// (not a local state toggle like MoreButton/ViewAllButton above), so it
+// reads as a proper call-to-action rather than a plain text link.
+function ViewAllLink({ to, label }) {
+  return (
+    <Link
+      to={to}
+      className="group inline-flex items-center gap-2 rounded-full bg-forest-700 py-2.5 pl-5 pr-3 font-body text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-forest-800 hover:shadow-lift"
+    >
+      {label}
+      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:translate-x-1">
+        <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    </Link>
+  );
+}
+
 export default function News() {
   const { t } = useLanguage();
   const { data: news, loading: newsLoading } = useContent(getNews);
@@ -404,11 +423,7 @@ export default function News() {
           <div className="mt-20">
             <SectionHeader
               title={t("news.sectionActivities")}
-              action={
-                <Link to="/projects" className="font-body text-sm font-semibold text-forest-600 hover:text-forest-800">
-                  {t("news.viewAllActivities")} →
-                </Link>
-              }
+              action={<ViewAllLink to="/projects" label={t("news.viewAllActivities")} />}
             />
             {projectsLoading || !projects ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

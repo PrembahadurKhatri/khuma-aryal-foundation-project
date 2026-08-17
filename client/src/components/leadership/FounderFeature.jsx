@@ -50,7 +50,7 @@ export default function FounderFeature({ leader, onRead }) {
             <span aria-hidden="true" className="font-body text-5xl leading-none text-gilt-500">
               &ldquo;
             </span>
-            <span className="mt-2 text-xs font-semibold uppercase tracking-[0.25em] text-gilt-600">
+            <span className="mt-2 text-sm font-semibold uppercase tracking-[0.25em] text-gilt-600">
               {t("home.messageFromFounder")}
             </span>
           </div>

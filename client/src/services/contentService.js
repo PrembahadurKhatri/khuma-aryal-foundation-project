@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------------------
 // Content service — the single seam between the UI and its data source.
 //
-// getSiteInfo/getProjects/getNews/getGalleryAlbums now read from the live
-// Express + MongoDB API (see server/) instead of the local content.js
+// getSiteInfo/getProjects/getNews/getGalleryAlbums/getMessages all read from
+// the live Express + MongoDB API (see server/) instead of local content.js
 // arrays — every page/component that already renders this data via
 // pick(field, language) keeps working untouched, because the API returns
 // the exact same { en, ne } bilingual shape those arrays used. Mongo's
@@ -10,11 +10,9 @@
 // the original static data used `id`.
 //
 // getMessages() (the Home page's founder/president/leadership messages) is
-// the one exception — there is no admin CMS screen for that content yet, so
-// it still resolves from the local `leaderMessages` array. Give it the same
-// treatment (model + controller + admin page) if/when that's needed.
+// backed by the Leader model — see server/models/Leader.js and the admin
+// "Leadership" page (admin/LeadersManage.jsx).
 // ---------------------------------------------------------------------------
-import { leaderMessages } from "../data/content.js";
 import api from "./api.js";
 
 const withId = (doc) => ({ ...doc, id: doc._id });
@@ -24,8 +22,9 @@ export async function getSiteInfo() {
   return data.data;
 }
 
-export function getMessages() {
-  return Promise.resolve(leaderMessages);
+export async function getMessages() {
+  const { data } = await api.get("/leaders");
+  return data.data.map(withId);
 }
 
 export async function getProjects() {
