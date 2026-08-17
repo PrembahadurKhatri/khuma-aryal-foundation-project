@@ -10,7 +10,6 @@ import LeadershipMessages from "../components/leadership/LeadershipMessages.jsx"
 import NewsCard from "../components/NewsCard.jsx";
 import NoticeCard from "../components/NoticeCard.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
-import CountUpStat from "../components/CountUpStat.jsx";
 
 const UPDATES_COUNT = 3;
 
@@ -69,16 +68,6 @@ const EXPLORE_LINKS = [
   { to: "/news", titleKey: "exploreNews", descKey: "exploreNewsDesc"},
 ];
 
-// `statField` maps to Settings.stats.<field> (see admin's Settings page,
-// "Homepage Stats") — `fallback` covers a freshly-created Settings document
-// or a field the admin hasn't filled in yet.
-const STATS = [
-  { key: "statYears", statField: "years", fallback: "10+" },
-  { key: "statBeneficiaries", statField: "beneficiaries", fallback: "5,000+" },
-  { key: "statProjects", statField: "projects", fallback: "40+" },
-  { key: "statVolunteers", statField: "volunteers", fallback: "120+" },
-];
-
 export default function Home() {
   const { t } = useLanguage();
   const { data: messages, loading } = useContent(getMessages);
@@ -95,22 +84,9 @@ export default function Home() {
 
   return (
     <>
-      <Hero />
-      {/* Stats */}
-      <section className="bg-forest-800  py-20">
-        <Container>
-          <div className="grid grid-cols-2  text-center sm:grid-cols-4">
-            {STATS.map((stat, i) => (
-              <Reveal key={stat.key} delay={i * 0.08} variant="scale" className="flex flex-col gap-1">
-                <span className="font-display text-3xl font-semibold text-white sm:text-4xl">
-                  <CountUpStat value={siteInfo?.stats?.[stat.statField] || stat.fallback} />
-                </span>
-                <span className="text-xs font-medium uppercase tracking-wide text-forest-200 sm:text-sm">{t(`home.${stat.key}`)}</span>
-              </Reveal>
-            ))}
-          </div>
-        </Container>
-      </section>
+      {/* Hero now includes the trust strip and the mission section (with the
+          homepage stats folded into it) — see Hero.jsx. */}
+      <Hero siteInfo={siteInfo} />
       {/* Leadership messages */}
       <LeadershipMessages messages={messages} loading={loading} />
 
