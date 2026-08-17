@@ -6,11 +6,43 @@ import { AnimatePresence, motion } from "framer-motion";
 export const ToastContext = createContext(null);
 
 let idCounter = 0;
+const DURATION = 4000;
 
-const toneClass = {
-  success: "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
-  error: "border-red-300 bg-red-50 text-red-600 dark:border-red-900 dark:bg-red-950/60 dark:text-red-300",
+const TONE = {
+  success: {
+    accent: "bg-emerald-500",
+    ring: "ring-emerald-500/15",
+    iconBg: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+    bar: "bg-emerald-500",
+  },
+  error: {
+    accent: "bg-red-500",
+    ring: "ring-red-500/15",
+    iconBg: "bg-red-500/15 text-red-600 dark:text-red-400",
+    bar: "bg-red-500",
+  },
 };
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8 12.5l2.5 2.5L16 9.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function AlertIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 7.5v6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="16.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+const ICON = { success: CheckIcon, error: AlertIcon };
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
@@ -23,7 +55,7 @@ export const ToastProvider = ({ children }) => {
     (type, message) => {
       const id = ++idCounter;
       setToasts((t) => [...t, { id, type, message }]);
-      setTimeout(() => remove(id), 4000);
+      setTimeout(() => remove(id), DURATION);
     },
     [remove]
   );
@@ -36,23 +68,45 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="pointer-events-none fixed bottom-5 right-5 left-5 sm:left-auto z-[100] flex flex-col gap-2 sm:max-w-sm">
+      <div className="pointer-events-none fixed bottom-5 right-5 left-5 sm:left-auto z-[100] flex flex-col gap-2.5 sm:max-w-sm">
         <AnimatePresence>
-          {toasts.map((toast) => (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, y: 16, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 40, scale: 0.96 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className={`pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg font-body text-sm font-medium ${toneClass[toast.type] || toneClass.success}`}
-            >
-              <p className="flex-1">{toast.message}</p>
-              <button onClick={() => remove(toast.id)} aria-label="Dismiss" className="shrink-0 opacity-60 hover:opacity-100">
-                ×
-              </button>
-            </motion.div>
-          ))}
+          {toasts.map((toast) => {
+            const tone = TONE[toast.type] || TONE.success;
+            const Icon = ICON[toast.type] || CheckIcon;
+            return (
+              <motion.div
+                key={toast.id}
+                layout
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 60, scale: 0.95, transition: { duration: 0.2 } }}
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                className="pointer-events-auto relative isolate flex items-start gap-3 overflow-hidden rounded-2xl border border-white/40 bg-white/90 py-3.5 pl-4 pr-3.5 font-body shadow-[0_10px_40px_-8px_rgba(0,0,0,0.25)] backdrop-blur-xl dark:border-white/10 dark:bg-gray-900/90"
+              >
+                <span className={`absolute inset-y-0 left-0 w-1 ${tone.accent}`} aria-hidden="true" />
+                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${tone.iconBg}`}>
+                  <Icon />
+                </span>
+                <p className="flex-1 self-center text-sm font-semibold leading-snug text-ink-900 dark:text-gray-100">{toast.message}</p>
+                <button
+                  onClick={() => remove(toast.id)}
+                  aria-label="Dismiss"
+                  className="shrink-0 self-start rounded-full p-1 text-ink-400 opacity-60 transition-opacity hover:opacity-100 dark:text-gray-500"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                </button>
+                {/* Countdown bar */}
+                <motion.span
+                  className={`absolute bottom-0 left-0 h-[3px] ${tone.bar}`}
+                  initial={{ width: "100%" }}
+                  animate={{ width: "0%" }}
+                  transition={{ duration: DURATION / 1000, ease: "linear" }}
+                />
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </div>
     </ToastContext.Provider>

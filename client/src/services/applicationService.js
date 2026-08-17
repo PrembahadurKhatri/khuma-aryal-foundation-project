@@ -22,8 +22,9 @@ export const fetchApplications = async (params = {}) => {
   return data;
 };
 
-export const updateApplicationStatus = async (id, status) => {
-  const { data } = await api.put(`/applications/${id}`, { status });
+// interviewAt: ISO date-time string, only meaningful when status is "interview".
+export const updateApplicationStatus = async (id, status, note, interviewAt) => {
+  const { data } = await api.put(`/applications/${id}`, { status, note, interviewAt });
   return data;
 };
 

@@ -1,3 +1,11 @@
+// Permanent Cloudinary URL (uploaded once via scripts/uploadEmailLogo.js) —
+// email clients fetch images over the open internet, so a relative
+// "/images/logo.jpg" path (fine in the browser) would be a broken image
+// here, and building one from CLIENT_URL would break in local dev (that's
+// localhost, unreachable by an email client). Cloudinary is always public,
+// in every environment, so this just works everywhere.
+const LOGO_URL = "https://res.cloudinary.com/dkril9btz/image/upload/v1786984405/khuma-aryal-foundation/email-logo.jpg";
+
 // Wraps inner HTML in a small branded email shell (deep forest header, ivory
 // body, gold accents — matching the site's forest/gilt/cream palette). Used
 // by every transactional email sent via utils/sendEmail.js.
@@ -10,8 +18,17 @@ const wrapEmail = ({ title, preheader, bodyHtml }) => `<!doctype html>
         <td align="center">
           <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6e2d8;">
             <tr>
-              <td style="background:#173b25;padding:22px 28px;">
-                <span style="color:#f8f7f2;font-size:16px;font-weight:700;letter-spacing:0.02em;">Khuma Aryal Foundation</span>
+              <td style="background:#173b25;padding:18px 28px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding-right:12px;">
+                      <img src="${LOGO_URL}" width="36" height="36" alt="" style="display:block;width:36px;height:36px;border-radius:50%;border:2px solid #c9a65b;" />
+                    </td>
+                    <td>
+                      <span style="color:#f8f7f2;font-size:16px;font-weight:700;letter-spacing:0.02em;">Khuma Aryal Foundation</span>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
             <tr>

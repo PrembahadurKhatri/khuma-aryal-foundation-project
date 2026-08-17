@@ -77,16 +77,101 @@ export const getApplications = asyncHandler(async (req, res) => {
   res.json({ success: true, count: applications.length, data: applications });
 });
 
-// @desc   Mark an application new/reviewed
+const STATUS_VALUES = ["new", "reviewed", "shortlisted", "interview", "hired", "rejected"];
+
+// Statuses that represent an actual decision the applicant should be told
+// about — "new"/"reviewed" are internal bookkeeping only.
+const STATUS_COPY = {
+  shortlisted: {
+    subject: (v) => `You've been shortlisted — ${v}`,
+    heading: "You've been shortlisted",
+    lead: (a) => `Good news, ${a.applicantName} — you've been shortlisted for the <strong>${a.vacancyTitle}</strong> position. We'll be in touch soon with next steps.`,
+  },
+  interview: {
+    subject: (v) => `Interview invitation — ${v}`,
+    heading: "Interview invitation",
+    lead: (a) => `Congratulations, ${a.applicantName} — we'd like to invite you for an interview for the <strong>${a.vacancyTitle}</strong> position.`,
+  },
+  hired: {
+    subject: (v) => `Congratulations — offer for ${v}`,
+    heading: "Congratulations!",
+    lead: (a) => `We're delighted to offer you the <strong>${a.vacancyTitle}</strong> position, ${a.applicantName}. Welcome to the team!`,
+  },
+  rejected: {
+    subject: (v) => `Update on your application — ${v}`,
+    heading: "Application update",
+    lead: (a) =>
+      `Thank you for applying for the <strong>${a.vacancyTitle}</strong> position, ${a.applicantName}. After careful review, we won't be moving forward with your application at this time. We appreciate your interest and encourage you to apply for future openings.`,
+  },
+};
+
+// @desc   Update an application's status — shortlisted/interview/hired/
+//         rejected also emails the applicant (optionally with a note, and
+//         for "interview" the picked date/time). new/reviewed are silent
+//         (internal only).
 // @route  PUT /api/applications/:id  (admin)
 export const updateApplicationStatus = asyncHandler(async (req, res) => {
-  const application = await JobApplication.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+  const { status, note, interviewAt } = req.body;
+  if (!STATUS_VALUES.includes(status)) {
+    res.status(400);
+    throw new Error("Invalid status");
+  }
+
+  const update = { status };
+  if (status === "interview" && interviewAt) update.interviewAt = new Date(interviewAt);
+
+  const application = await JobApplication.findByIdAndUpdate(req.params.id, update, { new: true });
   if (!application) {
     res.status(404);
     throw new Error("Application not found");
   }
   res.json({ success: true, data: application });
+
+  if (STATUS_COPY[status]) {
+    notifyApplicantStatusChange(application, status, note).catch((err) => console.error("Applicant status email failed:", err.message));
+  }
 });
+
+// Nepal Time, e.g. "Monday, 25 August 2026 at 10:00 AM (Nepal Time)".
+const formatInterviewTime = (date) =>
+  `${new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Asia/Kathmandu",
+  }).format(date)} (Nepal Time)`;
+
+const notifyApplicantStatusChange = async (application, status, note) => {
+  const copy = STATUS_COPY[status];
+  const interviewBlock =
+    status === "interview" && application.interviewAt
+      ? `<table role="presentation" style="margin-top:16px;width:100%;background:#173b25;border-radius:8px;">
+          <tr><td style="padding:14px 16px;">
+            <span style="display:block;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#d3b46a;">Interview Scheduled</span>
+            <span style="display:block;margin-top:4px;font-size:15px;font-weight:700;color:#ffffff;">${formatInterviewTime(application.interviewAt)}</span>
+          </td></tr>
+        </table>`
+      : "";
+
+  await sendEmail({
+    to: application.email,
+    subject: copy.subject(application.vacancyTitle),
+    html: wrapEmail({
+      title: copy.heading,
+      preheader: copy.heading,
+      bodyHtml: `
+        <p>${copy.lead(application)}</p>
+        ${interviewBlock}
+        ${note ? `<p style="margin-top:16px;padding:14px 16px;background:#f8f7f2;border-left:3px solid #c9a65b;border-radius:4px;">${note}</p>` : ""}
+        <p style="margin-top:20px;">Best regards,<br/>Khuma Aryal Foundation</p>
+      `,
+    }),
+  });
+};
 
 // @desc   Delete an application
 // @route  DELETE /api/applications/:id  (admin)
