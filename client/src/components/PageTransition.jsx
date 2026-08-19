@@ -13,13 +13,19 @@ import { motion } from "framer-motion";
 export default function PageTransition({ children }) {
   return (
     <motion.div
-      // No `scale` here on purpose — scaling the whole routed page while it
-      // contains the Hero's curved SVG mask produced a visible hairline seam
-      // at the section boundary mid-transition. Opacity + drift + blur gives
-      // the same soft crossfade feel without that compositing artifact.
-      initial={{ opacity: 0, y: 26, filter: "blur(6px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
-      exit={{ opacity: 0, y: -10, filter: "blur(4px)", transition: { duration: 0.22, ease: "easeIn" } }}
+      // Pure opacity fade — no `y`/`scale`/`blur`. Any of those force the
+      // whole routed page onto its own GPU-composited layer for the
+      // duration of the animation, and while that layer is active the
+      // Hero section's curved SVG (dark fill + gold stroke + cream fill
+      // stacked on top of each other) shows a hairline seam at its
+      // boundary with the next section — sub-pixel rounding from the
+      // transform, not a spacing/z-index bug. It only clears once the
+      // transform settles and the layer is dropped, hence "line appears
+      // during the transition, gone once it finishes." Opacity alone
+      // doesn't force that layer promotion, so the seam never appears.
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
+      exit={{ opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
     >
       {children}
     </motion.div>
