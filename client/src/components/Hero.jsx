@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import Container from "./Container.jsx";
@@ -20,6 +19,8 @@ const HERO_IMAGES = [
 ];
 
 const SLIDE_INTERVAL = 3000;
+
+const TRUST_KEYS = ["trustBadge1", "trustBadge2", "trustBadge3"];
 
 // `statField` maps to Settings.stats.<field> (see admin's Settings page,
 // "Homepage Stats") — `fallback` covers a freshly-created Settings document
@@ -45,9 +46,9 @@ function ShieldIcon() {
   );
 }
 
-function GrowthIcon({ className = "h-6 w-6" }) {
+function GrowthIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
       <path d="M12 21V10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
       <path
         d="M12 10C12 10 6 10 6 5c5 0 6 3 6 5Z"
@@ -76,13 +77,7 @@ function PeopleIcon() {
   );
 }
 
-function ChevronIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
-      <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+const TRUST_ICONS = [ShieldIcon, GrowthIcon, PeopleIcon];
 
 function ClockIcon() {
   return (
@@ -126,15 +121,6 @@ function HeartIcon() {
 }
 
 const STAT_ICONS = { clock: ClockIcon, grad: GradCapIcon, flag: FlagIcon, heart: HeartIcon };
-
-// Unified trust-strip card below "Our Aim" — title/description come from
-// translations (trustBadge1..4 / trustBadge1Desc..4Desc), icon stays fixed.
-const TRUST_CARDS = [
-  { key: "trustBadge1", descKey: "trustBadge1Desc", Icon: ShieldIcon },
-  { key: "trustBadge2", descKey: "trustBadge2Desc", Icon: GrowthIcon },
-  { key: "trustBadge3", descKey: "trustBadge3Desc", Icon: PeopleIcon },
-  { key: "trustBadge4", descKey: "trustBadge4Desc", Icon: HeartIcon },
-];
 
 export default function Hero({ siteInfo }) {
   const { t } = useLanguage();
@@ -235,8 +221,34 @@ export default function Hero({ siteInfo }) {
         </svg>
       </section>
 
+      {/* ================= TRUST STRIP ================= */}
+      <section className="bg-cream-100 py-8 sm:py-10">
+        <Container>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-4">
+            {TRUST_KEYS.map((key, i) => {
+              const Icon = TRUST_ICONS[i];
+              return (
+                <motion.div
+                  key={key}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="flex items-center gap-3 font-body"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-700 text-white">
+                    <Icon />
+                  </span>
+                  <span className="text-sm font-semibold leading-snug text-forest-900">{t(`home.${key}`)}</span>
+                </motion.div>
+              );
+            })}
+          </div>
+        </Container>
+      </section>
+
       {/* ================= MISSION ================= */}
-      <section className="relative overflow-hidden bg-cream-100 pb-10 pt-4 sm:pb-16 sm:pt-6">
+      <section className="relative overflow-hidden bg-cream-100 pb-16 pt-4 sm:pb-24 sm:pt-6">
         <div className="pointer-events-none absolute -left-32 top-0 h-72 w-72 rounded-full bg-gilt-500/10 blur-3xl" />
         <div className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-forest-500/20 blur-3xl" />
 
@@ -251,7 +263,7 @@ export default function Hero({ siteInfo }) {
               className="font-body"
             >
               <div className="mb-2 flex items-center gap-2">
-
+             
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-forest-600">{t("home.ourAimKicker")}</span>
               </div>
 
@@ -278,17 +290,9 @@ export default function Hero({ siteInfo }) {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
-                className="relative aspect-square sm:aspect-auto"
+                className="aspect-square overflow-hidden rounded-2xl shadow-card sm:aspect-auto"
               >
-                <div className="h-full w-full overflow-hidden rounded-2xl shadow-card">
-                  <img src={HERO_IMAGES[1]} alt="" className="h-full w-full object-cover" />
-                </div>
-
-                {/* Location badge — overlaid on the photo's bottom-left corner */}
-                <div className="absolute bottom-4 left-4 flex max-w-[7rem] items-center gap-2 rounded-xl bg-forest-800/95 px-3 py-2.5 text-white shadow-lift backdrop-blur-sm sm:bottom-5 sm:left-5">
-                  <GrowthIcon className="h-5 w-5 shrink-0" />
-                  <span className="text-xs font-semibold leading-tight">{t("home.heroLocationBadge")}</span>
-                </div>
+                <img src={HERO_IMAGES[1]} alt="" className="h-full w-full object-cover" />
               </motion.div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -311,41 +315,6 @@ export default function Hero({ siteInfo }) {
               </div>
             </div>
           </div>
-        </Container>
-      </section>
-
-      {/* ================= TRUST STRIP — one unified card ================= */}
-      <section className="bg-cream-100 pb-16 sm:pb-24">
-        <Container>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="relative overflow-hidden rounded-2xl border border-forest-100 bg-white p-6 shadow-card sm:p-8"
-          >
-            {/* Faint decorative graphic, bottom-right — purely ambient */}
-            <GrowthIcon className="pointer-events-none absolute -bottom-6 -right-6 h-32 w-32 text-forest-50" />
-
-            <div className="relative grid grid-cols-1 divide-y divide-forest-100 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
-              {TRUST_CARDS.map(({ key, descKey, Icon }) => (
-                <div key={key} className="flex flex-col gap-2 py-5 first:pt-0 last:pb-0 lg:px-6 lg:py-0 lg:first:pl-0 lg:last:pr-0">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-forest-700 text-white">
-                    <Icon />
-                  </span>
-                  <h3 className="text-sm font-bold text-forest-900">{t(`home.${key}`)}</h3>
-                  <p className="text-xs leading-relaxed text-ink-600">{t(`home.${descKey}`)}</p>
-                  <Link
-                    to="/about"
-                    aria-label={t(`home.${key}`)}
-                    className="mt-auto self-end text-forest-300 transition-colors duration-200 hover:text-forest-700"
-                  >
-                    <ChevronIcon />
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </motion.div>
         </Container>
       </section>
     </>
