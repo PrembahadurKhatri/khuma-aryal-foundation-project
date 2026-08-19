@@ -227,21 +227,21 @@ export default function Hero({ siteInfo }) {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-4">
             {TRUST_KEYS.map((key, i) => {
               const Icon = TRUST_ICONS[i];
-              const fromLeft = i % 2 === 0;
+              const tilt = i % 2 === 0 ? -6 : 6;
               return (
                 <motion.div
                   key={key}
-                  initial={{ opacity: 0, x: fromLeft ? -90 : 90, rotate: fromLeft ? -10 : 10, scale: 0.6 }}
-                  whileInView={{ opacity: 1, x: 0, rotate: 0, scale: 1 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ type: "spring", stiffness: 140, damping: 13, delay: i * 0.15 }}
+                  initial={{ opacity: 0, y: 36, rotate: tilt, scale: 0.75 }}
+                  whileInView={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ type: "spring", stiffness: 110, damping: 20, delay: i * 0.15 }}
                   className="flex items-center gap-3 font-body"
                 >
                   <motion.span
-                    initial={{ scale: 0, rotate: -270 }}
+                    initial={{ scale: 0, rotate: -200 }}
                     whileInView={{ scale: 1, rotate: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
-                    transition={{ type: "spring", stiffness: 260, damping: 14, delay: i * 0.15 + 0.2 }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20, delay: i * 0.15 + 0.15 }}
                     className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-700 text-white"
                   >
                     <Icon />
