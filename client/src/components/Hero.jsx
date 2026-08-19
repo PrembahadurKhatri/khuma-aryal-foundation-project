@@ -227,18 +227,25 @@ export default function Hero({ siteInfo }) {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-4">
             {TRUST_KEYS.map((key, i) => {
               const Icon = TRUST_ICONS[i];
+              const fromLeft = i % 2 === 0;
               return (
                 <motion.div
                   key={key}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  initial={{ opacity: 0, x: fromLeft ? -90 : 90, rotate: fromLeft ? -10 : 10, scale: 0.6 }}
+                  whileInView={{ opacity: 1, x: 0, rotate: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ type: "spring", stiffness: 140, damping: 13, delay: i * 0.15 }}
                   className="flex items-center gap-3 font-body"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-700 text-white">
+                  <motion.span
+                    initial={{ scale: 0, rotate: -270 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ type: "spring", stiffness: 260, damping: 14, delay: i * 0.15 + 0.2 }}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-700 text-white"
+                  >
                     <Icon />
-                  </span>
+                  </motion.span>
                   <span className="text-sm font-semibold leading-snug text-forest-900">{t(`home.${key}`)}</span>
                 </motion.div>
               );
@@ -284,7 +291,7 @@ export default function Hero({ siteInfo }) {
             </motion.div>
 
             {/* RIGHT — photo + stat cards */}
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-[0.8fr_1.2fr] sm:items-stretch">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-[0.8fr_1.2fr] sm:items-stretch mt-4">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
