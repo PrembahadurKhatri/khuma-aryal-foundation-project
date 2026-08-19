@@ -189,11 +189,11 @@ export default function Hero({ siteInfo }) {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Button to="/projects" variant="primary">
                 {t("home.heroCtaPrimary")}
-                <span aria-hidden="true">→</span>
+               
               </Button>
               <Button to="/news" variant="outline">
                 {t("home.exploreNews")}
-                <span aria-hidden="true">→</span>
+             
               </Button>
             </div>
           </motion.div>
