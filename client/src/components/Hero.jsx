@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import Container from "./Container.jsx";
@@ -19,8 +20,6 @@ const HERO_IMAGES = [
 ];
 
 const SLIDE_INTERVAL = 3000;
-
-const TRUST_KEYS = ["trustBadge1", "trustBadge2", "trustBadge3"];
 
 // `statField` maps to Settings.stats.<field> (see admin's Settings page,
 // "Homepage Stats") — `fallback` covers a freshly-created Settings document
@@ -77,7 +76,13 @@ function PeopleIcon() {
   );
 }
 
-const TRUST_ICONS = [ShieldIcon, GrowthIcon, PeopleIcon];
+function ArrowRightIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 function ClockIcon() {
   return (
@@ -121,6 +126,15 @@ function HeartIcon() {
 }
 
 const STAT_ICONS = { clock: ClockIcon, grad: GradCapIcon, flag: FlagIcon, heart: HeartIcon };
+
+// 4 trust cards below the hero — title/description come from translations
+// (trustBadge1..4 / trustBadge1Desc..4Desc), icon stays fixed per card.
+const TRUST_CARDS = [
+  { key: "trustBadge1", descKey: "trustBadge1Desc", Icon: ShieldIcon },
+  { key: "trustBadge2", descKey: "trustBadge2Desc", Icon: GrowthIcon },
+  { key: "trustBadge3", descKey: "trustBadge3Desc", Icon: PeopleIcon },
+  { key: "trustBadge4", descKey: "trustBadge4Desc", Icon: HeartIcon },
+];
 
 export default function Hero({ siteInfo }) {
   const { t } = useLanguage();
@@ -221,28 +235,33 @@ export default function Hero({ siteInfo }) {
         </svg>
       </section>
 
-      {/* ================= TRUST STRIP ================= */}
-      <section className="bg-cream-100 py-8 sm:py-10">
+      {/* ================= TRUST STRIP — 4 cards ================= */}
+      <section className="bg-cream-100 py-10 sm:py-14">
         <Container>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-4">
-            {TRUST_KEYS.map((key, i) => {
-              const Icon = TRUST_ICONS[i];
-              return (
-                <motion.div
-                  key={key}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="flex items-center gap-3 font-body"
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {TRUST_CARDS.map(({ key, descKey, Icon }, i) => (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="flex flex-col gap-3 rounded-2xl border border-forest-100 bg-white p-6 shadow-card font-body"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-forest-700 text-white">
+                  <Icon />
+                </span>
+                <h3 className="text-base font-bold text-forest-900">{t(`home.${key}`)}</h3>
+                <p className="flex-1 text-sm leading-relaxed text-ink-600">{t(`home.${descKey}`)}</p>
+                <Link
+                  to="/about"
+                  aria-label={t(`home.${key}`)}
+                  className="flex h-8 w-8 items-center justify-center self-start rounded-full border border-forest-200 text-forest-600 transition-colors duration-200 hover:border-forest-600 hover:bg-forest-600 hover:text-white"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-700 text-white">
-                    <Icon />
-                  </span>
-                  <span className="text-sm font-semibold leading-snug text-forest-900">{t(`home.${key}`)}</span>
-                </motion.div>
-              );
-            })}
+                  <ArrowRightIcon />
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </Container>
       </section>
