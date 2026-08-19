@@ -138,8 +138,15 @@ export default function ProjectDetail() {
   const formattedDate = project?.date
     ? new Date(project.date).toLocaleDateString(DATE_LOCALES[language] || "en-US", { year: "numeric", month: "long", day: "numeric" })
     : "";
+  const formattedEndDate = project?.endDate
+    ? new Date(project.endDate).toLocaleDateString(DATE_LOCALES[language] || "en-US", { year: "numeric", month: "long", day: "numeric" })
+    : "";
   const album = project?.album;
   const albumTitle = album ? pick(album.title, language) : "";
+  // Dedicated hero photo, set independently in the admin panel — falls back
+  // to the first gallery image so older projects without one still show a
+  // real photo instead of the generic default PageHero uses.
+  const heroImage = project?.thumbnail || project?.images?.[0];
 
   // GalleryGrid/Lightbox render { id, src, alt } objects — a project's
   // `images` is just an array of URL strings, so wrap each one here rather
@@ -149,6 +156,7 @@ export default function ProjectDetail() {
   const infoItems = project
     ? [
         formattedDate && { icon: <CalendarIcon />, label: t("projects.date"), value: formattedDate },
+        formattedEndDate && { icon: <CalendarIcon />, label: t("projects.finishDate"), value: formattedEndDate },
         duration && { icon: <ClockIcon />, label: t("projects.duration"), value: duration },
         location && { icon: <PinIcon />, label: t("projects.location"), value: location },
         { icon: <TagIcon />, label: t("projects.categoryLabel"), value: t(`gallery.category${category}`) },
@@ -159,7 +167,7 @@ export default function ProjectDetail() {
 
   return (
     <>
-      <PageHero label={loading ? t("projects.title") : title} />
+      <PageHero label={loading ? t("projects.title") : title} images={heroImage ? [heroImage] : undefined} />
 
       <section className="relative overflow-hidden py-20 sm:py-24">
         {/* Decorative glows + grain — same premium background treatment used

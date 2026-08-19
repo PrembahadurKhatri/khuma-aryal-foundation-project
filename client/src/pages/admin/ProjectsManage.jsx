@@ -4,6 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { fetchProjects, createProject, updateProject, deleteProject } from "../../services/projectService.js";
 import { fetchAlbums } from "../../services/galleryService.js";
 import useToast from "../../hooks/useToast.js";
+import NepaliDateField from "../../components/admin/NepaliDateField.jsx";
 
 // Same category list as gallery Albums (see admin/GalleryManage.jsx) — value
 // is what's stored (and used for the public Projects page's gallery.category*
@@ -25,6 +26,7 @@ const emptyForm = {
   status: "ongoing",
   category: "Event",
   date: "",
+  endDate: "",
   durationEn: "",
   durationNe: "",
   locationEn: "",
@@ -36,6 +38,8 @@ const emptyForm = {
   album: "",
   keepImages: [],
   newImageFiles: [],
+  keepThumbnail: "",
+  thumbnailFile: null,
 };
 
 // Mongo gives back a full ISO datetime; <input type="date"> needs "YYYY-MM-DD".
@@ -109,6 +113,7 @@ const ProjectsManage = () => {
       status: project.status,
       category: project.category || "Event",
       date: toDateInput(project.date),
+      endDate: toDateInput(project.endDate),
       durationEn: project.duration?.en || "",
       durationNe: project.duration?.ne || "",
       locationEn: project.location?.en || "",
@@ -123,6 +128,8 @@ const ProjectsManage = () => {
       album: (typeof project.album === "object" ? project.album?._id : project.album) || "",
       keepImages: project.images || [],
       newImageFiles: [],
+      keepThumbnail: project.thumbnail || "",
+      thumbnailFile: null,
     });
     setShowForm(true);
   };
@@ -244,9 +251,36 @@ const ProjectsManage = () => {
               </select>
             </div>
 
-            <div>
-              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Date</label>
-              <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className={inputClass} />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Start Date</label>
+                <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className={inputClass} />
+                <NepaliDateField
+                  adValue={form.date}
+                  onAdChange={(next) => setForm({ ...form, date: next })}
+                  inputClass={inputClass}
+                  mutedClass={mutedClass}
+                />
+              </div>
+              <div>
+                <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Finish Date</label>
+                <input type="date" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} className={inputClass} />
+                <NepaliDateField
+                  adValue={form.endDate}
+                  onAdChange={(next) => setForm({ ...form, endDate: next })}
+                  inputClass={inputClass}
+                  mutedClass={mutedClass}
+                />
+                {form.endDate && (
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, endDate: "" })}
+                    className={`mt-1 text-[11px] underline ${mutedClass}`}
+                  >
+                    Clear finish date
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -307,6 +341,31 @@ const ProjectsManage = () => {
               <p className={`mt-1 text-xs ${mutedClass}`}>
                 Lets visitors jump from this project's page to that album's full photo collection under Gallery.
               </p>
+            </div>
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Hero / Cover Photo</label>
+              <p className={`mb-2 text-xs ${mutedClass}`}>
+                Shown on the project's hero banner and its card cover. If not set, the first gallery photo below is used instead.
+              </p>
+              {form.keepThumbnail && (
+                <div className="group relative mb-2 w-32">
+                  <img src={form.keepThumbnail} alt="" className="h-20 w-32 rounded-lg object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setForm((prev) => ({ ...prev, keepThumbnail: "" }))}
+                    className="absolute right-1 top-1 rounded-full bg-black/60 px-1.5 text-xs text-white opacity-0 group-hover:opacity-100"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setForm((prev) => ({ ...prev, thumbnailFile: e.target.files?.[0] || null }))}
+                className={inputClass}
+              />
             </div>
 
             {form.keepImages.length > 0 && (

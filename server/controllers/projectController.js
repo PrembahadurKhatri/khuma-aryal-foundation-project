@@ -16,6 +16,9 @@ const fromFlatFields = (body) => ({
   ...(body.status ? { status: body.status } : {}),
   ...(body.category ? { category: body.category } : {}),
   ...(body.date ? { date: body.date } : {}),
+  // "" clears a previously-set finish date (a project that had one can go
+  // back to open-ended) — only a genuinely absent field leaves it untouched.
+  ...(body.endDate !== undefined ? { endDate: body.endDate || null } : {}),
   ...(body.durationEn !== undefined || body.durationNe !== undefined
     ? { duration: { en: body.durationEn || "", ne: body.durationNe || "" } }
     : {}),
@@ -64,8 +67,11 @@ export const getProject = asyncHandler(async (req, res) => {
 // @route  POST /api/projects
 export const createProject = asyncHandler(async (req, res) => {
   const payload = fromFlatFields(req.body);
-  const uploaded = (req.files || []).map((f) => f.path);
+  // req.files is now keyed by field ({ images: [...], thumbnail: [...] })
+  // since the route uses upload.fields() to accept both together.
+  const uploaded = (req.files?.images || []).map((f) => f.path);
   payload.images = uploaded;
+  payload.thumbnail = req.files?.thumbnail?.[0]?.path || "";
   if (req.user?._id && req.user._id !== "local-fallback-admin") payload.createdBy = req.user._id;
 
   const project = await Project.create(payload);
@@ -82,7 +88,7 @@ export const updateProject = asyncHandler(async (req, res) => {
   // (the admin form always sends keepImages, even as "[]") — otherwise a
   // caller updating just one other field (e.g. duration) would silently
   // wipe every existing image. Same guard rationale as title/description/etc above.
-  const uploaded = (req.files || []).map((f) => f.path);
+  const uploaded = (req.files?.images || []).map((f) => f.path);
   if (req.body.keepImages !== undefined || uploaded.length > 0) {
     let keepImages = [];
     if (req.body.keepImages) {
@@ -93,6 +99,14 @@ export const updateProject = asyncHandler(async (req, res) => {
       }
     }
     payload.images = [...keepImages, ...uploaded];
+  }
+
+  // Same guard for the dedicated thumbnail: only touch it if a new file was
+  // uploaded or the admin form explicitly said something about the existing
+  // one (keepThumbnail, possibly "" to clear it after removing it in the UI).
+  const uploadedThumbnail = req.files?.thumbnail?.[0]?.path;
+  if (req.body.keepThumbnail !== undefined || uploadedThumbnail) {
+    payload.thumbnail = uploadedThumbnail || req.body.keepThumbnail || "";
   }
 
   const project = await Project.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });

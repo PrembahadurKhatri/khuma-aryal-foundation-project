@@ -18,6 +18,9 @@ const projectSchema = new mongoose.Schema(
     // so the Projects page's category filter pills match Gallery's exactly.
     category: { type: String, enum: ALBUM_CATEGORIES, default: "Event" },
     date: { type: Date },
+    // Optional — most projects (e.g. "Ongoing since 2024") don't have one
+    // yet, so this stays unset rather than required.
+    endDate: { type: Date },
     // Free text on purpose (e.g. "6 Months", "Jan - Jun 2026", "Ongoing
     // since 2024") rather than a strict start/end date pair — matches how
     // `beneficiaries` is also loose text instead of a strict number, so
@@ -31,6 +34,12 @@ const projectSchema = new mongoose.Schema(
     // collection, not just the few images uploaded directly on the project.
     album: { type: mongoose.Schema.Types.ObjectId, ref: "Album", default: null },
     images: [{ type: String }],
+    // A dedicated photo for the project's hero banner / card cover, set
+    // independently of the gallery `images` array — lets an admin pick
+    // exactly which shot represents the project instead of it defaulting to
+    // whatever happens to be first in `images`. Falls back to `images[0]`
+    // on the frontend when unset (see ProjectCard.jsx/ProjectDetail.jsx).
+    thumbnail: { type: String, default: "" },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

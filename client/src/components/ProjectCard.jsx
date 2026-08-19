@@ -25,7 +25,7 @@ export default function ProjectCard({ project }) {
   const { t, language } = useLanguage();
   const title = pick(project.title, language);
   const description = pick(project.description, language);
-  const cover = project.images?.[0];
+  const cover = project.thumbnail || project.images?.[0];
   const status = project.status || "ongoing";
   const category = project.category || "Event";
 
