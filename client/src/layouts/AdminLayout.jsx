@@ -20,6 +20,7 @@ import {
   Video as VideoIcon,
   ClipboardList,
   Users,
+  Landmark,
 } from "lucide-react";
 import useAuth from "../hooks/useAuth.js";
 import { ToastProvider } from "../contexts/ToastContext.jsx";
@@ -37,6 +38,7 @@ const navItems = [
   { to: "/admin/gallery", label: "Gallery", icon: Image },
   { to: "/admin/videos", label: "Gallery Videos", icon: VideoIcon },
   { to: "/admin/leadership", label: "Leadership", icon: Users },
+  { to: "/admin/board-members", label: "Board Members", icon: Landmark },
   { to: "/admin/messages", label: "Messages", icon: Mail },
   { to: "/admin/settings", label: "Settings", icon: SettingsIcon },
 ];

@@ -2,11 +2,12 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { useContent } from "../hooks/useContent.js";
-import { getMessages, getProjects, getNews, getNotices, getSiteInfo } from "../services/contentService.js";
+import { getMessages, getBoardMembers, getProjects, getNews, getNotices, getSiteInfo } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import Hero from "../components/Hero.jsx";
 import Reveal from "../components/Reveal.jsx";
 import LeadershipMessages from "../components/leadership/LeadershipMessages.jsx";
+import BoardMembers from "../components/BoardMembers.jsx";
 import NewsCard from "../components/NewsCard.jsx";
 import NoticeCard from "../components/NoticeCard.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
@@ -71,6 +72,7 @@ const EXPLORE_LINKS = [
 export default function Home() {
   const { t } = useLanguage();
   const { data: messages, loading } = useContent(getMessages);
+  const { data: boardMembers, loading: boardLoading } = useContent(getBoardMembers);
   const { data: projects, loading: projectsLoading } = useContent(getProjects);
   const { data: news, loading: newsLoading } = useContent(getNews);
   const { data: notices, loading: noticesLoading } = useContent(getNotices);
@@ -89,6 +91,10 @@ export default function Home() {
       <Hero siteInfo={siteInfo} />
       {/* Leadership messages */}
       <LeadershipMessages messages={messages} loading={loading} />
+
+      {/* Board Members — plain photo directory, separate from the
+          Founder/President/leadership "Messages" section above. */}
+      <BoardMembers members={boardMembers} loading={boardLoading} />
 
       {/* Latest News / Notices / Projects — three separate teaser sections,
           each using the exact same card component as its own full page

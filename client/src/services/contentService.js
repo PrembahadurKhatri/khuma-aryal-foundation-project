@@ -27,6 +27,13 @@ export async function getMessages() {
   return data.data.map(withId);
 }
 
+// Home page's "Board Members" grid — see models/BoardMember.js and the
+// admin "Board Members" page (admin/BoardMembersManage.jsx).
+export async function getBoardMembers() {
+  const { data } = await api.get("/board-members");
+  return data.data.map(withId);
+}
+
 export async function getProjects() {
   const { data } = await api.get("/projects");
   return data.data.map(withId);

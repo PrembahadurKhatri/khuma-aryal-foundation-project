@@ -33,6 +33,7 @@ import VacanciesManage from "./pages/admin/VacanciesManage.jsx";
 import VideosManage from "./pages/admin/VideosManage.jsx";
 import ApplicationsManage from "./pages/admin/ApplicationsManage.jsx";
 import LeadersManage from "./pages/admin/LeadersManage.jsx";
+import BoardMembersManage from "./pages/admin/BoardMembersManage.jsx";
 
 export default function App() {
   return (
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="projects" element={<ProjectsManage />} />
           <Route path="gallery" element={<GalleryManage />} />
           <Route path="leadership" element={<LeadersManage />} />
+          <Route path="board-members" element={<BoardMembersManage />} />
           <Route path="messages" element={<MessagesManage />} />
           <Route path="settings" element={<SettingsManage />} />
         </Route>
