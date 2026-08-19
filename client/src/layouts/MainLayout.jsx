@@ -4,7 +4,6 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import PageTransition from "../components/PageTransition.jsx";
 import RouteSweep from "../components/RouteSweep.jsx";
-import LogoFlipOverlay from "../components/LogoFlipOverlay.jsx";
 import useTrackVisit from "../hooks/useTrackVisit.js";
 import { SiteInfoProvider } from "../contexts/SiteInfoContext.jsx";
 
@@ -18,7 +17,6 @@ export default function MainLayout() {
   return (
     <SiteInfoProvider>
       <div className="flex min-h-screen flex-col bg-cream-100">
-        <LogoFlipOverlay />
         <RouteSweep />
         <Navbar />
         <main className="flex-1">
