@@ -23,8 +23,13 @@ export default function BoardMembers({ members, loading }) {
   if (!loading && (!members || members.length === 0)) return null;
 
   return (
-    <section className="bg-cream-100 py-20 sm:py-24">
-      <Container className="flex flex-col gap-12">
+    <section className="relative overflow-hidden bg-cream-100 py-20 sm:py-24">
+      {/* Same premium decorative-glow treatment used on the other Home
+          sections (Hero's Mission section, ProjectDetail, etc). */}
+      <div className="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-gilt-500/10 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-forest-500/10 blur-3xl" aria-hidden="true" />
+
+      <Container className="relative flex flex-col gap-12">
         <Reveal className="flex flex-col items-center gap-4 text-center">
           <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-forest-600">
             {t("home.boardKicker")}
@@ -36,18 +41,38 @@ export default function BoardMembers({ members, loading }) {
         </Reveal>
 
         {loading || !members ? (
-          <Skeleton count={4} />
+          <Skeleton count={5} />
         ) : (
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
             {members.map((member, i) => {
               const name = pick(member.name, language);
               const designation = pick(member.designation, language);
               return (
-                <Reveal key={member.id} delay={(i % 4) * 0.06} variant="scale" className="flex flex-col items-center gap-3 text-center font-body">
-                  <Avatar name={name} src={member.photo} size="lg" />
+                <Reveal
+                  key={member.id}
+                  delay={(i % 5) * 0.06}
+                  variant="scale"
+                  className="group flex flex-col items-center gap-4 rounded-2xl border border-transparent p-5 text-center font-body transition-all duration-500 hover:-translate-y-2 hover:border-forest-100 hover:bg-white hover:shadow-lift"
+                >
+                  {/* Photo — a soft gilt glow blooms behind it and the ring
+                      tightens + gilds on hover, while the photo itself
+                      zooms slightly, all purely on the wrapping elements so
+                      Avatar's own fallback/ring styling stays untouched. */}
+                  <div className="relative">
+                    <div className="absolute inset-0 -z-10 rounded-full bg-gilt-400/0 blur-xl transition-colors duration-500 group-hover:bg-gilt-400/35" />
+                    <div className="rounded-full ring-0 ring-gilt-400/0 transition-all duration-500 group-hover:ring-4 group-hover:ring-gilt-400/60">
+                      <div className="overflow-hidden rounded-full transition-transform duration-500 ease-out group-hover:scale-110">
+                        <Avatar name={name} src={member.photo} size="lg" />
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
-                    <p className="text-sm font-bold text-forest-900 sm:text-base">{name}</p>
-                    <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-gilt-600">{designation}</p>
+                    <p className="text-sm font-bold text-forest-900 transition-colors duration-300 group-hover:text-forest-700 sm:text-base">{name}</p>
+                    <p className="relative mt-1 inline-block text-xs font-semibold uppercase tracking-wide text-gilt-600">
+                      {designation}
+                      <span className="absolute -bottom-1.5 left-1/2 h-px w-0 -translate-x-1/2 bg-gilt-500 transition-all duration-500 ease-out group-hover:w-full" />
+                    </p>
                   </div>
                 </Reveal>
               );
