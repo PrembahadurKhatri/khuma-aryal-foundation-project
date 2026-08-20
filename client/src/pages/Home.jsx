@@ -101,7 +101,7 @@ export default function Home() {
           (NewsCard/NoticeCard/ProjectCard), not a simplified summary — so a
           card here looks identical to the one a visitor sees after clicking
           through. */}
-      <section className="relative overflow-hidden bg-cream-100 py-20 sm:py-24">
+      <section className="relative overflow-hidden bg-cream-100 py-16 sm:py-20">
         <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-gilt-200/20 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-forest-100/40 blur-3xl" aria-hidden="true" />
         <Container className="relative">
@@ -124,7 +124,7 @@ export default function Home() {
           </div>
 
           {/* Important Notices */}
-          <div className="mt-20">
+          <div className="mt-10">
             <SectionHeader title={t("home.updatesNoticesTitle")} action={<ViewAllLink to="/news" label={t("home.readMore")} />} />
             {noticesLoading || !notices ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -146,7 +146,7 @@ export default function Home() {
           </div>
 
           {/* Latest Projects */}
-          <div className="mt-20">
+          <div className="mt-10">
             <SectionHeader title={t("home.updatesProjectsTitle")} action={<ViewAllLink to="/projects" label={t("home.readMore")} />} />
             {projectsLoading || !projects ? (
               <CardSkeleton />

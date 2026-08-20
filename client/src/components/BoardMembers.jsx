@@ -23,7 +23,11 @@ export default function BoardMembers({ members, loading }) {
   if (!loading && (!members || members.length === 0)) return null;
 
   return (
-    <section className="relative overflow-hidden bg-cream-100 py-20 sm:py-24">
+    // bg-cream-50 (pure white) instead of the cream-100 every neighboring
+    // section uses — a subtle alternation so Leadership -> Board -> Updates
+    // reads as three distinct, designed zones instead of one long flat
+    // stretch of identical background.
+    <section className="relative overflow-hidden bg-cream-100 py-10 sm:py-5">
       {/* Same premium decorative-glow treatment used on the other Home
           sections (Hero's Mission section, ProjectDetail, etc). */}
       <div className="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-gilt-500/10 blur-3xl" aria-hidden="true" />

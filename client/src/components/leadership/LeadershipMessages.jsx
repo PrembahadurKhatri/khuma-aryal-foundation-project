@@ -59,7 +59,7 @@ export default function LeadershipMessages({ messages, loading }) {
   }, [messages]);
 
   return (
-    <section className="bg-cream-100 py-24 sm:py-28 lg:py-32">
+    <section className="bg-cream-100 py-16 sm:py-20 lg:py-24">
       <Container className="flex flex-col gap-16 sm:gap-20">
         {/* Section header */}
         <Reveal className="flex flex-col items-center gap-4 text-center">
