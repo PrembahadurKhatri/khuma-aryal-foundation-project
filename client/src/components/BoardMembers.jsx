@@ -71,7 +71,7 @@ export default function BoardMembers({ members, loading }) {
                     <p className="text-sm font-bold text-forest-900 transition-colors duration-300 group-hover:text-forest-700 sm:text-base">{name}</p>
                     <p className="relative mt-1 inline-block text-xs font-semibold uppercase tracking-wide text-gilt-600">
                       {designation}
-                      <span className="absolute -bottom-1.5 left-1/2 h-px w-0 -translate-x-1/2 bg-gilt-500 transition-all duration-500 ease-out group-hover:w-full" />
+                     
                     </p>
                   </div>
                 </Reveal>
