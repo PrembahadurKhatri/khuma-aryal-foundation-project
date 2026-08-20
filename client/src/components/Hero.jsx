@@ -6,16 +6,16 @@ import Button from "./Button.jsx";
 import CountUpStat from "./CountUpStat.jsx";
 import Reveal from "./Reveal.jsx";
 
+// Real photos of the Foundation's own work — hosted on Cloudinary (the same
+// storage every admin-uploaded photo already uses), so unlike the previous
+// Facebook CDN links these never expire. Pulled from actual Gallery/Project
+// entries already live in the database, one per headline pillar
+// (Education/Health/Sports/Employment) so the rotation matches the hero copy.
 const HERO_IMAGES = [
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/612840432_1210440831271300_6264311500156313399_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x1200&ctp=s1600x1200&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=JV7LCZ4OW94Q7kNvwEihMaZ&_nc_oc=Adrlt0rzysaJ8x1dFRNTbSxNeF7YRpk-3IzmcmWppV7Iety99XgQsHc3c-hMsv_pjk93gUSpNyMlLVlFJkQ9yVJs&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=mj_IcuhC2ctsA_YUmmDo8Q&_nc_ss=7b2a8&oh=00_AQE70kvZ8JAobHzaltU47GVmreUgKxl11BSpy6c5ZVcdfQ&oe=6A80D825",
-
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/635500393_1244924151156301_1995148282506706674_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x1200&ctp=s1600x1200&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEec1llwMXY4jmUjSCzeewgKtIY9i1hTlMq0hj2LWFOU48eDawdJxnNVatqv_Izj3gCYeiyzCqS91PdITiG6QUK&_nc_ohc=t1R9JFQXwb8Q7kNvwHKRpl_&_nc_oc=AdpH-qKrSLrPAv5T9POxCSwN89bZEgQUjOPII4BCnOELm87QQ54B-v7n8BUPFYC-WbFRAD5jBenmbDdKZMrp5Uc5&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=wCdPx4JSlWUwOT6BLDb95A&_nc_ss=7b2a8&oh=00_AQElkd4d8i02zvWGztORI055rCZ2nXEKqWoi5T4gL5PWpQ&oe=6A84A891",
-
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/587012697_1176232828025434_1804289357828893127_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=EX1CkDTNNVMQ7kNvwGzJQHj&_nc_oc=AdrM70Sg8qY1EnBXTaYd4rVcfTvAQaAkEOLCaZiRc7Qpnb1BjW0i-Q5uNnFNIHKyInHWgpp_R1iylw1R3pmzYGSN&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=0y5r7pbHXVMUws1EhveltA&_nc_ss=7b2a8&oh=00_AQENxvsQPO8h0YtBdF-uz_MRJynRdcDWmC-X97O9NYp94g&oe=6A80DC35",
-
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/677925899_1301130065535709_607819062010126301_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x948&ctp=s2048x948&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHHEfR9X_f_jROEXcRXMgYFw3mXMO3P-WXDeZcw7c_5ZY-DoV7qKQn7UfHZR46bCoMRbuoabEFwIGVrAglYQ_1s&_nc_ohc=13TV07DBmaUQ7kNvwEOiDBh&_nc_oc=Adq3NTlLazhQDy7XVUU4cJFE1rxfukpU0VzLJLSETAdJjmo9kXIgGr3JTSNIuwariAmpcrXMibPseI1q1gQExvgS&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=VIJegTG3swSBbbcdylBrwA&_nc_ss=7b2a8&oh=00_AQHfXH1qcSlYTwbWSR_Sh8-JZTPDsDPE4lOeBrAORa7BTQ&oe=6A84CA19",
-
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/616193004_1215521387429911_5719217226397333462_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1367&ctp=s2048x1367&_nc_cat=109&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeE68hB2nr1jKaL0IQHw0pOuDuLEefSZBBsO4sR59JkEG0n1B9H-Rlp_BkVt42N6QnvrueLHv9VBGH-UlesfktZ5&_nc_ohc=L9_MzqQQexYQ7kNvwHFricQ&_nc_oc=AdpYFq9JJR4Z-7LjeFK2xXmQqbAfmVG3fzFrc5i6NcX8Dw_ZzpZCTDKtLeV2Q6Mgk4k3tL3Lzgcy5mk0m-e7q31X&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=RBABktXl6KudF6i91itbrQ&_nc_ss=7b2a8&oh=00_AQGVx4M9zKWewRTcVe9XMfW-H8MSBcd2DexE5QK1m_rFvg&oe=6A8646CC",
+  "https://res.cloudinary.com/dkril9btz/image/upload/v1786787003/khuma-aryal-foundation/h4nmrilqhk8crbsb5ybg.jpg", // School Scholarship Distribution
+  "https://res.cloudinary.com/dkril9btz/image/upload/v1786787006/khuma-aryal-foundation/pdhgiius9ynmuxlxchvx.jpg", // Community Health Camp
+  "https://res.cloudinary.com/dkril9btz/image/upload/v1787145785/khuma-aryal-foundation/wv0cveqvlwb7phuyqvdh.jpg", // Khuma Aryal Cup T20 Cricket League
+  "https://res.cloudinary.com/dkril9btz/image/upload/v1786803228/khuma-aryal-foundation/jj6tefrb1zajjepnpxuk.webp", // Youth recognition ceremony
 ];
 
 const SLIDE_INTERVAL = 3000;
