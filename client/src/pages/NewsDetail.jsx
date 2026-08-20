@@ -6,7 +6,6 @@ import { getNewsItem } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
-import PlaceholderImage from "../components/PlaceholderImage.jsx";
 
 const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
 
@@ -65,7 +64,13 @@ export default function NewsDetail() {
 
   return (
     <>
-      <PageHero label={loading ? t("news.sectionLatestNews") : title} />
+      {/* The article's own photo becomes the hero background instead of a
+          generic default — PageHero already falls back to the Foundation's
+          logo (see PageHero.jsx's `slides` default) when a news item has no
+          photo, so no extra fallback logic is needed here. `hideLabel`
+          drops the title-pill overlay since the full headline is already
+          shown right below in the article body. */}
+      <PageHero label={loading ? t("news.sectionLatestNews") : title} images={news?.image ? [news.image] : undefined} hideLabel />
 
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />
@@ -90,11 +95,6 @@ export default function NewsDetail() {
           ) : (
             <Reveal>
               <div className="overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card">
-                {news.image && (
-                  <div className="relative h-64 w-full overflow-hidden sm:h-80">
-                    <PlaceholderImage src={news.image} alt={title} label={title} />
-                  </div>
-                )}
                 <div className="flex flex-col gap-5 p-7 sm:p-9">
                   <div className="flex flex-wrap items-center gap-3">
                     <span className="inline-flex items-center gap-1 rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-700">

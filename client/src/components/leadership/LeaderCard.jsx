@@ -25,7 +25,7 @@ export default function LeaderCard({ leader, onRead, delay = 0 }) {
           <Avatar name={name} src={leader.photo} size="lg" />
         </div>
         <div>
-          <p className="font-display text-lg font-bold text-forest-900">{name}</p>
+          <p className="font-body text-lg font-bold text-forest-900">{name}</p>
           <p className="font-body text-xs font-semibold uppercase tracking-wide text-gilt-600">{title}</p>
 
         </div>

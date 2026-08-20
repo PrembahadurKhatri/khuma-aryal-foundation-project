@@ -44,7 +44,7 @@ const SLIDE_INTERVAL = 3000;
  * rather than a natural photo) instead of the light default meant to keep a
  * real photo's subjects visible.
  */
-export default function PageHero({ label, images, colorBackground = false, title, titleHighlight, description, badges, strongOverlay = false }) {
+export default function PageHero({ label, images, colorBackground = false, title, titleHighlight, description, badges, strongOverlay = false, hideLabel = false }) {
   const slides = images && images.length > 0 ? images : ["/images/khumalogo.png"];
   const [index, setIndex] = useState(0);
 
@@ -118,16 +118,21 @@ export default function PageHero({ label, images, colorBackground = false, title
             : "absolute inset-x-0 top-6 z-10 flex flex-col items-start gap-3 sm:top-8"
         }
       >
-        <motion.span
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 rounded-full border border-gilt-400/40 bg-forest-950/55 px-4 py-1.5 font-body text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-soft backdrop-blur-md"
-          style={{ textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-gilt-400" />
-          {label}
-        </motion.span>
+        {/* `label` still drives the image's `alt` text either way — `hideLabel`
+            only skips the visible pill (e.g. NewsDetail, where the headline
+            would otherwise be shown twice: once here, once in the article body). */}
+        {!hideLabel && (
+          <motion.span
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 rounded-full border border-gilt-400/40 bg-forest-950/55 px-4 py-1.5 font-body text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-soft backdrop-blur-md"
+            style={{ textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-gilt-400" />
+            {label}
+          </motion.span>
+        )}
 
         {title && (
           <motion.h1
