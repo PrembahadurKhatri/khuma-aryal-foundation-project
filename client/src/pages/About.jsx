@@ -211,7 +211,7 @@ export default function About() {
           you can never see the same photo twice on screen at once, even
           though the track itself still duplicates the list once (a standard
           trick for a seamless loop with no visible jump/reset). */}
-      <section className="bg-white py-20 sm:py-24">
+      <section className=" bg-gradient-to-br from-cream-100 via-cream to-cream-100 py-20 sm:py-24">
         <Container className="flex flex-col gap-12">
           <Reveal className="flex flex-col items-center gap-3 text-center">
             <h2 className="font-body text-2xl font-bold uppercase tracking-wide text-forest-900 sm:text-3xl">
@@ -261,17 +261,17 @@ export default function About() {
       </section>
 
       {/* ================= MISSION & VISION ================= */}
-<section className="relative overflow-hidden bg-gradient-to-br from-white via-cream-50 to-cream-100 py-24 sm:py-28">
+<section className="relative overflow-hidden  bg-gradient-to-br from-cream-100 via-cream to-cream-100 py-24 sm:py-28">
 
   {/* Background Decorations */}
   <div className="absolute -left-40 top-0 h-[420px] w-[420px] rounded-full bg-gilt-400/10 blur-3xl" />
   <div className="absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-forest-800/5 blur-3xl" />
 
-  <Container className="relative z-10">
+  <Container className="relative z-10 ">
 
     {/* Section Heading */}
     <Reveal>
-      <div className="mb-16 text-center">
+      <div className="mb-16 text-center ">
 
      
 
@@ -279,7 +279,7 @@ export default function About() {
           {t("about.missionVisionTitle")}
         </h2>
 
-        <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-600">
+        <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-gray-600 ">
           Guided by compassion, integrity, and service, our mission and vision
           define our commitment to creating meaningful and lasting change.
         </p>
