@@ -14,12 +14,12 @@ import PageHero from "../components/PageHero.jsx";
 // Blood Donation & School Support have their own about.work* keys since
 // there's no existing equivalent elsewhere on the site.
 const WORK_ITEMS = [
-  {  titleKey: "home.pillarEducation", descKey: "home.pillarEducationDesc", image: "https://scontent.fpkr1-1.fna.fbcdn.net/v/t1.6435-9/69793051_125662108785690_5809715434240344064_n.jpg?stp=dst-jpg_tt6&cstp=mx960x720&ctp=s960x720&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=MfFKCgZ9PEUQ7kNvwHowYS0&_nc_oc=Adpdx3Bnh_yyEJQV6R26Ca3r6bNyOcC3y7kb0JQcXHjtcloik9tvScw1Iq9GaWZXcX-wrrKq0Ryi1iVsUDDcY06P&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=rwvpyhxK1-vJ2eu8sXH8EA&_nc_ss=7b2a8&oh=00_AQHadRIRD_c4Jry1NRyMQge9nyOx36FIT0AyyoP40fe08A&oe=6AA421AD" },
-  {  titleKey: "home.pillarHealth", descKey: "home.pillarHealthDesc", image: "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/486823106_984248633890522_484607770406747500_n.jpg?stp=dst-jpg_tt6&cstp=mx960x960&ctp=s960x960&_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=OU64WDiYVfsQ7kNvwGid1zq&_nc_oc=Adr3I3JaPxFotW2vsMtScX-6gf9NMWZ2QY5gYfY91xhObx2anMI0GBDJ1CjtEKCJnw8RJIkQueh5PsOQKlOtM9IO&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=2aZlIJUyyFexfVATwhZ-aA&_nc_ss=7b2a8&oh=00_AQFwRPvgB7DKMRa7rFNsOk16pg2CY5CvYTfs7i13OoHwsw&oe=6A825431" },
-  {  titleKey: "home.pillarSports", descKey: "home.pillarSportsDesc", image: "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/624837580_1228335686148481_5155746346685952178_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=110&ccb=1-7&_nc_sid=f727a1&_nc_ohc=ulgEADvOtOMQ7kNvwEaUgOJ&_nc_oc=Adq3t6ZESFbPEYQanGl3SMbAcEtB4KJJYzuD6ZxGiySC-owNepgTVUJlemn4w54k4zJf_WRu7g_21YwSZl7Orlzf&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=-X_kidxgaDsWuuoJ7lIaCA&_nc_ss=7b2a8&oh=00_AQGMx5U7jk-t-qlGbMwcccd_eq9OXLHCsaYb5VlBVeJGjA&oe=6A826F0E" },
-  {  titleKey: "about.workBloodDonationTitle", descKey: "about.workBloodDonationDesc", image: "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/587032325_1176229684692415_2894262075189041904_n.jpg?stp=cp6_dst-jpg_tt6&cstp=mx736x1000&ctp=s736x1000&_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=iYMUZ4j3QmAQ7kNvwF1cqN0&_nc_oc=AdocCXjG35WI4dVid9HDnYSDofYXArM_zVC1h8R_wF4q4YEHfOHEgxZIEq6sMXM_dNZm2Oysed-QfNpQjFSUK7pO&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=GYh1Qus9d8hJPqszqnuL1Q&_nc_ss=7b2a8&oh=00_AQHdRpcAj5Wjm4j7J34p8cf_Rosz89cTZnhG50cJuBTpvQ&oe=6A827AB4" },
-  {  titleKey: "about.workSchoolSupportTitle", descKey: "about.workSchoolSupportDesc", image: "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/593458221_1184793670502683_8870967002735546520_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1536&ctp=s2048x1536&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=SijN99myihMQ7kNvwHEE-mF&_nc_oc=AdqSD2F4wJfP5wGulrLWLHaAlh5-H-gKAxQ7BhMODbv8R_k6S5zewxmL-tUefC0obexpfaJ4OKikNLR1susW0Io_&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=bEWrLnpI2KSyqlFkfY8cNA&_nc_ss=7b2a8&oh=00_AQFtS7aNiv5RFCaR4gxwfpfQ0C_dy-vN5IWhPqNLbglOAw&oe=6A8279E1" },
-  {  titleKey: "home.pillarEmployment", descKey: "home.pillarEmploymentDesc", image: "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/676586471_1300140468968002_1277633533144413178_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x948&ctp=s2048x948&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=1Mqg3qB_6F0Q7kNvwHsiZ34&_nc_oc=AdqcSH44WjFSnYY3SbWfOEtug8q125GL-kSJEiYPr9v_inU_5GGuo07CHWXhH-HodPFRuid0Epd9YpgdprJ2TrfM&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=vN_JG9FWKWXbfi1HgRWD2w&_nc_ss=7b2a8&oh=00_AQEm4jG9lZQX0HJsr4oL8z82iiURJUs8_SNobBmuX18w_A&oe=6A826AC3" },
+  {  titleKey: "home.pillarEducation", descKey: "home.pillarEducationDesc", image: "/images/education.jpg" },
+  {  titleKey: "home.pillarHealth", descKey: "home.pillarHealthDesc", image: "/images/healthcare.jpg" },
+  {  titleKey: "home.pillarSports", descKey: "home.pillarSportsDesc", image: "/images/sports.jpg" },
+  {  titleKey: "about.workBloodDonationTitle", descKey: "about.workBloodDonationDesc", image: "/images/about1.jpg" },
+  {  titleKey: "about.workSchoolSupportTitle", descKey: "about.workSchoolSupportDesc", image: "/images/projectt.jpg" },
+  {  titleKey: "home.pillarEmployment", descKey: "home.pillarEmploymentDesc", image: "/images/selfemp.jpg" },
 ];
 
 function PinIcon() {
@@ -173,7 +173,7 @@ export default function About() {
               <div className="lg:sticky lg:top-28">
                 <div className="group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-lift sm:aspect-[3/4]">
                   <PlaceholderImage
-                    src="https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/727613560_1349550987360283_6157546229556903312_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x1200&ctp=s1600x1200&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ZRzwTrLcEWkQ7kNvwGuflHZ&_nc_oc=Adq2bXmBqoGgikJ-yfzXQ5ruzFq-RTU0Ch_7LgtTKYE0Yik4_AmApFhFuZaQFe4J40rism6irozz8m4ym_5F3CQZ&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=kMfwwlkofrkcWwXgCb5ssg&_nc_ss=7b2a8&oh=00_AQEHZtIU2moHFKQIivVBmjqj3UmOcLm6Hsovar2PkU2HkQ&oe=6A828253"
+                    src="/images/aboutus.jpg"
                     alt={t("about.profileTitle")}
                     label="Foundation profile photo"
                     imgClassName="transition-transform duration-700 ease-out group-hover:scale-105"

@@ -12,9 +12,8 @@ import Skeleton from "../components/Skeleton.jsx";
 // Real photos of the Foundation's work, cycling in the hero the same way
 // the Gallery page's hero does (see GALLERY_HERO_IMAGES in Gallery.jsx).
 const PROJECTS_HERO_IMAGES = [
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/613637167_1211826831132700_3088207031871571548_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1366&ctp=s2048x1366&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGmr0EGrs-15wvA2Fza-kY3DcbI-BG8Ik8Nxsj4EbwiT_JO5nVKrnPgdzTXGKSjOjcEzvDplLMVBZVrqz2fuiLD&_nc_ohc=YVaV7TbrKGAQ7kNvwGb5YBS&_nc_oc=AdqYOVhiWASq1OfuJTAPfo6HSCKJliSP-uPdaEL95Pp1ttPRFgE05hpt8L-xiNhodCIz2VeSAb9rTaPbjITLdrdj&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=oTUYWZT6Q2nnh2A2SZCChA&_nc_ss=7b2a8&oh=00_AQH8GOhVeGcDyoRyu2sxzqwftkLaIJKShpJIrrBNqUmIDA&oe=6A861A09",
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/622245734_1226398426342207_326528580162098212_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=109&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeGbp2Xk_4q6o1qVzWlPE-T37SoXLqzWB8DtKhcurNYHwNuJd0ZUuQL5TjN0lAlu7fNDxdJobwcD6XOnrnv6dcGm&_nc_ohc=tYeuShVx16kQ7kNvwE-v7kV&_nc_oc=Adou0d3Rj2LhS8hpL0dDV7jTddtQM0BqtkpEX5ieMd81qK6qSQJQd5aUmdyKE7UjxRxeu4gfG39Y6XyFES8Wf4Tj&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=RloHp_heGBLUFqa8wRX6XQ&_nc_ss=7b2a8&oh=00_AQEgppWGnNQqNu7mX9RTBLHw9S72YylWd_sVeLIxrPJdFA&oe=6A8647E3",
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/616798895_1217759630539420_4127296035359729089_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=108&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeEGIAi9HY_F6u_3meIyVsv-RAuOHngZ2iVEC44eeBnaJQ7qZ9VQREetHSo5AJiTlLRD2PZ04w8wKkdIbtyQ3IHD&_nc_ohc=dVNdKvSm7x8Q7kNvwEX9mb4&_nc_oc=AdoQ6Rj_F9Db_iWuy14eA7tlpk1hCc_M8N27F_qMX1KTQMYwADkA3WsgDeNF5yrXhFTYmgezQtFkdtycV-1DNoa5&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=BfG5GaevxL_inK1ZzoKJvA&_nc_ss=7b2a8&oh=00_AQGGyMWtF0Z0cOZBiI5Pj5EUbkxPctYn65Z4nVOF-5FPHg&oe=6A8898D6"
+  "/images/projectt.jpg",
+  "/images/projectt2.jpg"
 ];
 
 // Same category list as the Gallery page (see components/gallery's

@@ -12,8 +12,8 @@ import VideoLightbox from "../components/gallery/VideoLightbox.jsx";
 // Real photos of the Foundation's work, cycling in the hero the same way
 // the Home page's hero slides through HERO_IMAGES (see components/Hero.jsx).
 const GALLERY_HERO_IMAGES = [
-  "https://i.redd.it/g2p5honq8ye71.jpg",
-  "https://scontent.fpkr1-1.fna.fbcdn.net/v/t39.30808-6/615557641_1218005417181508_659253275639996851_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=103&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeF0dfL3ogb2cjv2OcbBsOwLKgFfU6k02dEqAV9TqTTZ0bghn0dckuEVnWWYxWx53ay4LDNF4aJp21tIMh_ascgv&_nc_ohc=_iJocRNUGAYQ7kNvwH9h_0j&_nc_oc=AdoQfzZ3nkxjQOpmDiEr3xWjiwxv2-wiax2w0zaapZxhUaLmG9x3Tv8z5Bba6Wc1JvnunlCBteJigOdkpWYdkBEJ&_nc_zt=23&_nc_ht=scontent.fpkr1-1.fna&_nc_gid=rRKK7TcFYr8nuq8u-2NTNA&_nc_ss=7b2a8&oh=00_AQELcDiFXbWeYT--TJKbvRNNQDyNIzWDflN7tFlbT2mbzQ&oe=6A85D980",
+  "/images/gallery.webp",
+  "/images/galleyr2.jpg",
 ];
 
 const CATEGORIES = ["All", "Event", "Education", "Health", "Community", "Distribution", "DisasterRelief"];
