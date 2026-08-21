@@ -166,8 +166,15 @@ export default function PageHero({ label, images, colorBackground = false, title
           </motion.p>
         )}
 
-        {badges && badges.length > 0 && (
-          <div className="mt-1 flex flex-wrap gap-2.5">
+      </Container>
+
+      {/* Badges row — anchored bottom-center rather than stacked under the
+          label/title, so it reads as its own row of section shortcuts
+          sitting low in the photo instead of crowding the kicker/title
+          block up top. Only News.jsx passes `badges` today. */}
+      {badges && badges.length > 0 && (
+        <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-24">
+          <div className="flex flex-wrap justify-center gap-2.5">
             {badgesAreIcons
               ? badges.map((badge, i) => (
                   <motion.div
@@ -175,9 +182,9 @@ export default function PageHero({ label, images, colorBackground = false, title
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
-                    className="flex w-[4.5rem] flex-col items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2 py-3 text-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md sm:w-20"
+                    className="flex w-[4.5rem] flex-col items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2 py-3 text-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-gilt-400/60 hover:bg-white/20 hover:shadow-lift sm:w-20"
                   >
-                    <span className="text-white">{badge.icon}</span>
+                    <span className="text-white transition-colors duration-300">{badge.icon}</span>
                     <span className="font-body text-[10px] font-semibold leading-tight text-white sm:text-[11px]">{badge.label}</span>
                   </motion.div>
                 ))
@@ -187,14 +194,14 @@ export default function PageHero({ label, images, colorBackground = false, title
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 font-body text-xs font-semibold text-white shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 font-body text-xs font-semibold text-white shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-gilt-400/60 hover:bg-white/20 hover:shadow-lift"
                   >
                     {badge}
                   </motion.span>
                 ))}
           </div>
-        )}
-      </Container>
+        </div>
+      )}
 
       {/* Bottom curve — a layered wave shared by every hero section (Home,
           About, Gallery, Projects, News). The green + gold curve shares the

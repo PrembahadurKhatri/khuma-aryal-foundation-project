@@ -239,13 +239,13 @@ export default function News() {
 
   return (
     <>
+      {/* No title/description here on purpose — just the kicker pill
+          (top-left, same compact placement every other inner page uses)
+          and the badges row anchored low in the photo. */}
       <PageHero
         label={t("news.kicker")}
-        title={t("news.title")}
-        titleHighlight={t("news.titleHighlight")}
         images={["/images/newz.jpg"]}
         strongOverlay
-        description={t("news.subtitle")}
         badges={[
           { icon: <NewsIcon />, label: t("news.sectionLatestNews") },
           { icon: <BellIcon />, label: t("news.sectionNotices") },
