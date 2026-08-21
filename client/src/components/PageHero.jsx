@@ -173,8 +173,8 @@ export default function PageHero({ label, images, colorBackground = false, title
           sitting low in the photo instead of crowding the kicker/title
           block up top. Only News.jsx passes `badges` today. */}
       {badges && badges.length > 0 && (
-        <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-24">
-          <div className="flex flex-wrap justify-center gap-2.5">
+        <div className="absolute inset-x-0 bottom-14 z-10 flex justify-center px-4 sm:bottom-16">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
             {badgesAreIcons
               ? badges.map((badge, i) => (
                   <motion.div
