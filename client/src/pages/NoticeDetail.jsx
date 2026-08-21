@@ -70,7 +70,7 @@ export default function NoticeDetail() {
 
   return (
     <>
-      <PageHero label={loading ? t("news.sectionNotices") : title} />
+      <PageHero label={loading ? t("news.sectionNotices") : title} hideLabel />
 
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />

@@ -167,7 +167,7 @@ export default function ProjectDetail() {
 
   return (
     <>
-      <PageHero label={loading ? t("projects.title") : title} images={heroImage ? [heroImage] : undefined} />
+      <PageHero label={loading ? t("projects.title") : title} images={heroImage ? [heroImage] : undefined} hideLabel />
 
       <section className="relative overflow-hidden py-20 sm:py-24">
         {/* Decorative glows + grain — same premium background treatment used

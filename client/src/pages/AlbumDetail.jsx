@@ -52,7 +52,7 @@ export default function AlbumDetail() {
 
   return (
     <>
-      <PageHero label={loading ? t("gallery.title") : title} />
+      <PageHero label={loading ? t("gallery.title") : title} hideLabel />
 
       <section className="py-20 sm:py-24">
         <Container>
