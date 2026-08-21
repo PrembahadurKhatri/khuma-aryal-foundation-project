@@ -311,7 +311,7 @@ export default function Hero({ siteInfo }) {
                         <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-forest-50 text-forest-700">
                           <Icon />
                         </span>
-                        <span className="font-display text-2xl font-semibold text-forest-900 sm:text-3xl">
+                        <span className="font-body text-2xl font-semibold text-forest-900 sm:text-3xl">
                           <CountUpStat value={siteInfo?.stats?.[stat.statField] || stat.fallback} />
                         </span>
                         <span className="text-[11px] font-medium leading-snug text-ink-600 sm:text-xs">{t(`home.${stat.key}`)}</span>

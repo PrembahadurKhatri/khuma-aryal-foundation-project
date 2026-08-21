@@ -13,19 +13,19 @@ const TRUNCATE_AT = 90;
 const PRIORITY_TONE = {
   important: {
     border: "border-l-forest-600",
-    wash: "bg-forest-50/50",
+    wash: "bg-white",
     badge: "bg-forest-100 text-forest-700",
     chevron: "border-forest-200 text-forest-600 group-hover:border-forest-600 group-hover:bg-forest-600 group-hover:text-white",
   },
   new: {
     border: "border-l-gilt-500",
-    wash: "bg-gilt-50/60",
+    wash: "bg-white",
     badge: "bg-gilt-100 text-gilt-700",
     chevron: "border-gilt-300 text-gilt-600 group-hover:border-gilt-500 group-hover:bg-gilt-500 group-hover:text-white",
   },
   urgent: {
     border: "border-l-red-500",
-    wash: "bg-red-50/60",
+    wash: "bg-white",
     badge: "bg-red-100 text-red-600",
     chevron: "border-red-200 text-red-500 group-hover:border-red-500 group-hover:bg-red-500 group-hover:text-white",
   },

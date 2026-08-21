@@ -56,7 +56,7 @@ export default function BoardMembers({ members, loading }) {
                   key={member.id}
                   delay={(i % 5) * 0.06}
                   variant="scale"
-                  className="group flex flex-col items-center gap-4 rounded-2xl border border-transparent p-5 text-center font-body transition-all duration-500 hover:-translate-y-2 hover:border-forest-100 hover:bg-white hover:shadow-lift"
+                  className="group flex flex-col items-center gap-3  rounded-2xl border border-transparent p-3 text-center font-body transition-all duration-500 hover:-translate-y-2 hover:border-forest-100 hover:bg-white hover:shadow-lift"
                 >
                   {/* Photo — a soft gilt glow blooms behind it and the ring
                       tightens + gilds on hover, while the photo itself
