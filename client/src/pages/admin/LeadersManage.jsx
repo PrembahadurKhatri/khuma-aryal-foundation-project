@@ -162,7 +162,7 @@ const LeadersManage = () => {
                               : "bg-forest-50 text-forest-700"
                         }`}
                       >
-                        {item.role}
+                        {item.role === "founder" ? "Founder" : item.role === "president" ? "President" : "Other"}
                       </span>
                     </td>
                     <td className="max-w-xs truncate px-4 py-3">{item.title?.en}</td>
