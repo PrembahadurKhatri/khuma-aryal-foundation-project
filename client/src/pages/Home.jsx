@@ -166,7 +166,7 @@ export default function Home() {
       </section>
 
       {/* Footer CTA — last section on the page, right above the site Footer */}
-      <section className="relative overflow-hidden bg-forest-900 py-16 sm:py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-forest-950 via-forest-850 to-forest-700 py-16 sm:py-20">
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gilt-500/15 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-forest-400/20 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />

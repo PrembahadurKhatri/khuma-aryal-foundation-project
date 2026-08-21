@@ -243,7 +243,8 @@ export default function News() {
         label={t("news.kicker")}
         title={t("news.title")}
         titleHighlight={t("news.titleHighlight")}
-        colorBackground
+        images={["/images/newz.jpg"]}
+        strongOverlay
         description={t("news.subtitle")}
         badges={[
           { icon: <NewsIcon />, label: t("news.sectionLatestNews") },
