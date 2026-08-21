@@ -5,15 +5,15 @@ import { fetchLeaders, createLeader, updateLeader, deleteLeader } from "../../se
 import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
 import useToast from "../../hooks/useToast.js";
 
-// "founder" and "president" are special (see server/models/Leader.js) — any
-// other role value is free text and just renders in the "Other Leadership"
-// grid, so this is only a list of suggestions (via <datalist> below), not
-// an enum — the admin can type any role/post that isn't already covered,
-// e.g. "Treasurer".
-const ROLE_OPTIONS = ["founder", "president", "past-president", "treasurer", "secretary", "advisor", "spouse"];
+// "founder" and "president" are special (see server/models/Leader.js) — each
+// gets one large featured card on the Home page. Every other value just
+// renders in the "Other Leadership" grid, keyed off the Title/Post field for
+// what actually shows — so the picker only needs to distinguish those two
+// special cases from "everything else", not enumerate every possible post.
+const ROLE_CHOICES = ["founder", "president", "other"];
 
 const emptyForm = {
-  role: "advisor",
+  role: "other",
   order: 0,
   nameEn: "",
   nameNe: "",
@@ -77,7 +77,7 @@ const LeadersManage = () => {
   const openEdit = (item) => {
     setEditing(item);
     setForm({
-      role: item.role || "advisor",
+      role: item.role || "other",
       order: item.order ?? 0,
       nameEn: item.name?.en || "",
       nameNe: item.name?.ne || "",
@@ -191,18 +191,18 @@ const LeadersManage = () => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Role</label>
-                <input
-                  list="role-suggestions"
-                  placeholder="e.g. treasurer"
-                  value={form.role}
+                <select
+                  value={ROLE_CHOICES.includes(form.role) ? form.role : "other"}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
                   className={inputClass}
-                />
-                <datalist id="role-suggestions">
-                  {ROLE_OPTIONS.map((r) => (
-                    <option key={r} value={r} />
-                  ))}
-                </datalist>
+                >
+                  <option value="founder">Founder</option>
+                  <option value="president">President</option>
+                  <option value="other">Other</option>
+                </select>
+                {!["founder", "president"].includes(form.role) && (
+                  <p className={`mt-1 text-[11px] ${mutedClass}`}>Write the actual post (e.g. "Treasurer") in Title / Post below.</p>
+                )}
               </div>
               <div>
                 <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Display Order</label>
@@ -215,9 +215,8 @@ const LeadersManage = () => {
               </div>
             </div>
             <p className={`text-xs ${mutedClass}`}>
-              "founder" and "president" each get one large featured card — only the first of each is used. Any other role
-              (type anything — "treasurer", "auditor", whatever the post is called) appears in the "Other Leadership" grid,
-              sorted by Display Order.
+              "Founder" and "President" each get one large featured card — only the first of each is used. "Other" covers every
+              other post (Treasurer, Secretary, Advisor, ...) and appears in the "Other Leadership" grid, sorted by Display Order.
             </p>
 
             <input required placeholder="Name (English)" value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })} className={inputClass} />
