@@ -171,9 +171,12 @@ export default function PageHero({ label, images, colorBackground = false, title
       {/* Badges row — anchored bottom-center rather than stacked under the
           label/title, so it reads as its own row of section shortcuts
           sitting low in the photo instead of crowding the kicker/title
-          block up top. Only News.jsx passes `badges` today. */}
+          block up top. Hidden below sm: — a narrow hero doesn't have room
+          for a 5-chip row without it feeling cramped, so mobile just shows
+          the photo/kicker and drops straight to the page content below.
+          Only News.jsx passes `badges` today. */}
       {badges && badges.length > 0 && (
-        <div className="absolute inset-x-0 bottom-14 z-10 flex justify-center px-4 sm:bottom-16">
+        <div className="absolute inset-x-0 bottom-20 z-10 hidden justify-center px-4 sm:bottom-24 sm:flex">
           <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
             {badgesAreIcons
               ? badges.map((badge, i) => (
