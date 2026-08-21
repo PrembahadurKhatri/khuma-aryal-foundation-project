@@ -83,8 +83,14 @@ export default function PageHero({ label, images, colorBackground = false, title
             </AnimatePresence>
             {strongOverlay ? (
               <>
-                <div className="absolute inset-0 bg-gradient-to-r from-forest-950/92 via-forest-950/70 to-forest-950/40" />
-                <div className="absolute inset-0 bg-forest-900/30 mix-blend-multiply" />
+                {/* Left-to-right wash for the text column, plus a top-to-bottom
+                    wash so the badge row (which sits in the vertical middle,
+                    per the `justify-center` layout below) doesn't have to
+                    compete with a busy mid-photo — deepest right where the
+                    photo itself is busiest/brightest. */}
+                <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/80 to-forest-950/55" />
+                <div className="absolute inset-0 bg-gradient-to-b from-forest-950/15 via-forest-950/35 to-forest-950/65" />
+                <div className="absolute inset-0 bg-forest-900/35 mix-blend-multiply" />
               </>
             ) : (
               // Kept light on purpose so the photo reads as a real, natural
