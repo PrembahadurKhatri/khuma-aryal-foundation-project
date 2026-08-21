@@ -44,7 +44,7 @@ const SLIDE_INTERVAL = 3000;
  * rather than a natural photo) instead of the light default meant to keep a
  * real photo's subjects visible.
  */
-export default function PageHero({ label, images, colorBackground = false, title, titleHighlight, description, badges, strongOverlay = false, hideLabel = false }) {
+export default function PageHero({ label, images, mobileImage, colorBackground = false, title, titleHighlight, description, badges, strongOverlay = false, hideLabel = false }) {
   const slides = images && images.length > 0 ? images : ["/images/khumalogo.png"];
   const [index, setIndex] = useState(0);
 
@@ -69,18 +69,27 @@ export default function PageHero({ label, images, colorBackground = false, title
           <div className="absolute inset-0 bg-gradient-to-br from-forest-950 via-forest-900 to-forest-800" />
         ) : (
           <>
-            <AnimatePresence initial={false} mode="popLayout">
-              <motion.img
-                key={index}
-                src={slides[index]}
-                alt={label}
-                initial={slides.length > 1 ? { x: "100%", opacity: 0 } : false}
-                animate={{ x: "0%", opacity: 1 }}
-                exit={{ x: "-100%", opacity: 0 }}
-                transition={{ duration: 0.9, ease: [0.65, 0, 0.35, 1] }}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </AnimatePresence>
+            {/* A dedicated portrait crop for narrow screens, when provided
+                (see News.jsx) — swapped in below `sm` instead of the
+                landscape photo/slideshow, which gets cropped awkwardly
+                tight on a phone-width hero. */}
+            {mobileImage && (
+              <img src={mobileImage} alt={label} className="absolute inset-0 h-full w-full object-cover sm:hidden" />
+            )}
+            <div className={mobileImage ? "hidden sm:block" : "contents"}>
+              <AnimatePresence initial={false} mode="popLayout">
+                <motion.img
+                  key={index}
+                  src={slides[index]}
+                  alt={label}
+                  initial={slides.length > 1 ? { x: "100%", opacity: 0 } : false}
+                  animate={{ x: "0%", opacity: 1 }}
+                  exit={{ x: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.9, ease: [0.65, 0, 0.35, 1] }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </AnimatePresence>
+            </div>
             {strongOverlay ? (
               <>
                 <div className="absolute inset-0 bg-gradient-to-r from-forest-950/92 via-forest-950/70 to-forest-950/40" />
@@ -171,13 +180,13 @@ export default function PageHero({ label, images, colorBackground = false, title
       {/* Badges row — anchored bottom-center rather than stacked under the
           label/title, so it reads as its own row of section shortcuts
           sitting low in the photo instead of crowding the kicker/title
-          block up top. Hidden below sm: — a narrow hero doesn't have room
-          for a 5-chip row without it feeling cramped, so mobile just shows
-          the photo/kicker and drops straight to the page content below.
-          Only News.jsx passes `badges` today. */}
+          block up top. Shown at every width now, just noticeably smaller
+          on mobile (tighter box/gap/text, and the icons themselves are
+          sized down in News.jsx) so all 5 fit one row without crowding a
+          narrow hero. Only News.jsx passes `badges` today. */}
       {badges && badges.length > 0 && (
-        <div className="absolute inset-x-0 bottom-20 z-10 hidden justify-center px-4 sm:bottom-24 sm:flex">
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
+        <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-20 sm:px-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-10">
             {badgesAreIcons
               ? badges.map((badge, i) => (
                   <motion.div
@@ -185,10 +194,10 @@ export default function PageHero({ label, images, colorBackground = false, title
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
-                    className="flex w-[4.5rem] flex-col items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2 py-3 text-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-gilt-400/60 hover:bg-white/20 hover:shadow-lift sm:w-20"
+                    className="flex w-12 flex-col items-center gap-1 rounded-lg border border-white/20 bg-white/10 px-1 py-1.5 text-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-gilt-400/60 hover:bg-white/20 hover:shadow-lift sm:w-20 sm:gap-1.5 sm:rounded-xl sm:px-2 sm:py-3"
                   >
                     <span className="text-white transition-colors duration-300">{badge.icon}</span>
-                    <span className="font-body text-[10px] font-semibold leading-tight text-white sm:text-[11px]">{badge.label}</span>
+                    <span className="font-body text-[7px] font-semibold leading-tight text-white sm:text-[11px]">{badge.label}</span>
                   </motion.div>
                 ))
               : badges.map((badge, i) => (

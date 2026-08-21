@@ -17,7 +17,7 @@ import VacancyCard from "../components/VacancyCard.jsx";
 // Icons for the hero's badge row — one per section further down the page.
 function NewsIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 sm:h-6 sm:w-6" aria-hidden="true">
       <path d="M4 5.5C4 4.67 4.67 4 5.5 4H16v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
       <path d="M16 8h3.5A1.5 1.5 0 0 1 21 9.5v9a1.5 1.5 0 0 1-1.5 1.5H16" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
       <path d="M7.5 8h5M7.5 11h5M7.5 14h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -27,7 +27,7 @@ function NewsIcon() {
 
 function BellIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 sm:h-6 sm:w-6" aria-hidden="true">
       <path d="M6 10a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
       <path d="M9.5 18.5a2.5 2.5 0 0 0 5 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
@@ -36,7 +36,7 @@ function BellIcon() {
 
 function CalendarIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 sm:h-6 sm:w-6" aria-hidden="true">
       <rect x="3.5" y="5" width="17" height="15" rx="2" stroke="currentColor" strokeWidth="1.6" />
       <path d="M3.5 9.5h17M8 3v3.5M16 3v3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
@@ -45,7 +45,7 @@ function CalendarIcon() {
 
 function ActivityPeopleIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 sm:h-6 sm:w-6" aria-hidden="true">
       <circle cx="9" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="17" cy="9" r="2" stroke="currentColor" strokeWidth="1.6" />
       <path d="M3.5 19c.6-3 2.7-4.8 5.5-4.8s4.9 1.8 5.5 4.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -56,7 +56,7 @@ function ActivityPeopleIcon() {
 
 function StarIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 sm:h-6 sm:w-6" aria-hidden="true">
       <path
         d="M12 3.5l2.6 5.5 6 .7-4.4 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.4-4.1 6-.7 2.6-5.5Z"
         stroke="currentColor"
@@ -245,6 +245,7 @@ export default function News() {
       <PageHero
         label={t("news.kicker")}
         images={["/images/newz.jpg"]}
+        mobileImage="/images/nz.png"
         strongOverlay
         badges={[
           { icon: <NewsIcon />, label: t("news.sectionLatestNews") },
