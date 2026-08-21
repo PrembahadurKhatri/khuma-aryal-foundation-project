@@ -180,13 +180,13 @@ export default function Hero({ siteInfo }) {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-2xl font-body"
           >
-            <h1 className="text-3xl font-bold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-5xl">
+            <h1 className="font-display text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
               {t("home.heroTitle")}
             </h1>
-            <p className="mt-5 max-w-xl text-sm leading-relaxed text-forest-100 sm:text-base">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-forest-100 sm:text-lg">
               {t("home.heroSubtitle")}
             </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button to="/projects" variant="primary">
                 {t("home.heroCtaPrimary")}
                
@@ -274,17 +274,17 @@ export default function Hero({ siteInfo }) {
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-forest-600">{t("home.ourAimKicker")}</span>
               </div>
 
-              <h2 className="text-3xl font-bold leading-tight tracking-tight text-ink-900 sm:text-4xl">
+              <h2 className="font-display text-4xl font-semibold leading-tight tracking-tight text-ink-900 sm:text-5xl">
                 {t("home.heroNameFirst")} <span className="text-forest-600">{t("home.heroNameSecond")}</span>
               </h2>
 
-              <p className="mt-4 text-sm leading-relaxed text-ink-600 sm:text-base">
+              <p className="mt-5 text-base leading-relaxed text-ink-600 sm:text-lg">
                 {aimBefore}
                 {aimAfter && <span className="font-semibold text-forest-700">{aimHighlight}</span>}
                 {aimAfter}
               </p>
 
-              <Button to="/about" variant="primary" className="mt-6">
+              <Button to="/about" variant="primary" className="mt-8">
                 {t("home.exploreAbout")}
                 <span aria-hidden="true">→</span>
               </Button>
@@ -297,21 +297,26 @@ export default function Hero({ siteInfo }) {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
-                className="aspect-square overflow-hidden rounded-2xl shadow-card sm:aspect-auto"
+                className="group relative aspect-square overflow-hidden rounded-2xl shadow-xl ring-1 ring-forest-900/5 sm:aspect-auto"
               >
-                <img src={HERO_IMAGES[1]} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={HERO_IMAGES[1]}
+                  alt=""
+                  className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-950/25 via-transparent to-transparent" />
               </motion.div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-5">
                 {STATS.map((stat, i) => {
                   const Icon = STAT_ICONS[stat.icon];
                   return (
                     <Reveal key={stat.key} delay={i * 0.08} variant="scale" className="h-full">
-                      <div className="flex h-full flex-col gap-2 rounded-2xl border border-forest-100 bg-white p-5 text-center shadow-card">
-                        <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-forest-50 text-forest-700">
+                      <div className="group flex h-full flex-col gap-2.5 rounded-2xl border border-forest-100 bg-white p-6 text-center shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-gilt-300/60 hover:shadow-lift">
+                        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-forest-50 text-forest-700 transition-colors duration-300 group-hover:bg-forest-700 group-hover:text-white">
                           <Icon />
                         </span>
-                        <span className="font-body text-2xl font-semibold text-forest-900 sm:text-3xl">
+                        <span className="font-display text-2xl font-semibold text-forest-900 sm:text-3xl">
                           <CountUpStat value={siteInfo?.stats?.[stat.statField] || stat.fallback} />
                         </span>
                         <span className="text-[11px] font-medium leading-snug text-ink-600 sm:text-xs">{t(`home.${stat.key}`)}</span>

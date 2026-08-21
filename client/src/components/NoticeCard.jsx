@@ -58,16 +58,16 @@ export default function NoticeCard({ notice }) {
   return (
     <Link
       to={`/notices/${notice.id}`}
-      className={`group flex items-center gap-4 rounded-xl2 border border-l-4 border-forest-100 p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:p-5 ${tone.border} ${tone.wash}`}
+      className={`group flex items-center gap-5 rounded-xl2 border border-l-4 border-forest-100 p-5 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:p-6 ${tone.border} ${tone.wash}`}
     >
-      <div className="flex flex-1 flex-col gap-1.5">
+      <div className="flex flex-1 flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <span className={`rounded-full px-2.5 py-0.5 font-body text-[11px] font-bold uppercase tracking-wide ${tone.badge}`}>
             {t(`news.priority${priority.charAt(0).toUpperCase()}${priority.slice(1)}`)}
           </span>
           <span className="font-body text-xs text-ink-400">{formatted}</span>
         </div>
-        <h3 className="font-body text-base font-bold text-forest-900">{title}</h3>
+        <h3 className="font-display text-lg font-semibold text-forest-900">{title}</h3>
         {shownDescription && <p className="line-clamp-2 font-body text-sm leading-relaxed text-ink-600">{shownDescription}</p>}
       </div>
       <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-white transition-all duration-300 ${tone.chevron}`}>

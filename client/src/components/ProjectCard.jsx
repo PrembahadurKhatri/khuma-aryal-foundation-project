@@ -32,20 +32,21 @@ export default function ProjectCard({ project }) {
   return (
     <Link
       to={`/projects/${project.id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-500"
+      className="group flex h-full flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white shadow-card transition-all duration-500 hover:-translate-y-1.5 hover:border-gilt-300/60 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-500"
     >
-      <div className="relative h-48 w-full overflow-hidden">
-        <PlaceholderImage src={cover} alt={title} label={title} imgClassName="transition-transform duration-500 group-hover:scale-105" />
+      <div className="relative h-52 w-full overflow-hidden">
+        <PlaceholderImage src={cover} alt={title} label={title} imgClassName="transition-transform duration-700 ease-out group-hover:scale-110" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-950/30 via-transparent to-transparent" />
         <span className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold shadow-soft ${STATUS_TONE[status] || STATUS_TONE.ongoing}`}>
           {t(`common.${status}`)}
         </span>
       </div>
-      <div className="flex flex-1 flex-col gap-1.5 p-6">
+      <div className="flex flex-1 flex-col gap-2 p-7">
         <span className="inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600">
           <TagIcon />
           {t(`gallery.category${category}`)}
         </span>
-        <h3 className="font-body text-lg font-semibold text-forest-900">{title}</h3>
+        <h3 className="font-display text-xl font-semibold text-forest-900 transition-colors duration-300 group-hover:text-forest-700">{title}</h3>
         <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-ink-600">{description}</p>
       </div>
     </Link>
