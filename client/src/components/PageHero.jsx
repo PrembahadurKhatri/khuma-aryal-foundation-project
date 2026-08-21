@@ -185,8 +185,8 @@ export default function PageHero({ label, images, mobileImage, colorBackground =
           sized down in News.jsx) so all 5 fit one row without crowding a
           narrow hero. Only News.jsx passes `badges` today. */}
       {badges && badges.length > 0 && (
-        <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-20 sm:px-4">
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-10">
+        <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-21 sm:px-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-5">
             {badgesAreIcons
               ? badges.map((badge, i) => (
                   <motion.div

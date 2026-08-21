@@ -104,21 +104,9 @@ function SearchIcon() {
   );
 }
 
-// Header-row "More X" button — only rendered by the caller when there's
-// actually more to reveal. A plain state toggle (not a Link, not
-// incremental "+N" pagination): clicking it just shows everything at once.
-function MoreButton({ label, onClick }) {
-  return (
-    <button type="button" onClick={onClick} className="group inline-flex items-center gap-1 font-body text-sm font-semibold text-forest-600 hover:text-forest-800">
-      {label}
-      <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
-    </button>
-  );
-}
-
 // Small local heading used by every section below the Latest News grid —
 // title (+ optional short subtitle) on the left, an optional action
-// (MoreButton/ViewAllButton) on the right.
+// (ViewAllButton/ViewAllLink) on the right.
 function SectionHeader({ title, subtitle, action }) {
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -131,9 +119,11 @@ function SectionHeader({ title, subtitle, action }) {
   );
 }
 
-// Pill-style "View All X" button (white, bordered, chevron-in-a-circle) —
-// used where a section wants a more prominent call-to-action than
-// MoreButton's plain text link (e.g. Important Notices).
+// Pill-style "More/View All X" button (white, bordered, chevron-in-a-circle)
+// — the header-row action for every section that reveals more of itself in
+// place (not a Link, not incremental "+N" pagination: clicking it just
+// shows everything at once). Used everywhere a section has a "show more"
+// toggle (Latest News, Important Notices, Success Stories).
 function ViewAllButton({ label, onClick }) {
   return (
     <button
@@ -266,7 +256,7 @@ export default function News() {
           <SectionHeader
             title={t("news.sectionLatestNews")}
             action={
-              !newsShowAll && filteredNews.length > NEWS_CAP && <MoreButton label={t("news.moreLatestNews")} onClick={() => setNewsShowAll(true)} />
+              !newsShowAll && filteredNews.length > NEWS_CAP && <ViewAllButton label={t("news.moreLatestNews")} onClick={() => setNewsShowAll(true)} />
             }
           />
 
@@ -451,7 +441,7 @@ export default function News() {
             <SectionHeader
               title={t("news.sectionStories")}
               action={
-                !storiesShowAll && (stories?.length || 0) > STORIES_CAP && <MoreButton label={t("news.moreStories")} onClick={() => setStoriesShowAll(true)} />
+                !storiesShowAll && (stories?.length || 0) > STORIES_CAP && <ViewAllButton label={t("news.moreStories")} onClick={() => setStoriesShowAll(true)} />
               }
             />
             {storiesLoading || !stories ? (

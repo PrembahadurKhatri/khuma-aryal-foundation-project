@@ -55,7 +55,7 @@ export default function NewsCard({ news }) {
         <span className="w-fit rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-700">{formatted}</span>
         <h3 className="font-body text-lg font-semibold text-forest-900">{title}</h3>
         <p className="flex-1 font-body text-sm leading-relaxed text-ink-600">{shown}</p>
-        <span className="mt-1 inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600 transition-transform duration-300 group-hover:translate-x-0.5">
+        <span className="mt-1 inline-flex w-fit items-center gap-1 font-body text-xs font-semibold  text-forest-600 transition-transform duration-300 group-hover:translate-x-0.5">
           {t("news.readMore")} →
         </span>
       </div>
