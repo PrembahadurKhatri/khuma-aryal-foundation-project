@@ -6,7 +6,6 @@ import { getEvent } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
-import PlaceholderImage from "../components/PlaceholderImage.jsx";
 
 const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
 
@@ -80,7 +79,11 @@ export default function EventDetail() {
 
   return (
     <>
-      <PageHero label={loading ? t("news.sectionEvents") : name} />
+      {/* Same pattern as NewsDetail: the event's own photo becomes the hero
+          background (falls back to the Foundation's logo when there isn't
+          one), no title text overlaid since the headline is already shown
+          right below in the card. */}
+      <PageHero label={loading ? t("news.sectionEvents") : name} images={event?.image ? [event.image] : undefined} hideLabel />
 
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />
@@ -105,15 +108,7 @@ export default function EventDetail() {
           ) : (
             <Reveal>
               <div className="overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card">
-                {event.image && (
-                  <div className="relative h-64 w-full overflow-hidden sm:h-80">
-                    <PlaceholderImage src={event.image} alt={name} label={name} />
-                  </div>
-                )}
                 <div className="flex flex-col gap-5 p-7 sm:p-9">
-                  <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{name}</h1>
-                
-
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-body text-sm text-ink-600">
                     <span className="inline-flex items-center gap-1.5">
                       <CalendarIcon />
@@ -132,6 +127,8 @@ export default function EventDetail() {
                       </span>
                     )}
                   </div>
+
+                  <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{name}</h1>
 
                   {event.registerLink && (
                     <a

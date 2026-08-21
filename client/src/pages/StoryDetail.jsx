@@ -6,7 +6,6 @@ import { getStory } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
-import PlaceholderImage from "../components/PlaceholderImage.jsx";
 
 export default function StoryDetail() {
   const { id } = useParams();
@@ -43,7 +42,15 @@ export default function StoryDetail() {
 
   return (
     <>
-      <PageHero label={loading ? t("news.sectionStories") : story?.name || t("news.sectionStories")} />
+      {/* Same pattern as NewsDetail: the story's own photo becomes the hero
+          background (falls back to the Foundation's logo when there isn't
+          one), no title text overlaid since the headline is already shown
+          right below in the card. */}
+      <PageHero
+        label={loading ? t("news.sectionStories") : story?.name || t("news.sectionStories")}
+        images={story?.photo ? [story.photo] : undefined}
+        hideLabel
+      />
 
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />
@@ -68,15 +75,8 @@ export default function StoryDetail() {
           ) : (
             <Reveal>
               <div className="overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card">
-                <div className="relative h-72 w-full overflow-hidden sm:h-96">
-                  <PlaceholderImage src={story.photo} alt={story.name || "Impact story"} label={story.name} />
-                  <span className="absolute inset-0 bg-gradient-to-t from-forest-950/60 via-transparent to-transparent" />
-                  {story.name && (
-                    <span className="absolute bottom-5 left-6 font-body text-xl font-bold text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.4)]">{story.name}</span>
-                  )}
-                </div>
                 <div className="flex flex-col gap-5 p-7 sm:p-9">
-             
+                  {story.name && <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{story.name}</h1>}
                   <p className="whitespace-pre-line font-body text-base leading-relaxed text-ink-600">{summary}</p>
                 </div>
               </div>
