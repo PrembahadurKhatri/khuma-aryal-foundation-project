@@ -19,8 +19,8 @@ const UPDATES_COUNT = 3;
 // goes to the button, not a decorative underline.
 function SectionHeader({ title, action }) {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-      <h2 className="font-display text-3xl font-semibold text-forest-900 sm:text-4xl">{title}</h2>
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <h2 className="font-body text-2xl font-bold text-forest-900 sm:text-3xl">{title}</h2>
       {action}
     </div>
   );
@@ -47,7 +47,7 @@ function ViewAllLink({ to, label }) {
 
 function CardSkeleton({ count = 3, className = "h-72" }) {
   return (
-    <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className={`${className} animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60`} />
       ))}
@@ -113,7 +113,7 @@ export default function Home() {
             ) : latestNews.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyNews")}</p>
             ) : (
-              <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {latestNews.map((item, i) => (
                   <Reveal key={item.id} delay={i * 0.08} className="h-full">
                     <NewsCard news={item} />
@@ -127,7 +127,7 @@ export default function Home() {
           <div className="mt-20">
             <SectionHeader title={t("home.updatesNoticesTitle")} action={<ViewAllLink to="/news" label={t("home.readMore")} />} />
             {noticesLoading || !notices ? (
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <div key={i} className="h-20 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
                 ))}
@@ -135,7 +135,7 @@ export default function Home() {
             ) : latestNotices.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyNotices")}</p>
             ) : (
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {latestNotices.map((notice, i) => (
                   <Reveal key={notice.id} delay={i * 0.08}>
                     <NoticeCard notice={notice} />
@@ -153,7 +153,7 @@ export default function Home() {
             ) : latestProjects.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyProjects")}</p>
             ) : (
-              <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {latestProjects.map((project, i) => (
                   <Reveal key={project.id} delay={i * 0.08} className="h-full">
                     <ProjectCard project={project} />
@@ -166,23 +166,18 @@ export default function Home() {
       </section>
 
       {/* Footer CTA — last section on the page, right above the site Footer */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-forest-950 via-forest-900 to-forest-700 py-20 sm:py-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-forest-950 via-forest-850 to-forest-700 py-16 sm:py-20">
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gilt-500/15 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-forest-400/20 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />
-        <Container className="relative flex flex-col items-center gap-6 text-center">
-          <h2 className="font-display text-3xl font-semibold text-white sm:text-4xl">{t("home.ctaTitle")}</h2>
-          <p className="max-w-2xl font-body text-base leading-relaxed text-forest-100 sm:text-lg">{t("home.ctaSubtitle")}</p>
+        <Container className="relative flex flex-col items-center gap-5 text-center">
+          <h2 className="font-body text-2xl font-bold text-white sm:text-3xl">{t("home.ctaTitle")}</h2>
+          <p className="max-w-2xl font-body text-sm leading-relaxed text-forest-100 sm:text-base">{t("home.ctaSubtitle")}</p>
           <a
             href={siteInfo?.email ? `mailto:${siteInfo.email}` : "#"}
-            className="group mt-2 inline-flex items-center gap-2.5 rounded-full bg-gilt-500 py-3 pl-7 pr-3 font-body text-sm font-semibold text-forest-950 shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-gilt-400"
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-gilt-500 px-7 py-3 font-body text-sm font-semibold text-forest-950 shadow-lift transition-all duration-300 hover:-translate-y-0.5 hover:bg-gilt-400"
           >
-            {t("home.ctaButton")}
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-forest-950/10 transition-transform duration-300 group-hover:translate-x-1">
-              <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
+            {t("home.ctaButton")} →
           </a>
         </Container>
       </section>

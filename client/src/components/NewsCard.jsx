@@ -42,21 +42,20 @@ export default function NewsCard({ news }) {
   return (
     <Link
       to={`/news/${news.id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white shadow-card transition-all duration-500 hover:-translate-y-1.5 hover:border-gilt-300/60 hover:shadow-2xl"
+      className="group flex h-full flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
     >
-      <div className="relative h-52 w-full overflow-hidden">
-        <PlaceholderImage src={news.image} alt={title} label={title} imgClassName="transition-transform duration-700 ease-out group-hover:scale-110" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-950/30 via-transparent to-transparent" />
+      <div className="relative h-44 w-full overflow-hidden">
+        <PlaceholderImage src={news.image} alt={title} label={title} imgClassName="transition-transform duration-500 group-hover:scale-105" />
         <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 font-body text-[11px] font-semibold text-forest-700 shadow-soft backdrop-blur-sm">
           <TagIcon />
           {t(`news.category${category}`)}
         </span>
       </div>
-      <div className="flex flex-1 flex-col gap-2.5 p-7">
+      <div className="flex flex-1 flex-col gap-2 p-6">
         <span className="w-fit rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-700">{formatted}</span>
-        <h3 className="font-display text-xl font-semibold text-forest-900 transition-colors duration-300 group-hover:text-forest-700">{title}</h3>
+        <h3 className="font-body text-lg font-semibold text-forest-900">{title}</h3>
         <p className="flex-1 font-body text-sm leading-relaxed text-ink-600">{shown}</p>
-        <span className="mt-1 inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600 transition-transform duration-300 group-hover:translate-x-0.5">
+        <span className="mt-1 inline-flex w-fit items-center gap-1 font-body text-xs font-semibold  text-forest-600 transition-transform duration-300 group-hover:translate-x-0.5">
           {t("news.readMore")} →
         </span>
       </div>
