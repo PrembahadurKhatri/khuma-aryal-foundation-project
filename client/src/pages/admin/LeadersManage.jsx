@@ -7,8 +7,10 @@ import useToast from "../../hooks/useToast.js";
 
 // "founder" and "president" are special (see server/models/Leader.js) — any
 // other role value is free text and just renders in the "Other Leadership"
-// grid, so this is a convenience list, not an enum.
-const ROLE_OPTIONS = ["founder", "president", "past-president", "secretary", "advisor", "spouse"];
+// grid, so this is only a list of suggestions (via <datalist> below), not
+// an enum — the admin can type any role/post that isn't already covered,
+// e.g. "Treasurer".
+const ROLE_OPTIONS = ["founder", "president", "past-president", "treasurer", "secretary", "advisor", "spouse"];
 
 const emptyForm = {
   role: "advisor",
@@ -189,13 +191,18 @@ const LeadersManage = () => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Role</label>
-                <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className={inputClass}>
+                <input
+                  list="role-suggestions"
+                  placeholder="e.g. treasurer"
+                  value={form.role}
+                  onChange={(e) => setForm({ ...form, role: e.target.value })}
+                  className={inputClass}
+                />
+                <datalist id="role-suggestions">
                   {ROLE_OPTIONS.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
+                    <option key={r} value={r} />
                   ))}
-                </select>
+                </datalist>
               </div>
               <div>
                 <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Display Order</label>
@@ -208,8 +215,9 @@ const LeadersManage = () => {
               </div>
             </div>
             <p className={`text-xs ${mutedClass}`}>
-              "founder" and "president" each get one large featured card — only the first of each is used. Every other role
-              appears in the "Other Leadership" grid, sorted by Display Order.
+              "founder" and "president" each get one large featured card — only the first of each is used. Any other role
+              (type anything — "treasurer", "auditor", whatever the post is called) appears in the "Other Leadership" grid,
+              sorted by Display Order.
             </p>
 
             <input required placeholder="Name (English)" value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })} className={inputClass} />
