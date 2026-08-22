@@ -105,28 +105,47 @@ export default function Projects() {
 
       <section className="pb-20 pt-10 sm:pb-24 sm:pt-14">
         <Container className="flex flex-col gap-8">
-          {/* Search + sort, then category pills below — search sits above
-              the pills on purpose (matches the layout News/Notice already
-              used) so it reads first as the primary way to narrow the list. */}
+          {/* Search (its own full-width row), then category pills + sort
+              sharing one row below — same structure as News/Notice's
+              search/filter block. */}
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-              <label className="relative flex items-center">
-                <span className="pointer-events-none absolute left-3 text-ink-400">
-                  <SearchIcon />
-                </span>
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setVisibleCount(PAGE_SIZE);
-                  }}
-                  placeholder={t("projects.searchPlaceholder")}
-                  className="w-full rounded-full border border-forest-100 bg-white py-2 pl-9 pr-4 font-body text-sm text-ink-800 outline-none transition-colors focus:border-gilt-400 sm:w-56"
-                />
-              </label>
+            <label className="relative flex items-center">
+              <span className="pointer-events-none absolute left-3 text-ink-400">
+                <SearchIcon />
+              </span>
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setVisibleCount(PAGE_SIZE);
+                }}
+                placeholder={t("projects.searchPlaceholder")}
+                className="w-full rounded-full border border-forest-100 bg-white py-2 pl-9 pr-4 font-body text-sm text-ink-800 outline-none transition-colors focus:border-gilt-400"
+              />
+            </label>
 
-              <div className="relative inline-flex items-center">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              {/* Category pills — horizontal scroll below `sm`, same as the
+                  Gallery page's filter row, instead of wrapping to several
+                  cramped lines on a narrow screen. */}
+              <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+                {CATEGORIES.map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => handleCategory(key)}
+                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 font-body text-sm font-semibold transition-colors duration-150 ${
+                      category === key ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
+                    }`}
+                  >
+                    {key === "All" ? <GridIcon /> : <TagIcon />}
+                    {key === "All" ? t("projects.categoryAll") : t(`gallery.category${key}`)}
+                  </button>
+                ))}
+              </div>
+
+              <div className="relative inline-flex w-fit items-center">
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
@@ -139,25 +158,6 @@ export default function Projects() {
                   <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-            </div>
-
-            {/* Category pills — horizontal scroll below `sm`, same as the
-                Gallery page's filter row, instead of wrapping to several
-                cramped lines on a narrow screen. */}
-            <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
-              {CATEGORIES.map((key) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => handleCategory(key)}
-                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 font-body text-sm font-semibold transition-colors duration-150 ${
-                    category === key ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
-                  }`}
-                >
-                  {key === "All" ? <GridIcon /> : <TagIcon />}
-                  {key === "All" ? t("projects.categoryAll") : t(`gallery.category${key}`)}
-                </button>
-              ))}
             </div>
           </div>
 
