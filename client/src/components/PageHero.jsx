@@ -181,11 +181,14 @@ export default function PageHero({ label, images, mobileImage, colorBackground =
           label/title, so it reads as its own row of section shortcuts
           sitting low in the photo instead of crowding the kicker/title
           block up top. Shown at every width now, just noticeably smaller
-          on mobile (tighter box/gap/text, and the icons themselves are
-          sized down in News.jsx) so all 5 fit one row without crowding a
-          narrow hero. Only News.jsx passes `badges` today. */}
+          on mobile (smaller box/gap/text than the sm+ size, and the icons
+          themselves are sized down in News.jsx) so all 5 still fit one row
+          without crowding a narrow hero — sized up just enough from the
+          original mobile treatment to stay legible instead of feeling like
+          an afterthought next to the clean single-pill hero every other
+          page uses. Only News.jsx passes `badges` today. */}
       {badges && badges.length > 0 && (
-        <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-21 sm:px-4">
+        <div className="absolute inset-x-0 bottom-24 z-10 flex justify-center px-4 sm:bottom-21 sm:px-4">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-5">
             {badgesAreIcons
               ? badges.map((badge, i) => (
@@ -194,10 +197,10 @@ export default function PageHero({ label, images, mobileImage, colorBackground =
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.36 + i * 0.08 }}
-                    className="flex w-12 flex-col items-center gap-1 rounded-lg border border-white/20 bg-white/10 px-1 py-1.5 text-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-gilt-400/60 hover:bg-white/20 hover:shadow-lift sm:w-20 sm:gap-1.5 sm:rounded-xl sm:px-2 sm:py-3"
+                    className="flex w-14 flex-col items-center gap-1 rounded-lg border border-white/20 bg-white/10 px-1.5 py-2 text-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-gilt-400/60 hover:bg-white/20 hover:shadow-lift sm:w-20 sm:gap-1.5 sm:rounded-xl sm:px-2 sm:py-3"
                   >
                     <span className="text-white transition-colors duration-300">{badge.icon}</span>
-                    <span className="font-body text-[7px] font-semibold leading-tight text-white sm:text-[11px]">{badge.label}</span>
+                    <span className="font-body text-[8.5px] font-semibold leading-tight text-white sm:text-[11px]">{badge.label}</span>
                   </motion.div>
                 ))
               : badges.map((badge, i) => (
