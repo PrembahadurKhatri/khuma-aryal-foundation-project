@@ -275,12 +275,15 @@ export default function News() {
               />
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              {/* Category pills — horizontal scroll below `sm`, same as the
+                  Gallery page's filter row, instead of wrapping to several
+                  cramped lines on a narrow screen. */}
+              <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
                 <button
                   type="button"
                   onClick={() => resetFilters({ category: "All" })}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
                     category === "All" ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
                   }`}
                 >
@@ -292,7 +295,7 @@ export default function News() {
                     key={c}
                     type="button"
                     onClick={() => resetFilters({ category: c })}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
+                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-body text-xs font-semibold transition-colors duration-150 ${
                       category === c ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
                     }`}
                   >

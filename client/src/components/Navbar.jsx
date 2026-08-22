@@ -47,10 +47,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-500 ${
+      className={`sticky top-0 z-50 w-full border-b border-transparent transition-all duration-500 ${
         scrolled
-          ? "border-b border-forest-100/70 bg-cream-50/75 shadow-[0_10px_40px_-8px_rgba(31,55,45,0.12)] backdrop-blur-2xl"
-          : "border-b border-transparent bg-cream-50"
+          ? "bg-cream-50/75 shadow-[0_10px_40px_-8px_rgba(31,55,45,0.12)] backdrop-blur-2xl"
+          : "bg-cream-50"
       }`}
     >
       {/* Hairline gold accent */}
