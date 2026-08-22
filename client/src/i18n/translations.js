@@ -174,6 +174,8 @@ const translations = {
       emptyVideos: "No videos here yet.",
       loadMoreVideos: "Load More Videos",
       categoryAllVideos: "All Videos",
+      featured: "Featured",
+      beneficiariesLabel: "Beneficiaries",
     },
     projects: {
       kicker: "Our Work",
@@ -484,6 +486,8 @@ const translations = {
       emptyVideos: "अहिलेसम्म कुनै भिडियो छैन।",
       loadMoreVideos: "थप भिडियो हेर्नुहोस्",
       categoryAllVideos: "सबै भिडियो",
+      featured: "विशेष",
+      beneficiariesLabel: "लाभान्वित",
     },
     projects: {
       kicker: "हाम्रो काम",

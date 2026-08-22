@@ -6,6 +6,7 @@ import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
 import AlbumCard from "../components/gallery/AlbumCard.jsx";
+import FeaturedAlbumCard from "../components/gallery/FeaturedAlbumCard.jsx";
 import VideoCard from "../components/gallery/VideoCard.jsx";
 import VideoLightbox from "../components/gallery/VideoLightbox.jsx";
 
@@ -128,13 +129,21 @@ export default function Gallery() {
   const [videoVisibleCount, setVideoVisibleCount] = useState(PAGE_SIZE);
   const [activeVideo, setActiveVideo] = useState(null);
 
+  // Pinned "Featured" spotlight — only shown on the unfiltered "All" view
+  // (a category filter should just show that category's own results), and
+  // pulled out of the regular grid below so it isn't shown twice.
+  const featuredAlbum = useMemo(() => {
+    if (!albums || category !== "All") return null;
+    return albums.find((a) => a.featured) || null;
+  }, [albums, category]);
+
   const filteredAlbums = useMemo(() => {
     if (!albums) return [];
-    const list = category === "All" ? albums : albums.filter((a) => (a.category || "Event") === category);
+    const list = albums.filter((a) => (category === "All" || (a.category || "Event") === category) && a.id !== featuredAlbum?.id);
     return [...list].sort((a, b) =>
       sort === "oldest" ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt)
     );
-  }, [albums, category, sort]);
+  }, [albums, category, sort, featuredAlbum]);
   const visibleAlbums = filteredAlbums.slice(0, visibleCount);
 
   const filteredVideos = useMemo(() => {
@@ -190,6 +199,12 @@ export default function Gallery() {
           {tab === "photos" ? (
             <>
               <FilterBar category={category} onCategory={handleCategory} sort={sort} onSort={setSort} />
+
+              {featuredAlbum && !albumsLoading && (
+                <Reveal>
+                  <FeaturedAlbumCard album={featuredAlbum} />
+                </Reveal>
+              )}
 
               {albumsLoading || !albums ? (
                 <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">

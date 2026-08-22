@@ -13,6 +13,11 @@ const fromFlatFields = (body) => ({
     ? { description: { en: body.descriptionEn || "", ne: body.descriptionNe || "" } }
     : {}),
   ...(body.category ? { category: body.category } : {}),
+  // Sent as a plain (possibly empty) string over FormData — coerce to a
+  // number, or unset it when cleared, rather than storing "" on the schema's
+  // Number field (which would fail validation).
+  ...(body.beneficiaries !== undefined ? { beneficiaries: body.beneficiaries === "" ? null : Number(body.beneficiaries) } : {}),
+  ...(body.featured !== undefined ? { featured: body.featured === true || body.featured === "true" } : {}),
 });
 
 // @desc   List albums, newest first. ?category=Event filters; sort=oldest

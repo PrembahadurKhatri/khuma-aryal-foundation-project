@@ -25,6 +25,8 @@ const emptyForm = {
   descriptionEn: "",
   descriptionNe: "",
   category: "Event",
+  beneficiaries: "",
+  featured: false,
   coverFile: null,
   keepPhotos: [],
   newPhotoFiles: [],
@@ -87,6 +89,8 @@ const GalleryManage = () => {
       descriptionEn: album.description?.en || "",
       descriptionNe: album.description?.ne || "",
       category: album.category || "Event",
+      beneficiaries: album.beneficiaries != null ? String(album.beneficiaries) : "",
+      featured: !!album.featured,
       coverFile: null,
       keepPhotos: album.photos || [],
       newPhotoFiles: [],
@@ -133,12 +137,16 @@ const GalleryManage = () => {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {data?.data?.length === 0 && <p className={`col-span-full text-center ${mutedClass}`}>No albums yet.</p>}
           {data?.data?.map((album) => (
-            <div key={album._id} className={`overflow-hidden rounded-xl border ${panelClass}`}>
+            <div key={album._id} className={`relative overflow-hidden rounded-xl border ${panelClass}`}>
+              {album.featured && (
+                <span className="absolute left-2 top-2 z-10 rounded-md bg-gilt-500 px-1.5 py-0.5 text-[10px] font-semibold text-white shadow-soft">Featured</span>
+              )}
               <img src={album.coverImage} alt={album.title?.en} className="h-32 w-full object-cover" />
               <div className="p-3">
                 <p className="truncate text-sm font-medium">{album.title?.en}</p>
                 <p className={`text-xs ${mutedClass}`}>
                   {categoryLabel(album.category)} · {album.photos?.length || 0} photos
+                  {album.beneficiaries != null && ` · ${album.beneficiaries}+ beneficiaries`}
                 </p>
                 <div className="mt-2 flex gap-2">
                   <button onClick={() => openEdit(album)} className="flex-1 rounded-lg bg-forest-600/10 py-1.5 text-xs font-medium text-forest-700 dark:text-forest-400">
@@ -177,16 +185,39 @@ const GalleryManage = () => {
               className={inputClass}
             />
 
-            <div>
-              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Category</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputClass}>
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Category</label>
+                <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputClass}>
+                  {CATEGORIES.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1">
+                <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Beneficiaries (number)</label>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 200"
+                  value={form.beneficiaries}
+                  onChange={(e) => setForm({ ...form, beneficiaries: e.target.value })}
+                  className={inputClass}
+                />
+              </div>
             </div>
+
+            <label className={`flex items-center gap-2 text-sm font-medium ${mutedClass}`}>
+              <input
+                type="checkbox"
+                checked={form.featured}
+                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                className="h-4 w-4 rounded border-forest-300 text-forest-700 focus:ring-forest-500"
+              />
+              Feature this album on the Gallery page
+            </label>
 
             <ImageSourceField
               theme={theme}

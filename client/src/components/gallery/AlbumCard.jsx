@@ -21,6 +21,16 @@ function CalendarIcon() {
   );
 }
 
+function PeopleIcon({ className = "h-3 w-3" }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={`${className} shrink-0`} aria-hidden="true">
+      <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M3.5 19.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M15.5 5.3c1.3.4 2.2 1.6 2.2 3s-.9 2.6-2.2 3M18 14.3c1.7.5 3 2.2 3 4.2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
 
 // Gallery thumbnail: cover photo on top, then a white body with a category
@@ -71,9 +81,15 @@ export default function AlbumCard({ album }) {
         </div>
       </div>
 
-      {/* Mobile-only: compact body, title only */}
-      <div className="p-3 sm:hidden">
+      {/* Mobile-only: compact body — title + beneficiaries count (when set) */}
+      <div className="flex flex-col gap-1 p-3 sm:hidden">
         <h3 className="line-clamp-2 font-body text-sm font-semibold leading-snug text-ink-900">{title}</h3>
+        {album.beneficiaries != null && (
+          <span className="inline-flex w-fit items-center gap-1 font-body text-[11px] font-semibold text-forest-600">
+            <PeopleIcon />
+            {album.beneficiaries}+ {t("gallery.beneficiariesLabel")}
+          </span>
+        )}
       </div>
 
       {/* sm and up: the original richer body */}
@@ -84,6 +100,12 @@ export default function AlbumCard({ album }) {
         </span>
         <h3 className="font-body text-base font-semibold leading-snug text-ink-900">{title}</h3>
         {description && <p className="line-clamp-2 flex-1 font-body text-sm leading-relaxed text-ink-600">{description}</p>}
+        {album.beneficiaries != null && (
+          <span className="inline-flex w-fit items-center gap-1.5 font-body text-xs font-semibold text-forest-700">
+            <PeopleIcon className="h-3.5 w-3.5" />
+            {album.beneficiaries}+ {t("gallery.beneficiariesLabel")}
+          </span>
+        )}
 
         <div className="mt-2 flex items-center justify-end border-t border-forest-100 pt-2.5">
           <span className="rounded-full bg-cream-200 px-2.5 py-1 font-body text-[11px] font-medium text-ink-600">

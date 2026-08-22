@@ -24,6 +24,14 @@ const albumSchema = new mongoose.Schema(
     category: { type: String, enum: ALBUM_CATEGORIES, default: "Event" },
     coverImage: { type: String, required: true },
     photos: [{ type: String }],
+    // How many people this album's work reached — a plain number (not text)
+    // so it can be rendered as "200+ Beneficiaries" on the public card.
+    // Optional: albums seeded before this field existed just don't show it.
+    beneficiaries: { type: Number, min: 0 },
+    // Marks (at most, by convention — the UI just uses the first match) one
+    // album for the large "Featured" treatment at the top of the Gallery
+    // page's grid.
+    featured: { type: Boolean, default: false },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
