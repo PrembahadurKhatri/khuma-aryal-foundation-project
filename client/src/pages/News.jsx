@@ -246,7 +246,7 @@ export default function News() {
         ]}
       />
 
-      <section className="relative overflow-hidden py-20 sm:py-24">
+      <section className="relative overflow-hidden pb-20 pt-10 sm:pb-24 sm:pt-14">
         <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -right-40 top-1/3 h-[420px] w-[420px] rounded-full bg-forest-100/40 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />

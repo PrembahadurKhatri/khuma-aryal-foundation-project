@@ -138,7 +138,7 @@ export default function About() {
       <PageHero label={t("about.title")} />
 
       {/* ================= FOUNDATION PROFILE ================= */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cream-100 via-cream to-cream-100 py-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-cream-100 via-cream to-cream-100 pb-24 pt-10 sm:pt-14">
         {/* Decorative Background */}
         <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-gilt-200/20 blur-3xl" />
         <div className="absolute -right-40 bottom-0 h-[450px] w-[450px] rounded-full bg-forest-100/30 blur-3xl" />

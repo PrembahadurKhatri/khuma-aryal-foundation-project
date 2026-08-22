@@ -11,10 +11,17 @@ export const fetchAlbum = async (id) => {
 };
 
 // payload: { titleEn, titleNe, coverFile?, keepPhotos: string[], newPhotoFiles: File[] }
+//
+// Empty strings are sent through on purpose (not skipped like undefined/null)
+// — an admin clearing the description (or beneficiaries) field submits "",
+// and that has to reach the server so it actually overwrites the old value.
+// Skipping "" here used to make a cleared field silently keep its previous
+// value forever, since the server's guarded-update only touches a field
+// when the request said something about it at all.
 const toFormData = ({ coverFile, keepPhotos, newPhotoFiles, ...rest }) => {
   const form = new FormData();
   Object.entries(rest).forEach(([key, value]) => {
-    if (value === undefined || value === null || value === "") return;
+    if (value === undefined || value === null) return;
     form.append(key, value);
   });
   if (coverFile) form.append("cover", coverFile);

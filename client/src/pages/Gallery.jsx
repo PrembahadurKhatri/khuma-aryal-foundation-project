@@ -174,7 +174,7 @@ export default function Gallery() {
     <>
       <PageHero label={t("gallery.title")} images={GALLERY_HERO_IMAGES} />
 
-      <section className="py-20 sm:py-24">
+      <section className="pb-20 pt-10 sm:pb-24 sm:pt-14">
         <Container>
           {/* Photos / Videos tab toggle — right-aligned in both tabs */}
           <div className="mb-8 flex justify-end">

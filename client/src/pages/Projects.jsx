@@ -103,7 +103,7 @@ export default function Projects() {
     <>
       <PageHero label={t("projects.title")} images={PROJECTS_HERO_IMAGES} />
 
-      <section className="py-20 sm:py-24">
+      <section className="pb-20 pt-10 sm:pb-24 sm:pt-14">
         <Container className="flex flex-col gap-8">
           {/* Category pills + search + sort */}
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
