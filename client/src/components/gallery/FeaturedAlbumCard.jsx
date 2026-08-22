@@ -3,21 +3,10 @@ import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import { pick } from "../../utils/localize.js";
 import PlaceholderImage from "../PlaceholderImage.jsx";
 
-const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
-
 function StarIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5 shrink-0" aria-hidden="true">
       <path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17.6l-6.1 3.4 1.5-6.8-5.2-4.7 6.9-.7L12 2.5Z" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 shrink-0" aria-hidden="true">
-      <rect x="3.5" y="5" width="17" height="15" rx="2" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M3.5 9.5h17M8 3v3.5M16 3v3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -42,22 +31,13 @@ function ArrowIcon() {
 
 // The large "Featured" spotlight card shown above the regular grid on the
 // Gallery page — same underlying data as AlbumCard.jsx, just a bigger,
-// richer treatment (star badge, date, beneficiaries count, circular arrow
-// button) for whichever album the admin marked `featured` in GalleryManage.
+// richer treatment (star badge, beneficiaries count, circular arrow button)
+// for whichever album the admin marked `featured` in GalleryManage.
 export default function FeaturedAlbumCard({ album }) {
   const { t, language } = useLanguage();
   const title = pick(album.title, language);
   const description = pick(album.description, language);
   const category = album.category || "Event";
-
-  let formattedDate = "";
-  try {
-    formattedDate = album.createdAt
-      ? new Date(album.createdAt).toLocaleDateString(DATE_LOCALES[language] || "en-US", { year: "numeric", month: "short", day: "numeric" })
-      : "";
-  } catch {
-    formattedDate = "";
-  }
 
   return (
     <Link
@@ -79,12 +59,6 @@ export default function FeaturedAlbumCard({ album }) {
       <div className="relative mt-auto flex w-full flex-col gap-2 p-5 sm:max-w-2xl sm:gap-3 sm:p-8">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 font-body text-xs font-medium text-white/85 sm:text-sm">
           <span className="rounded-full bg-white/15 px-2.5 py-1 font-semibold text-white backdrop-blur-sm">{t(`gallery.category${category}`)}</span>
-          {formattedDate && (
-            <span className="inline-flex items-center gap-1.5">
-              <CalendarIcon />
-              {formattedDate}
-            </span>
-          )}
         </div>
 
         <h3 className="font-body text-xl font-bold leading-snug text-white drop-shadow-sm sm:text-2xl lg:text-3xl">{title}</h3>

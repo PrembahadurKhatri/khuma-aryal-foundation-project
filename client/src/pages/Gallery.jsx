@@ -131,10 +131,16 @@ export default function Gallery() {
 
   // Pinned "Featured" spotlight — only shown on the unfiltered "All" view
   // (a category filter should just show that category's own results), and
-  // pulled out of the regular grid below so it isn't shown twice.
+  // pulled out of the regular grid below so it isn't shown twice. If more
+  // than one album is ever marked featured, the most recently *updated* one
+  // wins (not just whichever comes first in the list) — so re-featuring a
+  // different album in the admin always takes effect immediately instead of
+  // silently losing to an older featured pick.
   const featuredAlbum = useMemo(() => {
     if (!albums || category !== "All") return null;
-    return albums.find((a) => a.featured) || null;
+    const candidates = albums.filter((a) => a.featured);
+    if (candidates.length === 0) return null;
+    return candidates.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
   }, [albums, category]);
 
   const filteredAlbums = useMemo(() => {
