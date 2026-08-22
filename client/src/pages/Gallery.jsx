@@ -77,13 +77,16 @@ function FilterBar({ category, onCategory, sort, onSort, sortLabels, allLabel })
   const { t } = useLanguage();
   return (
     <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex flex-wrap gap-2">
+      {/* Horizontal scroll below `sm` (a wrapped multi-line pill row eats too
+          much vertical space on a narrow screen) — back to wrapping at `sm`
+          and up, where there's enough width for it to read as a block. */}
+      <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
         {CATEGORIES.map((key) => (
           <button
             key={key}
             type="button"
             onClick={() => onCategory(key)}
-            className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-body text-sm font-semibold transition-colors duration-150 ${
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 font-body text-sm font-semibold transition-colors duration-150 ${
               category === key ? "bg-forest-700 text-white shadow-soft" : "bg-cream-200 text-ink-600 hover:bg-forest-50 hover:text-forest-700"
             }`}
           >
@@ -189,7 +192,7 @@ export default function Gallery() {
               <FilterBar category={category} onCategory={handleCategory} sort={sort} onSort={setSort} />
 
               {albumsLoading || !albums ? (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {Array.from({ length: 9 }).map((_, i) => (
                     <div key={i} className="aspect-[4/3] animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
                   ))}
@@ -198,7 +201,10 @@ export default function Gallery() {
                 <p className="text-center text-ink-600">{t("gallery.empty")}</p>
               ) : (
                 <>
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {/* 2 columns even below `sm` (was 1) — matches the compact
+                      mobile card layout in AlbumCard.jsx, which is designed
+                      to sit two-up on a narrow screen. */}
+                  <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {visibleAlbums.map((album, i) => (
                       <Reveal key={album.id} delay={(i % 6) * 0.05} className="h-full">
                         <AlbumCard album={album} />
