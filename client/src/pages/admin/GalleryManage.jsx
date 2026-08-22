@@ -254,10 +254,36 @@ const GalleryManage = () => {
                 type="file"
                 accept="image/*"
                 multiple
-                onChange={(e) => setForm((prev) => ({ ...prev, newPhotoFiles: Array.from(e.target.files || []) }))}
+                onChange={(e) => {
+                  const picked = Array.from(e.target.files || []);
+                  // Appended, not replaced — picking files again (e.g. one
+                  // folder at a time, or a second batch on mobile where
+                  // multi-select is fiddly) used to silently drop whatever
+                  // was already queued. Reset the input after so the same
+                  // file can be re-picked if it's ever removed below.
+                  setForm((prev) => ({ ...prev, newPhotoFiles: [...prev.newPhotoFiles, ...picked] }));
+                  e.target.value = "";
+                }}
                 className={inputClass}
               />
-              <p className={`mt-1 text-xs ${mutedClass}`}>These are added to the album alongside any photos kept above.</p>
+              <p className={`mt-1 text-xs ${mutedClass}`}>These are added to the album alongside any photos kept above. Select more than once to keep adding.</p>
+
+              {form.newPhotoFiles.length > 0 && (
+                <div className="mt-2 grid grid-cols-4 gap-2">
+                  {form.newPhotoFiles.map((file, i) => (
+                    <div key={`${file.name}-${i}`} className="group relative">
+                      <img src={URL.createObjectURL(file)} alt="" className="h-16 w-full rounded-lg object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setForm((prev) => ({ ...prev, newPhotoFiles: prev.newPhotoFiles.filter((_, idx) => idx !== i) }))}
+                        className="absolute right-1 top-1 rounded-full bg-black/60 px-1.5 text-xs text-white opacity-0 group-hover:opacity-100"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end sm:gap-3">

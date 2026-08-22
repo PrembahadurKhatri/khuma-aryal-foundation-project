@@ -394,9 +394,35 @@ const ProjectsManage = () => {
                 type="file"
                 accept="image/*"
                 multiple
-                onChange={(e) => setForm((prev) => ({ ...prev, newImageFiles: Array.from(e.target.files || []) }))}
+                onChange={(e) => {
+                  const picked = Array.from(e.target.files || []);
+                  // Appended, not replaced — picking files again (a second
+                  // batch, or one at a time on mobile) used to silently drop
+                  // whatever was already queued. Reset the input after so
+                  // the same file can be re-picked if it's ever removed below.
+                  setForm((prev) => ({ ...prev, newImageFiles: [...prev.newImageFiles, ...picked] }));
+                  e.target.value = "";
+                }}
                 className={inputClass}
               />
+              <p className={`mt-1 text-xs ${mutedClass}`}>Select more than once to keep adding.</p>
+
+              {form.newImageFiles.length > 0 && (
+                <div className="mt-2 grid grid-cols-3 gap-2">
+                  {form.newImageFiles.map((file, i) => (
+                    <div key={`${file.name}-${i}`} className="group relative">
+                      <img src={URL.createObjectURL(file)} alt="" className="h-16 w-full rounded-lg object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setForm((prev) => ({ ...prev, newImageFiles: prev.newImageFiles.filter((_, idx) => idx !== i) }))}
+                        className="absolute right-1 top-1 rounded-full bg-black/60 px-1.5 text-xs text-white opacity-0 group-hover:opacity-100"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end sm:gap-3">
