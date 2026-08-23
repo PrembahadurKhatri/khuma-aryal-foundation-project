@@ -41,8 +41,19 @@ export default function Navbar() {
   // green treatment at a time — every other link stays in its normal state.
   // forest-600 matches the language toggle's active-pill color
   // (LanguageSwitcher.jsx) rather than the near-black forest-900.
+  //
+  // `inline-flex` is load-bearing, not decorative: every other link here is
+  // a *direct* flex child of the `nav`, which CSS auto-blockifies regardless
+  // of its own `display` — but Gallery's <a> sits one level deeper inside a
+  // wrapping <div> (for the dropdown), so it isn't a flex item itself and
+  // falls back to its native `display: inline`. An inline element's
+  // vertical padding (py-2.5) still paints but doesn't correctly size the
+  // box, which was rendering Gallery's link at ~68px tall instead of the
+  // 40px every sibling gets — tall and mispositioned enough to visibly
+  // poke through the pill's rounded edge. `inline-flex` makes the box
+  // sizing explicit instead of relying on flex-item auto-blockification.
   const linkClasses = ({ isActive }) =>
-    `group relative rounded-full px-4 py-2.5 font-body text-sm font-medium
+    `group relative inline-flex rounded-full px-4 py-2.5 font-body text-sm font-medium
      tracking-[0.01em] transition-all duration-300 ease-out
      ${
        isActive
