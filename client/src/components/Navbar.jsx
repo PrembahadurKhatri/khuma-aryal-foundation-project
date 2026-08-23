@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import LanguageSwitcher from "./LanguageSwitcher.jsx";
@@ -102,23 +102,58 @@ export default function Navbar() {
           className="hidden items-center gap-1 rounded-full border border-forest-100/70 bg-white/50 p-1 shadow-[0_1px_2px_rgba(31,55,45,0.04),0_8px_24px_-8px_rgba(31,55,45,0.10)] backdrop-blur-sm lg:flex"
           aria-label="Primary"
         >
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === "/"}
-              className={linkClasses}
-            >
-              {({ isActive }) => (
-                <span className="relative z-10 flex items-center gap-2">
-                  {isActive && (
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
+          {links.map((link) =>
+            link.to === "/gallery" ? (
+              // Gallery gets a hover dropdown instead of a plain link — the
+              // page itself no longer has an on-page Photos/Videos toggle
+              // (see Gallery.jsx), so this is the only way in. `group` on
+              // the wrapper reveals the panel on hover; the link itself
+              // still navigates straight to /gallery (defaults to Photos)
+              // for anyone who just clicks instead of hovering.
+              <div key={link.to} className="group relative">
+                <NavLink to={link.to} className={linkClasses}>
+                  {({ isActive }) => (
+                    <span className="relative z-10 flex items-center gap-2">
+                      {isActive && (
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
+                      )}
+                      {link.label}
+                      <svg viewBox="0 0 24 24" fill="none" className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
                   )}
-                  {link.label}
-                </span>
-              )}
-            </NavLink>
-          ))}
+                </NavLink>
+
+                <div className="invisible absolute left-0 top-full z-20 w-44 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                  <div className="overflow-hidden rounded-xl border border-forest-100 bg-white py-1.5 shadow-lift">
+                    <Link to="/gallery?tab=videos" className="block px-4 py-2.5 font-body text-sm font-medium text-ink-700 transition-colors hover:bg-forest-50 hover:text-forest-800">
+                      {t("nav.videoGallery")}
+                    </Link>
+                    <Link to="/gallery?tab=photos" className="block px-4 py-2.5 font-body text-sm font-medium text-ink-700 transition-colors hover:bg-forest-50 hover:text-forest-800">
+                      {t("nav.photoGallery")}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === "/"}
+                className={linkClasses}
+              >
+                {({ isActive }) => (
+                  <span className="relative z-10 flex items-center gap-2">
+                    {isActive && (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
+                    )}
+                    {link.label}
+                  </span>
+                )}
+              </NavLink>
+            )
+          )}
         </nav>
 
         {/* Desktop Language */}
@@ -175,35 +210,61 @@ export default function Navbar() {
         <Container className="pb-5 pt-3">
           <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
             {links.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === "/"}
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  `group flex items-center justify-between rounded-xl px-4 py-3.5 font-body text-sm font-medium tracking-[0.01em] transition-all duration-300 ${
-                    isActive
-                      ? "bg-forest-600 text-white shadow-[0_6px_16px_-6px_rgba(63,150,84,0.4)]"
-                      : "text-ink-600 hover:bg-forest-900/[0.05] hover:text-forest-900"
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <span>{link.label}</span>
+              <div key={link.to}>
+                <NavLink
+                  to={link.to}
+                  end={link.to === "/"}
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    `group flex items-center justify-between rounded-xl px-4 py-3.5 font-body text-sm font-medium tracking-[0.01em] transition-all duration-300 ${
+                      isActive
+                        ? "bg-forest-600 text-white shadow-[0_6px_16px_-6px_rgba(63,150,84,0.4)]"
+                        : "text-ink-600 hover:bg-forest-900/[0.05] hover:text-forest-900"
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span>{link.label}</span>
 
-                    <span
-                      className={`text-lg transition-all duration-300 ${
-                        isActive
-                          ? "translate-x-0 text-gilt-400 opacity-100"
-                          : "-translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
-                      }`}
+                      <span
+                        className={`text-lg transition-all duration-300 ${
+                          isActive
+                            ? "translate-x-0 text-gilt-400 opacity-100"
+                            : "-translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+                        }`}
+                      >
+                        →
+                      </span>
+                    </>
+                  )}
+                </NavLink>
+
+                {/* No hover on mobile, so Gallery's Photo/Video split is a
+                    pair of indented links shown right under it — same two
+                    destinations as the desktop dropdown (see the `nav`
+                    block above), always visible rather than tap-to-expand
+                    so the Video Gallery stays reachable without relying on
+                    a gesture. */}
+                {link.to === "/gallery" && (
+                  <div className="ml-4 mt-1 flex flex-col gap-1 border-l border-forest-100 pl-3">
+                    <Link
+                      to="/gallery?tab=photos"
+                      onClick={closeMenu}
+                      className="rounded-lg px-4 py-2.5 font-body text-sm text-ink-600 transition-colors hover:bg-forest-900/[0.05] hover:text-forest-900"
                     >
-                      →
-                    </span>
-                  </>
+                      {t("nav.photoGallery")}
+                    </Link>
+                    <Link
+                      to="/gallery?tab=videos"
+                      onClick={closeMenu}
+                      className="rounded-lg px-4 py-2.5 font-body text-sm text-ink-600 transition-colors hover:bg-forest-900/[0.05] hover:text-forest-900"
+                    >
+                      {t("nav.videoGallery")}
+                    </Link>
+                  </div>
                 )}
-              </NavLink>
+              </div>
             ))}
           </nav>
         </Container>

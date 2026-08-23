@@ -12,6 +12,8 @@ function TagIcon() {
   );
 }
 
+const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
+
 const STATUS_TONE = {
   ongoing: "bg-forest-600 text-white",
   completed: "bg-ink-600 text-white",
@@ -29,6 +31,15 @@ export default function ProjectCard({ project }) {
   const status = project.status || "ongoing";
   const category = project.category || "Event";
 
+  let formattedDate = "";
+  try {
+    formattedDate = project.date
+      ? new Date(project.date).toLocaleDateString(DATE_LOCALES[language] || "en-US", { year: "numeric", month: "short", day: "numeric" })
+      : "";
+  } catch {
+    formattedDate = "";
+  }
+
   return (
     <Link
       to={`/projects/${project.id}`}
@@ -41,10 +52,13 @@ export default function ProjectCard({ project }) {
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-6">
-        <span className="inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600">
-          <TagIcon />
-          {t(`gallery.category${category}`)}
-        </span>
+        <div className="flex items-center justify-between gap-2">
+          <span className="inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600">
+            <TagIcon />
+            {t(`gallery.category${category}`)}
+          </span>
+          {formattedDate && <span className="font-body text-xs text-ink-400">{formattedDate}</span>}
+        </div>
         <h3 className="font-body text-lg font-semibold text-forest-900">{title}</h3>
         <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-ink-600">{description}</p>
       </div>

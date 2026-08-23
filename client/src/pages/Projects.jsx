@@ -7,6 +7,7 @@ import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
+import FeaturedProjectCard from "../components/FeaturedProjectCard.jsx";
 import Skeleton from "../components/Skeleton.jsx";
 
 // Real photos of the Foundation's work, cycling in the hero the same way
@@ -73,9 +74,21 @@ export default function Projects() {
   const [sort, setSort] = useState("latest");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
+  // Pinned "Featured" spotlight — only shown on the fully unfiltered view
+  // (no category/status/search narrowing it down), and pulled out of the
+  // regular grid below so it isn't shown twice. Same convention as Gallery's
+  // featuredAlbum (see Gallery.jsx): if more than one project is ever
+  // marked featured, the most recently *updated* one wins.
+  const featuredProject = useMemo(() => {
+    if (!projects || category !== "All" || status !== "all" || search.trim()) return null;
+    const candidates = projects.filter((p) => p.featured);
+    if (candidates.length === 0) return null;
+    return candidates.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
+  }, [projects, category, status, search]);
+
   const filtered = useMemo(() => {
     if (!projects) return [];
-    let list = projects;
+    let list = projects.filter((p) => p.id !== featuredProject?.id);
     if (category !== "All") list = list.filter((p) => (p.category || "Event") === category);
     if (status !== "all") list = list.filter((p) => (p.status || "ongoing") === status);
     if (search.trim()) {
@@ -85,7 +98,7 @@ export default function Projects() {
     return [...list].sort((a, b) =>
       sort === "oldest" ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt)
     );
-  }, [projects, category, status, search, sort, language]);
+  }, [projects, category, status, search, sort, language, featuredProject]);
 
   const visible = filtered.slice(0, visibleCount);
 
@@ -179,6 +192,12 @@ export default function Projects() {
               ))}
             </div>
           </div>
+
+          {featuredProject && !loading && (
+            <Reveal>
+              <FeaturedProjectCard project={featuredProject} />
+            </Reveal>
+          )}
 
           {loading || !projects ? (
             <Skeleton count={9} />

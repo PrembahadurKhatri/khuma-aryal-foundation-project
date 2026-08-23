@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { useLanguage } from "../../i18n/LanguageContext.jsx";
-import { pick } from "../../utils/localize.js";
-import PlaceholderImage from "../PlaceholderImage.jsx";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { pick } from "../utils/localize.js";
+import PlaceholderImage from "./PlaceholderImage.jsx";
 
 function StarIcon() {
   return (
@@ -30,22 +30,27 @@ function ArrowIcon() {
 }
 
 // The large "Featured" spotlight card shown above the regular grid on the
-// Gallery page — same underlying data as AlbumCard.jsx, just a bigger,
-// richer treatment (star badge, beneficiaries count, circular arrow button)
-// for whichever album the admin marked `featured` in GalleryManage.
-export default function FeaturedAlbumCard({ album }) {
+// Projects page — same underlying data as ProjectCard.jsx, just a bigger,
+// richer treatment (star badge, beneficiaries, circular arrow button) for
+// whichever project the admin marked `featured` in ProjectsManage. Mirrors
+// FeaturedAlbumCard.jsx's structure (see components/gallery/) so the two
+// "Featured" spotlights across the site feel like the same pattern.
+export default function FeaturedProjectCard({ project }) {
   const { t, language } = useLanguage();
-  const title = pick(album.title, language);
-  const description = pick(album.description, language);
-  const category = album.category || "Event";
+  const title = pick(project.title, language);
+  const description = pick(project.description, language);
+  const beneficiaries = pick(project.beneficiaries, language);
+  const cover = project.thumbnail || project.images?.[0];
+  const status = project.status || "ongoing";
+  const category = project.category || "Event";
 
   return (
     <Link
-      to={`/gallery/${album.id}`}
+      to={`/projects/${project.id}`}
       className="group relative mb-6 flex aspect-[4/5] w-full overflow-hidden rounded-xl2 border border-forest-100 shadow-card transition-all duration-300 hover:shadow-lift sm:mb-8 sm:aspect-[21/9]"
     >
       <div className="absolute inset-0">
-        <PlaceholderImage src={album.coverImage} alt={title} label={title} imgClassName="transition-transform duration-500 group-hover:scale-105" />
+        <PlaceholderImage src={cover} alt={title} label={title} imgClassName="transition-transform duration-500 group-hover:scale-105" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/25 to-transparent" aria-hidden="true" />
 
@@ -53,6 +58,11 @@ export default function FeaturedAlbumCard({ album }) {
       <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-gilt-500 px-3 py-1.5 font-body text-xs font-bold text-white shadow-soft sm:left-6 sm:top-6">
         <StarIcon />
         {t("gallery.featured")}
+      </span>
+
+      {/* Status badge, top-right — same info ProjectCard shows on its cover photo */}
+      <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 font-body text-xs font-semibold text-forest-800 shadow-soft sm:right-6 sm:top-6">
+        {t(`common.${status}`)}
       </span>
 
       {/* Content, bottom-left */}
@@ -70,10 +80,15 @@ export default function FeaturedAlbumCard({ album }) {
         {description && <p className="hidden max-w-lg font-body text-sm leading-relaxed text-white/80 sm:line-clamp-2">{description}</p>}
 
         <div className="mt-1 flex items-center justify-between gap-3">
-          {album.beneficiaries != null ? (
-            <span className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-white">
+          {beneficiaries ? (
+            // Unlike Gallery's numeric beneficiaries count, a project's
+            // beneficiaries field is free bilingual text (see Project.js)
+            // and can run long (a bullet-style list, a full sentence, ...)
+            // — truncated to one line so it can't push the arrow button
+            // out of the card or overflow the fixed-height box.
+            <span className="flex min-w-0 items-center gap-1.5 font-body text-sm font-semibold text-white">
               <PeopleIcon />
-              {album.beneficiaries}+ {t("gallery.beneficiariesLabel")}
+              <span className="truncate">{beneficiaries}</span>
             </span>
           ) : (
             <span />

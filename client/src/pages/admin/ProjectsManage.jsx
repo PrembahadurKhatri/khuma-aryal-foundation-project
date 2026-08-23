@@ -36,6 +36,7 @@ const emptyForm = {
   objectiveEn: "",
   objectiveNe: "",
   album: "",
+  featured: false,
   keepImages: [],
   newImageFiles: [],
   keepThumbnail: "",
@@ -126,6 +127,7 @@ const ProjectsManage = () => {
       // string depending on where this project object came from — normalize
       // to just the ID string the <select> needs.
       album: (typeof project.album === "object" ? project.album?._id : project.album) || "",
+      featured: !!project.featured,
       keepImages: project.images || [],
       newImageFiles: [],
       keepThumbnail: project.thumbnail || "",
@@ -175,13 +177,14 @@ const ProjectsManage = () => {
                   <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Images</th>
+                  <th className="px-4 py-3">Featured</th>
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {data?.data?.length === 0 && (
                   <tr>
-                    <td colSpan={5} className={`px-4 py-6 text-center ${mutedClass}`}>
+                    <td colSpan={6} className={`px-4 py-6 text-center ${mutedClass}`}>
                       No projects yet.
                     </td>
                   </tr>
@@ -194,6 +197,11 @@ const ProjectsManage = () => {
                       <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusTone[project.status] || ""}`}>{project.status}</span>
                     </td>
                     <td className="px-4 py-3">{project.images?.length || 0}</td>
+                    <td className="px-4 py-3">
+                      {project.featured && (
+                        <span className="rounded-full bg-gilt-500 px-2.5 py-1 text-xs font-semibold text-white">Featured</span>
+                      )}
+                    </td>
                     <td className="space-x-3 px-4 py-3 text-right">
                       <button onClick={() => openEdit(project)} className="text-forest-700 hover:underline dark:text-forest-400">
                         Edit
@@ -342,6 +350,16 @@ const ProjectsManage = () => {
                 Lets visitors jump from this project's page to that album's full photo collection under Gallery.
               </p>
             </div>
+
+            <label className={`flex items-center gap-2 text-sm font-medium ${mutedClass}`}>
+              <input
+                type="checkbox"
+                checked={form.featured}
+                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                className="h-4 w-4 rounded border-forest-300 text-forest-700 focus:ring-forest-500"
+              />
+              Feature this project on the Projects page
+            </label>
 
             <div>
               <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Hero / Cover Photo</label>

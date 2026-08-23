@@ -34,6 +34,7 @@ const fromFlatFields = (body) => ({
   // "" (the <select>'s "None" option) explicitly clears the link — only a
   // genuinely absent field leaves the existing album untouched.
   ...(body.album !== undefined ? { album: body.album || null } : {}),
+  ...(body.featured !== undefined ? { featured: body.featured === true || body.featured === "true" } : {}),
 });
 
 // @desc   List projects. ?status=ongoing|completed|upcoming and

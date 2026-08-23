@@ -40,6 +40,11 @@ const projectSchema = new mongoose.Schema(
     // whatever happens to be first in `images`. Falls back to `images[0]`
     // on the frontend when unset (see ProjectCard.jsx/ProjectDetail.jsx).
     thumbnail: { type: String, default: "" },
+    // Marks a project for the large "Featured" spotlight card at the top of
+    // the Projects page's grid — same convention as Album.featured (see
+    // models/Album.js): if more than one project is ever marked featured,
+    // the page picks whichever was most recently updated.
+    featured: { type: Boolean, default: false },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

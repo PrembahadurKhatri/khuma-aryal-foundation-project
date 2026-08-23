@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { useContent } from "../hooks/useContent.js";
 import { getGalleryAlbums, getGalleryVideos } from "../services/contentService.js";
@@ -52,25 +53,6 @@ function RefreshIcon() {
   );
 }
 
-function ImageIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
-      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="8.5" cy="9.5" r="1.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M21 16l-5.5-5.5a1 1 0 0 0-1.4 0L5 19" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
-function PlayCircleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
-      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M10.3 9v6l5-3-5-3Z" fill="currentColor" />
-    </svg>
-  );
-}
-
 // Category filter pills + sort dropdown — identical structure for both
 // Photos and Videos, only the data/handlers differ, so it's factored out
 // once rather than duplicated per tab.
@@ -116,7 +98,15 @@ function FilterBar({ category, onCategory, sort, onSort, sortLabels, allLabel })
 
 export default function Gallery() {
   const { t } = useLanguage();
-  const [tab, setTab] = useState("photos");
+  // Which tab is showing is driven entirely by the URL (?tab=videos) now —
+  // reached via the "Photo Gallery" / "Video Gallery" options under the
+  // Gallery item in Navbar.jsx, rather than an on-page toggle. Reading it
+  // straight from searchParams (instead of syncing into local state) means
+  // clicking that nav dropdown while already on this page switches tabs
+  // immediately, since react-router doesn't remount the page for a
+  // same-route query-string change.
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab") === "videos" ? "videos" : "photos";
 
   const { data: albums, loading: albumsLoading } = useContent(getGalleryAlbums);
   const [category, setCategory] = useState("All");
@@ -176,31 +166,6 @@ export default function Gallery() {
 
       <section className="pb-20 pt-10 sm:pb-24 sm:pt-14">
         <Container>
-          {/* Photos / Videos tab toggle — right-aligned in both tabs */}
-          <div className="mb-8 flex justify-end">
-            <div className="inline-flex w-fit gap-1 rounded-full border border-forest-100 bg-white p-1 shadow-card">
-              <button
-                type="button"
-                onClick={() => setTab("photos")}
-                className={`inline-flex items-center gap-2 rounded-full px-5 py-2 font-body text-sm font-semibold transition-colors duration-150 ${
-                  tab === "photos" ? "bg-forest-700 text-white shadow-soft" : "text-ink-600 hover:text-forest-700"
-                }`}
-              >
-                <ImageIcon />
-                {t("gallery.tabPhotos")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab("videos")}
-                className={`inline-flex items-center gap-2 rounded-full px-5 py-2 font-body text-sm font-semibold transition-colors duration-150 ${
-                  tab === "videos" ? "bg-forest-700 text-white shadow-soft" : "text-ink-600 hover:text-forest-700"
-                }`}
-              >
-                <PlayCircleIcon />
-                {t("gallery.tabVideos")}
-              </button>
-            </div>
-          </div>
 
           {tab === "photos" ? (
             <>
