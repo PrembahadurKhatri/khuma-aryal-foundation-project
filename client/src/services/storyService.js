@@ -5,14 +5,23 @@ export const fetchStories = async () => {
   return data;
 };
 
-// payload: { name, summaryEn, summaryNe, photoFile? }
-const toFormData = (payload) => {
+// payload: { name, summaryEn, summaryNe, photoFile?, album,
+//            keepImages: string[], newImageFiles: File[] }
+//
+// Empty strings are sent through on purpose (not skipped like undefined/
+// null) — clearing a text field or the album link submits "", and that has
+// to reach the server so it actually overwrites the old value instead of
+// being silently ignored (see galleryService.js's toFormData for the same
+// fix, applied there first).
+const toFormData = ({ photoFile, keepImages, newImageFiles, ...rest }) => {
   const form = new FormData();
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value === undefined || value === null || value === "") return;
-    if (key === "photoFile") form.append("photo", value);
-    else form.append(key, value);
+  Object.entries(rest).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+    form.append(key, value);
   });
+  if (photoFile) form.append("photo", photoFile);
+  if (keepImages) form.append("keepImages", JSON.stringify(keepImages));
+  (newImageFiles || []).forEach((file) => form.append("images", file));
   return form;
 };
 

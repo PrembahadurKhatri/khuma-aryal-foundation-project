@@ -54,10 +54,13 @@ export async function getNews() {
   return data.data.map(withId);
 }
 
-// Used by NewsDetail.jsx.
+// Used by NewsDetail.jsx. `album`, if this item has one linked, comes back
+// populated (title/coverImage/photos) — same normalization as getProject.
 export async function getNewsItem(id) {
   const { data } = await api.get(`/news/${id}`);
-  return withId(data.data);
+  const item = withId(data.data);
+  if (item.album) item.album = withId(item.album);
+  return item;
 }
 
 // Gallery is organized as albums: a thumbnail grid of cover photo + title
@@ -88,10 +91,13 @@ export async function getNotices() {
   return data.data.map(withId);
 }
 
-// Used by NoticeDetail.jsx.
+// Used by NoticeDetail.jsx. `album`, if this notice has one linked, comes
+// back populated (title/coverImage/photos) — same normalization as getProject.
 export async function getNotice(id) {
   const { data } = await api.get(`/notices/${id}`);
-  return withId(data.data);
+  const notice = withId(data.data);
+  if (notice.album) notice.album = withId(notice.album);
+  return notice;
 }
 
 // "Upcoming Events" — see models/Event.js.
@@ -100,10 +106,13 @@ export async function getEvents() {
   return data.data.map(withId);
 }
 
-// Used by EventDetail.jsx.
+// Used by EventDetail.jsx. `album`, if this event has one linked, comes
+// back populated (title/coverImage/photos) — same normalization as getProject.
 export async function getEvent(id) {
   const { data } = await api.get(`/events/${id}`);
-  return withId(data.data);
+  const event = withId(data.data);
+  if (event.album) event.album = withId(event.album);
+  return event;
 }
 
 // "Impact / Success Stories" — see models/Story.js.
@@ -112,10 +121,13 @@ export async function getStories() {
   return data.data.map(withId);
 }
 
-// Used by StoryDetail.jsx.
+// Used by StoryDetail.jsx. `album`, if this story has one linked, comes
+// back populated (title/coverImage/photos) — same normalization as getProject.
 export async function getStory(id) {
   const { data } = await api.get(`/stories/${id}`);
-  return withId(data.data);
+  const story = withId(data.data);
+  if (story.album) story.album = withId(story.album);
+  return story;
 }
 
 // "Downloads" — useful documents (annual report, brochure, etc). See models/Download.js.

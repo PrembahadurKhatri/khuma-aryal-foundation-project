@@ -237,6 +237,11 @@ const translations = {
       vacancyInternship: "Internship",
       vacancyContract: "Contract",
       backToNews: "Back to News",
+      // Linked-album card on News/Notice/Event/Story detail pages — same
+      // idea as projects.photoGalleryDesc/viewFullGallery, worded generically
+      // since it's shared across four different content types here.
+      linkedAlbumDesc: "See more photos from this in the Gallery.",
+      viewFullGallery: "View Full Gallery",
       orApplyExternally: "Or apply externally",
       applyForThisRole: "Apply for This Role",
       applyFormSubtitle: "Fill out the form below and we'll get back to you.",
@@ -543,6 +548,8 @@ const translations = {
       vacancyInternship: "इन्टर्नशिप",
       vacancyContract: "करार",
       backToNews: "समाचारमा फर्कनुहोस्",
+      linkedAlbumDesc: "यससँग सम्बन्धित थप फोटोहरू ग्यालरीमा हेर्नुहोस्।",
+      viewFullGallery: "पूर्ण ग्यालरी हेर्नुहोस्",
       orApplyExternally: "वा बाहिरी लिङ्कबाट आवेदन दिनुहोस्",
       applyForThisRole: "यस पदका लागि आवेदन दिनुहोस्",
       applyFormSubtitle: "तलको फारम भर्नुहोस्, हामी तपाईंलाई सम्पर्क गर्नेछौं।",

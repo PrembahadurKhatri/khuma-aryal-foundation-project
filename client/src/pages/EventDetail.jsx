@@ -6,6 +6,8 @@ import { getEvent } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
+import GalleryGrid from "../components/gallery/GalleryGrid.jsx";
+import LinkedAlbumCard from "../components/LinkedAlbumCard.jsx";
 
 const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
 
@@ -69,6 +71,8 @@ export default function EventDetail() {
 
   const name = event ? pick(event.name, language) : "";
   const location = event ? pick(event.location, language) : "";
+  const album = event?.album;
+  const photos = event?.images ? event.images.map((src, i) => ({ id: `${event.id}-${i}`, src, alt: name })) : [];
 
   let formatted = event?.date;
   try {
@@ -142,6 +146,24 @@ export default function EventDetail() {
                   )}
                 </div>
               </div>
+            </Reveal>
+          )}
+
+          {!loading && event && photos.length > 0 && (
+            <Reveal delay={0.05}>
+              <div className="mt-6 flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-body text-xl font-bold text-forest-900">{t("gallery.photosLabel")}</h2>
+                  <span className="rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">{photos.length}</span>
+                </div>
+                <GalleryGrid images={photos} />
+              </div>
+            </Reveal>
+          )}
+
+          {!loading && album && (
+            <Reveal delay={0.1} className="mt-6">
+              <LinkedAlbumCard album={album} />
             </Reveal>
           )}
         </Container>

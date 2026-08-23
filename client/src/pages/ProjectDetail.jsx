@@ -6,8 +6,8 @@ import { getProject } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
-import PlaceholderImage from "../components/PlaceholderImage.jsx";
 import GalleryGrid from "../components/gallery/GalleryGrid.jsx";
+import LinkedAlbumCard from "../components/LinkedAlbumCard.jsx";
 
 function TagIcon() {
   return (
@@ -73,17 +73,6 @@ function FlagIcon() {
   );
 }
 
-function ImagesIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0" aria-hidden="true">
-      <rect x="3" y="4" width="14" height="14" rx="1.8" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="7.5" cy="8.5" r="1.4" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M4 15l3.5-3.5a1.5 1.5 0 0 1 2 0L13 15M12 13l1.3-1.3a1.5 1.5 0 0 1 2 0L18 14.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M20 8v10a2 2 0 0 1-2 2H8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 const STATUS_TONE = {
   ongoing: "bg-forest-600 text-white",
   completed: "bg-ink-600 text-white",
@@ -142,7 +131,6 @@ export default function ProjectDetail() {
     ? new Date(project.endDate).toLocaleDateString(DATE_LOCALES[language] || "en-US", { year: "numeric", month: "long", day: "numeric" })
     : "";
   const album = project?.album;
-  const albumTitle = album ? pick(album.title, language) : "";
   // Dedicated hero photo, set independently in the admin panel — falls back
   // to the first gallery image so older projects without one still show a
   // real photo instead of the generic default PageHero uses.
@@ -272,26 +260,12 @@ export default function ProjectDetail() {
                     admin panel. */}
                 {album && (
                   <Reveal delay={0.1} className="h-fit">
-                    <Link
-                      to={`/gallery/${album.id}`}
-                      className="group flex flex-col overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
-                    >
-                      <div className="relative h-36 w-full overflow-hidden">
-                        <PlaceholderImage src={album.coverImage} alt={albumTitle} label={albumTitle} imgClassName="transition-transform duration-500 group-hover:scale-105" />
-                        <span className="absolute inset-0 bg-gradient-to-t from-forest-950/70 via-forest-950/10 to-transparent" />
-                        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 font-body text-[11px] font-semibold text-white backdrop-blur-md">
-                          <ImagesIcon />
-                          {t("projects.photoGallery")}
-                        </span>
-                      </div>
-                      <div className="flex flex-col gap-1.5 p-5">
-                        <h3 className="font-body text-base font-semibold text-forest-900">{albumTitle}</h3>
-                        <p className="font-body text-xs leading-relaxed text-ink-600">{t("projects.photoGalleryDesc")}</p>
-                        <span className="mt-2 inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600 transition-transform duration-300 group-hover:translate-x-0.5">
-                          {t("projects.viewFullGallery")} →
-                        </span>
-                      </div>
-                    </Link>
+                    <LinkedAlbumCard
+                      album={album}
+                      badgeLabel={t("projects.photoGallery")}
+                      description={t("projects.photoGalleryDesc")}
+                      ctaLabel={t("projects.viewFullGallery")}
+                    />
                   </Reveal>
                 )}
               </div>

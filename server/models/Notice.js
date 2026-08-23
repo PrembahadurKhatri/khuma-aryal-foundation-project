@@ -21,6 +21,11 @@ const noticeSchema = new mongoose.Schema(
     // middleware/upload.js's `upload.document`) — a plain URL, same as
     // every other uploaded-asset field in this app.
     attachment: { type: String, default: "" },
+    // Additional photos for this notice's own detail page gallery (up to 6)
+    // plus an optional link to a full Gallery Album — same pattern as
+    // models/Project.js's images/album.
+    images: [{ type: String }],
+    album: { type: mongoose.Schema.Types.ObjectId, ref: "Album", default: null },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

@@ -6,6 +6,8 @@ import { getStory } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
+import GalleryGrid from "../components/gallery/GalleryGrid.jsx";
+import LinkedAlbumCard from "../components/LinkedAlbumCard.jsx";
 
 export default function StoryDetail() {
   const { id } = useParams();
@@ -39,6 +41,8 @@ export default function StoryDetail() {
   }
 
   const summary = story ? pick(story.summary, language) : "";
+  const album = story?.album;
+  const photos = story?.images ? story.images.map((src, i) => ({ id: `${story.id}-${i}`, src, alt: story.name || "" })) : [];
 
   return (
     <>
@@ -80,6 +84,24 @@ export default function StoryDetail() {
                   <p className="whitespace-pre-line font-body text-base leading-relaxed text-ink-600">{summary}</p>
                 </div>
               </div>
+            </Reveal>
+          )}
+
+          {!loading && story && photos.length > 0 && (
+            <Reveal delay={0.05}>
+              <div className="mt-6 flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-body text-xl font-bold text-forest-900">{t("gallery.photosLabel")}</h2>
+                  <span className="rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">{photos.length}</span>
+                </div>
+                <GalleryGrid images={photos} />
+              </div>
+            </Reveal>
+          )}
+
+          {!loading && album && (
+            <Reveal delay={0.1} className="mt-6">
+              <LinkedAlbumCard album={album} />
             </Reveal>
           )}
         </Container>

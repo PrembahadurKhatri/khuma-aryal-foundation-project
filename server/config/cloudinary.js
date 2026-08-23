@@ -83,4 +83,26 @@ export const applicationStorage = new CloudinaryStorage({
   },
 });
 
+// Notices — an "attachment" field (PDF/doc, a raw document) and an "images"
+// field (photos for the notice's own detail-page gallery) uploaded
+// together. Same per-fieldname routing idea as mediaStorage/applicationStorage
+// above: "attachment" needs the raw-document params, anything else (the
+// "images" field) is treated as a normal photo.
+export const noticeStorage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => {
+    if (file.fieldname === "attachment") {
+      return {
+        folder: "khuma-aryal-foundation/documents",
+        resource_type: "raw",
+        allowed_formats: ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
+      };
+    }
+    return {
+      folder: "khuma-aryal-foundation",
+      allowed_formats: ["jpg", "jpeg", "png", "webp", "avif"],
+    };
+  },
+});
+
 export default cloudinary;

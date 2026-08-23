@@ -11,6 +11,11 @@ const storySchema = new mongoose.Schema(
     name: { type: String, trim: true, default: "" },
     summary: { type: bilingual, required: true },
     photo: { type: String, required: true },
+    // Additional photos for this story's own detail page gallery (up to 6)
+    // plus an optional link to a full Gallery Album — same pattern as
+    // models/Project.js's images/album.
+    images: [{ type: String }],
+    album: { type: mongoose.Schema.Types.ObjectId, ref: "Album", default: null },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

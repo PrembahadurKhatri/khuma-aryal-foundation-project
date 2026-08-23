@@ -16,6 +16,9 @@ const fromFlatFields = (body) => ({
     : {}),
   ...(body.date ? { date: body.date } : {}),
   ...(body.category ? { category: body.category } : {}),
+  // "" (the <select>'s "None" option) explicitly clears the link — only a
+  // genuinely absent field leaves the existing album untouched.
+  ...(body.album !== undefined ? { album: body.album || null } : {}),
 });
 
 // @desc   List news/notices, newest first
@@ -25,10 +28,12 @@ export const getNews = asyncHandler(async (req, res) => {
   res.json({ success: true, count: news.length, data: news });
 });
 
-// @desc   Get a single news item
+// @desc   Get a single news item. `album` is populated (title/coverImage) so
+//         the detail page can render a real preview card linking to that
+//         album, not just a bare ID — same as projectController.js's getProject.
 // @route  GET /api/news/:id
 export const getNewsItem = asyncHandler(async (req, res) => {
-  const item = await News.findById(req.params.id);
+  const item = await News.findById(req.params.id).populate("album", "title coverImage photos");
   if (!item) {
     res.status(404);
     throw new Error("News item not found");
@@ -40,18 +45,35 @@ export const getNewsItem = asyncHandler(async (req, res) => {
 // @route  POST /api/news
 export const createNews = asyncHandler(async (req, res) => {
   const payload = fromFlatFields(req.body);
-  if (req.file) payload.image = req.file.path;
+  if (req.files?.image?.[0]) payload.image = req.files.image[0].path;
+  payload.images = (req.files?.images || []).map((f) => f.path);
   if (req.user?._id && req.user._id !== "local-fallback-admin") payload.createdBy = req.user._id;
 
   const item = await News.create(payload);
   res.status(201).json({ success: true, data: item });
 });
 
-// @desc   Update a news/notice item
+// @desc   Update a news/notice item. `keepImages` (JSON array of existing
+//         gallery photo URLs the admin chose to keep) is merged with any
+//         newly uploaded files — same guarded pattern as
+//         projectController.js's updateProject.
 // @route  PUT /api/news/:id
 export const updateNews = asyncHandler(async (req, res) => {
   const payload = fromFlatFields(req.body);
-  if (req.file) payload.image = req.file.path;
+  if (req.files?.image?.[0]) payload.image = req.files.image[0].path;
+
+  const uploadedImages = (req.files?.images || []).map((f) => f.path);
+  if (req.body.keepImages !== undefined || uploadedImages.length > 0) {
+    let keepImages = [];
+    if (req.body.keepImages) {
+      try {
+        keepImages = JSON.parse(req.body.keepImages);
+      } catch {
+        keepImages = [];
+      }
+    }
+    payload.images = [...keepImages, ...uploadedImages];
+  }
 
   const item = await News.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
   if (!item) {

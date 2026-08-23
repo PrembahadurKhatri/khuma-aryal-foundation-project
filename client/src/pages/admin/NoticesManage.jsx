@@ -2,11 +2,23 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useOutletContext } from "react-router-dom";
 import { fetchNotices, createNotice, updateNotice, deleteNotice } from "../../services/noticeService.js";
+import { fetchAlbums } from "../../services/galleryService.js";
 import FileSourceField from "../../components/admin/FileSourceField.jsx";
 import useToast from "../../hooks/useToast.js";
 
 const PRIORITIES = ["important", "new", "urgent"];
-const emptyForm = { titleEn: "", titleNe: "", descriptionEn: "", descriptionNe: "", date: "", priority: "important", attachmentFile: null };
+const emptyForm = {
+  titleEn: "",
+  titleNe: "",
+  descriptionEn: "",
+  descriptionNe: "",
+  date: "",
+  priority: "important",
+  attachmentFile: null,
+  album: "",
+  keepImages: [],
+  newImageFiles: [],
+};
 
 const toDateInput = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
 
@@ -19,6 +31,8 @@ const NoticesManage = () => {
   const [showForm, setShowForm] = useState(false);
 
   const { data, isLoading } = useQuery({ queryKey: ["admin-notices"], queryFn: fetchNotices });
+  const { data: albumsData } = useQuery({ queryKey: ["admin-gallery"], queryFn: fetchAlbums });
+  const albums = albumsData?.data || [];
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-notices"] });
   const onError = (err) => toast.error(err.response?.data?.message || "Something went wrong.");
@@ -70,8 +84,15 @@ const NoticesManage = () => {
       date: toDateInput(item.date),
       priority: item.priority || "important",
       attachmentFile: null,
+      album: (typeof item.album === "object" ? item.album?._id : item.album) || "",
+      keepImages: item.images || [],
+      newImageFiles: [],
     });
     setShowForm(true);
+  };
+
+  const removeKeptImage = (url) => {
+    setForm((prev) => ({ ...prev, keepImages: prev.keepImages.filter((u) => u !== url) }));
   };
 
   const handleSubmit = async (e) => {
@@ -188,6 +209,72 @@ const NoticesManage = () => {
               fileValue={form.attachmentFile}
               onFileChange={(f) => setForm((prev) => ({ ...prev, attachmentFile: f }))}
             />
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Linked Gallery Album (optional)</label>
+              <select value={form.album} onChange={(e) => setForm({ ...form, album: e.target.value })} className={inputClass}>
+                <option value="">None</option>
+                {albums.map((a) => (
+                  <option key={a._id} value={a._id}>
+                    {a.title?.en}
+                  </option>
+                ))}
+              </select>
+              <p className={`mt-1 text-xs ${mutedClass}`}>Lets visitors jump from this notice's page to that album's full photo collection under Gallery.</p>
+            </div>
+
+            {form.keepImages.length > 0 && (
+              <div>
+                <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Current Photos</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {form.keepImages.map((url) => (
+                    <div key={url} className="group relative">
+                      <img src={url} alt="" className="h-16 w-full rounded-lg object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeKeptImage(url)}
+                        className="absolute right-1 top-1 rounded-full bg-black/60 px-1.5 text-xs text-white opacity-0 group-hover:opacity-100"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Add Photos (up to 6 total, optional)</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  const picked = Array.from(e.target.files || []);
+                  setForm((prev) => ({ ...prev, newImageFiles: [...prev.newImageFiles, ...picked] }));
+                  e.target.value = "";
+                }}
+                className={inputClass}
+              />
+              <p className={`mt-1 text-xs ${mutedClass}`}>Shown as a photo gallery on this notice's own detail page. Select more than once to keep adding.</p>
+
+              {form.newImageFiles.length > 0 && (
+                <div className="mt-2 grid grid-cols-3 gap-2">
+                  {form.newImageFiles.map((file, i) => (
+                    <div key={`${file.name}-${i}`} className="group relative">
+                      <img src={URL.createObjectURL(file)} alt="" className="h-16 w-full rounded-lg object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setForm((prev) => ({ ...prev, newImageFiles: prev.newImageFiles.filter((_, idx) => idx !== i) }))}
+                        className="absolute right-1 top-1 rounded-full bg-black/60 px-1.5 text-xs text-white opacity-0 group-hover:opacity-100"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end sm:gap-3">
               <button type="button" onClick={() => setShowForm(false)} className={`w-full rounded-lg px-4 py-2.5 text-center sm:w-auto ${mutedClass}`}>

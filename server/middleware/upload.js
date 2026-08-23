@@ -7,6 +7,7 @@ import {
   documentStorage as cloudinaryDocumentStorage,
   mediaStorage as cloudinaryMediaStorage,
   applicationStorage as cloudinaryApplicationStorage,
+  noticeStorage as cloudinaryNoticeStorage,
   isCloudinaryConfigured,
 } from "../config/cloudinary.js";
 
@@ -106,6 +107,27 @@ const baseApplicationUpload = multer({
   },
 });
 
+// Notices — "attachment" (PDF/doc) and "images" (photos, up to 6, for the
+// notice's own detail-page gallery) uploaded together. Needs its own
+// instance (not the generic image-only `upload.fields`) because "attachment"
+// is a document, not an image — the fileFilter below has to branch per field
+// the same way noticeStorage's params function does.
+const noticeStorage = isCloudinaryConfigured ? cloudinaryNoticeStorage : diskStorage;
+const baseNoticeUpload = multer({
+  storage: noticeStorage,
+  limits: { fileSize: 25 * 1024 * 1024 }, // 25MB
+  fileFilter: (req, file, cb) => {
+    if (file.fieldname === "attachment") {
+      if (!DOCUMENT_MIMETYPES.includes(file.mimetype)) {
+        return cb(new Error("Only PDF/Word/Excel/PowerPoint files are allowed for the attachment field"));
+      }
+    } else if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only image files are allowed for the images field"));
+    }
+    cb(null, true);
+  },
+});
+
 // Cloudinary storage already leaves req.file.path as a secure_url. Local
 // disk storage leaves it as an absolute filesystem path — normalize that to
 // the public URL controllers should actually save.
@@ -126,6 +148,7 @@ const upload = {
   array: (field, maxCount) => [baseUpload.array(field, maxCount), normalizePaths],
   fields: (fieldsConfig) => [baseUpload.fields(fieldsConfig), normalizePaths],
   document: (field) => [baseDocumentUpload.single(field), normalizePaths],
+  notice: (fieldsConfig) => [baseNoticeUpload.fields(fieldsConfig), normalizePaths],
   media: (fieldsConfig) => [baseMediaUpload.fields(fieldsConfig), normalizePaths],
   application: (fieldsConfig) => [baseApplicationUpload.fields(fieldsConfig), normalizePaths],
 };

@@ -19,6 +19,11 @@ const eventSchema = new mongoose.Schema(
     // opens in a new tab. Left empty, the card just doesn't show a button.
     registerLink: { type: String, trim: true, default: "" },
     image: { type: String, default: "" },
+    // Additional photos for this event's own detail page gallery (up to 6)
+    // plus an optional link to a full Gallery Album — same pattern as
+    // models/Project.js's images/album.
+    images: [{ type: String }],
+    album: { type: mongoose.Schema.Types.ObjectId, ref: "Album", default: null },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

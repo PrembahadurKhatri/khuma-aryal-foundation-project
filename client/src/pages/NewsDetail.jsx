@@ -6,6 +6,8 @@ import { getNewsItem } from "../services/contentService.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
+import GalleryGrid from "../components/gallery/GalleryGrid.jsx";
+import LinkedAlbumCard from "../components/LinkedAlbumCard.jsx";
 
 const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
 
@@ -54,6 +56,11 @@ export default function NewsDetail() {
   const title = news ? pick(news.title, language) : "";
   const description = news ? pick(news.description, language) : "";
   const category = news?.category || "General";
+  const album = news?.album;
+  // GalleryGrid/Lightbox render { id, src, alt } objects — this item's
+  // `images` is just an array of URL strings, same pattern as
+  // ProjectDetail.jsx/AlbumDetail.jsx.
+  const photos = news?.images ? news.images.map((src, i) => ({ id: `${news.id}-${i}`, src, alt: title })) : [];
 
   let formatted = news?.date;
   try {
@@ -109,6 +116,24 @@ export default function NewsDetail() {
                   <p className="whitespace-pre-line font-body text-base leading-relaxed text-ink-600">{description}</p>
                 </div>
               </div>
+            </Reveal>
+          )}
+
+          {!loading && news && photos.length > 0 && (
+            <Reveal delay={0.05}>
+              <div className="mt-6 flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-body text-xl font-bold text-forest-900">{t("gallery.photosLabel")}</h2>
+                  <span className="rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">{photos.length}</span>
+                </div>
+                <GalleryGrid images={photos} />
+              </div>
+            </Reveal>
+          )}
+
+          {!loading && album && (
+            <Reveal delay={0.1} className="mt-6">
+              <LinkedAlbumCard album={album} />
             </Reveal>
           )}
         </Container>

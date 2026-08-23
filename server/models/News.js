@@ -19,6 +19,11 @@ const newsSchema = new mongoose.Schema(
     date: { type: Date, required: true, default: Date.now },
     category: { type: String, enum: NEWS_CATEGORIES, default: "General" },
     image: { type: String },
+    // Additional photos for this item's own detail page gallery (up to 6 —
+    // same cap/pattern as Project.images) plus an optional link to a full
+    // Gallery Album, mirroring models/Project.js exactly.
+    images: [{ type: String }],
+    album: { type: mongoose.Schema.Types.ObjectId, ref: "Album", default: null },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
