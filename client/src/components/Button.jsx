@@ -11,8 +11,12 @@ const VARIANTS = {
 
 // Diagonal light sweep that slides across on hover — shared by every button
 // variant so the whole site's CTAs get the same little flourish rather than
-// just sitting there with a flat color change.
-function Shine() {
+// just sitting there with a flat color change. Exported (not just used
+// internally) so non-Button elements that want the identical effect — the
+// Navbar links, the Home page's "Read More" pills — can reuse the exact
+// same sweep instead of a near-duplicate. The parent needs `group relative
+// overflow-hidden` for it to clip and trigger correctly.
+export function Shine() {
   return (
     <span
       aria-hidden="true"

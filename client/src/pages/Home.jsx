@@ -11,6 +11,7 @@ import BoardMembers from "../components/BoardMembers.jsx";
 import NewsCard from "../components/NewsCard.jsx";
 import NoticeCard from "../components/NoticeCard.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
+import { Shine } from "../components/Button.jsx";
 
 const UPDATES_COUNT = 3;
 
@@ -28,15 +29,18 @@ function SectionHeader({ title, action }) {
 
 // Pill button (not a plain text link) so "Read More" reads as a real call
 // to action, matching the weight of buttons used elsewhere on the site
-// (e.g. the "Back to Projects" pill on ProjectDetail).
+// (e.g. the "Back to Projects" pill on ProjectDetail). Same forest-600 as
+// Hero's primary Button + the same diagonal Shine sweep on hover, so this
+// reads as the same CTA treatment rather than a near-miss variant.
 function ViewAllLink({ to, label }) {
   return (
     <Link
       to={to}
-      className="group inline-flex items-center gap-2 rounded-full bg-forest-700 py-2.5 pl-5 pr-3 font-body text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-forest-800 hover:shadow-lift"
+      className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-forest-600 py-2.5 pl-5 pr-3 font-body text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-forest-700 hover:shadow-lift"
     >
-      {label}
-      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:translate-x-1">
+      <Shine />
+      <span className="relative z-10">{label}</span>
+      <span className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:translate-x-1">
         <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
           <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -56,10 +60,10 @@ function CardSkeleton({ count = 3, className = "h-72" }) {
 }
 
 const PILLARS = [
-  { key: "pillarEducation", descKey: "pillarEducationDesc", icon: "🎓" },
-  { key: "pillarHealth", descKey: "pillarHealthDesc", icon: "🩺" },
-  { key: "pillarSports", descKey: "pillarSportsDesc", icon: "⚽" },
-  { key: "pillarEmployment", descKey: "pillarEmploymentDesc", icon: "💼" },
+  { key: "pillarEducation", descKey: "pillarEducationDesc",  },
+  { key: "pillarHealth", descKey: "pillarHealthDesc",  },
+  { key: "pillarSports", descKey: "pillarSportsDesc", },
+  { key: "pillarEmployment", descKey: "pillarEmploymentDesc", },
 ];
 
 const EXPLORE_LINKS = [

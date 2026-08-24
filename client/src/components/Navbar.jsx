@@ -4,6 +4,7 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import LanguageSwitcher from "./LanguageSwitcher.jsx";
 import Container from "./Container.jsx";
+import { Shine } from "./Button.jsx";
 import { useSiteInfo } from "../contexts/SiteInfoContext.jsx";
 
 export default function Navbar() {
@@ -53,7 +54,7 @@ export default function Navbar() {
   // poke through the pill's rounded edge. `inline-flex` makes the box
   // sizing explicit instead of relying on flex-item auto-blockification.
   const linkClasses = ({ isActive }) =>
-    `group relative inline-flex rounded-full px-4 py-2.5 font-body text-sm font-medium
+    `group relative inline-flex overflow-hidden rounded-full px-4 py-2.5 font-body text-sm font-medium
      tracking-[0.01em] transition-all duration-300 ease-out
      ${
        isActive
@@ -137,20 +138,23 @@ export default function Navbar() {
               >
                 <NavLink to={link.to} className={linkClasses}>
                   {({ isActive }) => (
-                    <span className="relative z-10 flex items-center gap-2">
-                      {isActive && (
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
-                      )}
-                      {link.label}
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        className={`h-3 w-3 transition-transform duration-200 ${galleryHover ? "rotate-180" : ""}`}
-                        aria-hidden="true"
-                      >
-                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
+                    <>
+                      <Shine />
+                      <span className="relative z-10 flex items-center gap-2">
+                        {isActive && (
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
+                        )}
+                        {link.label}
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className={`h-3 w-3 transition-transform duration-200 ${galleryHover ? "rotate-180" : ""}`}
+                          aria-hidden="true"
+                        >
+                          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    </>
                   )}
                 </NavLink>
 
@@ -175,12 +179,15 @@ export default function Navbar() {
                 className={linkClasses}
               >
                 {({ isActive }) => (
-                  <span className="relative z-10 flex items-center gap-2">
-                    {isActive && (
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
-                    )}
-                    {link.label}
-                  </span>
+                  <>
+                    <Shine />
+                    <span className="relative z-10 flex items-center gap-2">
+                      {isActive && (
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gilt-400 shadow-[0_0_8px_rgba(201,166,91,0.6)]" />
+                      )}
+                      {link.label}
+                    </span>
+                  </>
                 )}
               </NavLink>
             )

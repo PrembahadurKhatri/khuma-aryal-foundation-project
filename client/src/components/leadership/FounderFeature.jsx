@@ -3,6 +3,7 @@ import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import { pick } from "../../utils/localize.js";
 import { useSiteInfo } from "../../contexts/SiteInfoContext.jsx";
 import PlaceholderImage from "../PlaceholderImage.jsx";
+import Button from "../Button.jsx";
 
 function BookIcon() {
   return (
@@ -47,10 +48,10 @@ export default function FounderFeature({ leader, onRead }) {
         {/* Message */}
         <div className="flex flex-col gap-5 font-body">
           <div className="flex items-start gap-3">
-            <span aria-hidden="true" className="font-body text-5xl leading-none text-gilt-500">
+            <span aria-hidden="true" className="font-body text-5xl leading-none text-[#FF8C00]">
               &ldquo;
             </span>
-            <span className="mt-2 text-sm font-semibold uppercase tracking-[0.25em] text-gilt-600">
+            <span className="mt-2 text-sm font-semibold uppercase tracking-[0.25em] text-[#FF8C00]">
               {t("home.messageFromFounder")}
             </span>
           </div>
@@ -67,17 +68,13 @@ export default function FounderFeature({ leader, onRead }) {
             <p className="text-sm text-ink-600">{pick(siteInfo.name, language)}</p>
           </div>
 
-          <button
-            type="button"
-            onClick={onRead}
-            className="group mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-forest-900 px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-forest-800"
-          >
+          <Button type="button" onClick={onRead} variant="primary" className="mt-1 w-fit">
             <BookIcon />
             {t("home.readFullMessage")}
             <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
               →
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     </motion.div>
