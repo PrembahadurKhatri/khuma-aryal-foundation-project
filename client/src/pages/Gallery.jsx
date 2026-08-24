@@ -14,8 +14,8 @@ import VideoLightbox from "../components/gallery/VideoLightbox.jsx";
 // Real photos of the Foundation's work, cycling in the hero the same way
 // the Home page's hero slides through HERO_IMAGES (see components/Hero.jsx).
 const GALLERY_HERO_IMAGES = [
-  "/images/gallery.webp",
-  "/images/galleyr2.jpg",
+  "/images/machha.jpg",
+  "/images/galley.webp",
 ];
 
 const CATEGORIES = ["All", "Event", "Education", "Health", "Community", "Distribution", "DisasterRelief"];
