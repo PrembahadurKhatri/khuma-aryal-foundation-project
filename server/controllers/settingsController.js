@@ -23,6 +23,7 @@ export const updateSettings = asyncHandler(async (req, res) => {
   const {
     nameEn, nameNe, taglineEn, taglineNe, addressEn, addressNe, officeHoursEn, officeHoursNe, phone, email, facebook, instagram, youtube,
     statYears, statBeneficiaries, statProjects, statVolunteers,
+    maintenanceEnabled, maintenanceMessage,
   } = req.body;
 
   settings.name = { en: nameEn ?? settings.name?.en, ne: nameNe ?? settings.name?.ne };
@@ -42,6 +43,22 @@ export const updateSettings = asyncHandler(async (req, res) => {
     projects: statProjects ?? settings.stats?.projects,
     volunteers: statVolunteers ?? settings.stats?.volunteers,
   };
+  // maintenanceEnabled arrives as a real boolean from the admin form, but
+  // req.body can hand it back as the string "false" depending on how the
+  // client serializes it — coerce explicitly rather than relying on JS
+  // truthiness, where the string "false" is truthy and would leave
+  // maintenance mode stuck on.
+  if (maintenanceEnabled !== undefined) {
+    settings.maintenanceMode = {
+      enabled: maintenanceEnabled === true || maintenanceEnabled === "true",
+      message: maintenanceMessage ?? settings.maintenanceMode?.message,
+    };
+  } else if (maintenanceMessage !== undefined) {
+    settings.maintenanceMode = {
+      enabled: settings.maintenanceMode?.enabled ?? false,
+      message: maintenanceMessage,
+    };
+  }
 
   await settings.save();
   res.json({ success: true, data: settings });

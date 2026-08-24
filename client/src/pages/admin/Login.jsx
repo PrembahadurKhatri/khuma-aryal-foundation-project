@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 import useAuth from "../../hooks/useAuth.js";
 
@@ -93,6 +93,13 @@ const Login = () => {
         >
           {loading ? "Signing in..." : "Sign In"}
         </button>
+
+        <Link
+          to="/admin/forgot-password"
+          className={`mt-4 block text-center text-sm hover:underline ${theme === "dark" ? "text-gray-400" : "text-ink-600"}`}
+        >
+          Forgot password?
+        </Link>
       </form>
     </div>
   );

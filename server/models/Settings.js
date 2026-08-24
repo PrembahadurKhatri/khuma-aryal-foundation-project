@@ -30,6 +30,21 @@ const settingsSchema = new mongoose.Schema(
       projects: { type: String, default: "40+" },
       volunteers: { type: String, default: "120+" },
     },
+    // Public-site maintenance mode (admin panel → Settings). When enabled,
+    // MainLayout.jsx shows a full-screen "under maintenance" page instead of
+    // the normal public routes; /admin/* is untouched either way so an
+    // admin can always log in and turn it back off. Enforced client-side
+    // only (see MainLayout.jsx) rather than in the API, since public pages
+    // and the admin's own management screens read the same GET endpoints
+    // (e.g. GET /api/news) — blocking them server-side would lock the
+    // admin out of their own dashboard along with the public site.
+    maintenanceMode: {
+      enabled: { type: Boolean, default: false },
+      message: {
+        type: String,
+        default: "We're currently performing scheduled maintenance. We'll be back online shortly — thank you for your patience.",
+      },
+    },
   },
   { timestamps: true }
 );

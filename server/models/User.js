@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ["admin", "editor"], default: "editor" },
     isActive: { type: Boolean, default: true },
     lastLogin: { type: Date },
+    passwordResetToken: { type: String },
+    passwordResetExpires: { type: Date },
     refreshTokens: [{ type: String }], // supports multiple sessions/devices
   },
   { timestamps: true }

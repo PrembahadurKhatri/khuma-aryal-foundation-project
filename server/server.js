@@ -100,7 +100,7 @@ const limiter = rateLimit({
   max: 300,
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => ["/auth/login", "/auth/refresh"].includes(req.path),
+  skip: (req) => ["/auth/login", "/auth/refresh", "/auth/forgot-password", "/auth/reset-password"].includes(req.path),
 });
 app.use("/api", limiter);
 
