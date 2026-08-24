@@ -21,6 +21,10 @@ function ImagesIcon() {
 // coverImage } object (see contentService.js's getProject/getNewsItem/etc,
 // which all normalize it the same way).
 //
+// Deliberately a compact horizontal row (fixed-size thumbnail + text), not
+// a tall full-width banner — a banner stretched across a wide desktop
+// container reads as oversized for what's essentially a single link.
+//
 // `badgeLabel`/`description`/`ctaLabel` default to generic wording shared
 // across News/Notice/Event/Story; ProjectDetail.jsx passes its own
 // slightly more specific copy ("...from this program...") instead.
@@ -31,23 +35,27 @@ export default function LinkedAlbumCard({ album, badgeLabel, description, ctaLab
   return (
     <Link
       to={`/gallery/${album.id}`}
-      className="group flex flex-col overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+      className="group flex items-center gap-4 overflow-hidden rounded-xl3 border border-forest-100 bg-white p-3.5 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-forest-200 hover:shadow-lift sm:gap-5 sm:p-4"
     >
-      <div className="relative h-36 w-full overflow-hidden">
+      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl2 sm:h-20 sm:w-20">
         <PlaceholderImage src={album.coverImage} alt={albumTitle} label={albumTitle} imgClassName="transition-transform duration-500 group-hover:scale-105" />
-        <span className="absolute inset-0 bg-gradient-to-t from-forest-950/70 via-forest-950/10 to-transparent" />
-        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 font-body text-[11px] font-semibold text-white backdrop-blur-md">
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-forest-50 px-2.5 py-1 font-body text-[10px] font-semibold uppercase tracking-wide text-forest-600">
           <ImagesIcon />
           {badgeLabel || t("news.sectionGallery")}
         </span>
+        <h3 className="truncate font-body text-base font-semibold text-forest-900">{albumTitle}</h3>
+        <p className="hidden truncate font-body text-xs leading-relaxed text-ink-600 sm:block">{description || t("news.linkedAlbumDesc")}</p>
       </div>
-      <div className="flex flex-col gap-1.5 p-5">
-        <h3 className="font-body text-base font-semibold text-forest-900">{albumTitle}</h3>
-        <p className="font-body text-xs leading-relaxed text-ink-600">{description || t("news.linkedAlbumDesc")}</p>
-        <span className="mt-2 inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600 transition-transform duration-300 group-hover:translate-x-0.5">
-          {ctaLabel || t("news.viewFullGallery")} →
-        </span>
-      </div>
+
+      <span className="flex shrink-0 items-center gap-1 font-body text-xs font-semibold text-forest-600 transition-transform duration-300 group-hover:translate-x-0.5">
+        <span className="hidden sm:inline">{ctaLabel || t("news.viewFullGallery")}</span>
+        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
     </Link>
   );
 }
