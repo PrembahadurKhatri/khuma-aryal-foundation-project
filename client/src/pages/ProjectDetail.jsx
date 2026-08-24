@@ -187,14 +187,12 @@ export default function ProjectDetail() {
               <div className="h-40 animate-pulse rounded-xl3 border border-forest-100 bg-forest-50/60" />
             </div>
           ) : (
-            // Single editorial column, not a two-column split — a project
-            // title here can run as long as a news headline (see the 6th
-            // Anniversary project), and a narrower sidebar column forced it
-            // into near-one-word-per-line wrapping. Giving the title the
-            // full container width to breathe fixes that regardless of how
-            // long any given title is, and reads as a proper case-study
-            // page rather than a cramped dashboard split.
-            <div className="mx-auto flex max-w-4xl flex-col gap-8">
+            // Full-width editorial layout — wide enough that the title
+            // (which can run as long as a news headline, e.g. the 6th
+            // Anniversary project) and the stat row both get real room,
+            // instead of the old lg:grid-cols-[1.4fr_1fr] split that forced
+            // both into a narrow sidebar.
+            <div className="mx-auto flex max-w-6xl flex-col gap-8">
               <Reveal>
                 <div className="flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-7 shadow-card sm:p-9">
                   <div className="flex flex-wrap items-center gap-3">
@@ -214,12 +212,11 @@ export default function ProjectDetail() {
                 </div>
               </Reveal>
 
-              {/* Meta info as a stat-tile grid rather than a stacked
-                  icon/label/value list — reflows naturally at full width
-                  instead of being squeezed into a sidebar. */}
+              {/* Meta info as a stat-tile grid — all five facts fit one row
+                  on desktop now that the page is wide enough for it. */}
               {infoItems.length > 0 && (
                 <Reveal delay={0.05}>
-                  <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+                  <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
                     {infoItems.map((item) => (
                       <div
                         key={item.label}
@@ -236,8 +233,52 @@ export default function ProjectDetail() {
                 </Reveal>
               )}
 
+              {/* LEFT: linked album + this project's own photos. RIGHT: the
+                  objective callout. Stacks to a single column below lg. */}
+              {(album || photos.length > 0 || objective) && (
+                <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+                  <div className="flex flex-col gap-6">
+                    {album && (
+                      <Reveal delay={0.08}>
+                        <LinkedAlbumCard
+                          album={album}
+                          badgeLabel={t("projects.photoGallery")}
+                          description={t("projects.photoGalleryDesc")}
+                          ctaLabel={t("projects.viewFullGallery")}
+                        />
+                      </Reveal>
+                    )}
+
+                    {photos.length > 0 && (
+                      <Reveal delay={0.12}>
+                        <div className="flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
+                          <div className="flex items-center justify-between">
+                            <h2 className="font-body text-xl font-bold text-forest-900">{t("gallery.photosLabel")}</h2>
+                            <span className="rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">{photos.length}</span>
+                          </div>
+                          <GalleryGrid images={photos} />
+                        </div>
+                      </Reveal>
+                    )}
+                  </div>
+
+                  {objective && (
+                    <Reveal delay={0.1}>
+                      <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
+                        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gilt-400/10 blur-2xl" aria-hidden="true" />
+                        <span className="inline-flex w-fit items-center gap-2 rounded-full bg-forest-50 px-3 py-1.5 font-body text-sm font-semibold text-forest-700">
+                          <TargetIcon />
+                          {t("projects.objective")}
+                        </span>
+                        <p className="font-body text-sm leading-relaxed text-ink-600 sm:text-base">{objective}</p>
+                      </div>
+                    </Reveal>
+                  )}
+                </div>
+              )}
+
               {beneficiaries && (
-                <Reveal delay={0.08}>
+                <Reveal delay={0.16}>
                   <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
                     <div className="pointer-events-none absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-forest-500/10 blur-2xl" aria-hidden="true" />
                     <span className="inline-flex w-fit items-center gap-2 rounded-full bg-forest-50 px-3 py-1.5 font-body text-sm font-semibold text-forest-700">
@@ -246,45 +287,6 @@ export default function ProjectDetail() {
                     </span>
                     <p className="relative font-body text-sm leading-relaxed text-ink-600 sm:text-base">{beneficiaries}</p>
                   </div>
-                </Reveal>
-              )}
-
-              {objective && (
-                <Reveal delay={0.1}>
-                  <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
-                    <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gilt-400/10 blur-2xl" aria-hidden="true" />
-                    <span className="inline-flex w-fit items-center gap-2 rounded-full bg-forest-50 px-3 py-1.5 font-body text-sm font-semibold text-forest-700">
-                      <TargetIcon />
-                      {t("projects.objective")}
-                    </span>
-                    <p className="font-body text-sm leading-relaxed text-ink-600 sm:text-base">{objective}</p>
-                  </div>
-                </Reveal>
-              )}
-
-              {photos.length > 0 && (
-                <Reveal delay={0.15}>
-                  <div className="flex flex-col gap-5 rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
-                    <div className="flex items-center justify-between">
-                      <h2 className="font-body text-xl font-bold text-forest-900">{t("gallery.photosLabel")}</h2>
-                      <span className="rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">{photos.length}</span>
-                    </div>
-                    <GalleryGrid images={photos} />
-                  </div>
-                </Reveal>
-              )}
-
-              {/* Photo Gallery — links through to the linked Album's full
-                  photo collection under Gallery, if one was linked in the
-                  admin panel. */}
-              {album && (
-                <Reveal delay={0.2}>
-                  <LinkedAlbumCard
-                    album={album}
-                    badgeLabel={t("projects.photoGallery")}
-                    description={t("projects.photoGalleryDesc")}
-                    ctaLabel={t("projects.viewFullGallery")}
-                  />
                 </Reveal>
               )}
             </div>
