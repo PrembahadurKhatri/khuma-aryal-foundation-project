@@ -41,7 +41,7 @@ export default function BoardMembers({ members, loading }) {
           <h2 className="font-body text-3xl font-bold uppercase tracking-[0.08em] text-forest-900 sm:text-4xl">
             {t("home.boardTitle")}
           </h2>
-          <p className="max-w-xl text-sm leading-relaxed text-ink-700 sm:text-base">{t("home.boardSubtitle")}</p>
+          <p className="max-w-xl text-sm leading-relaxed text-ink-700 sm:text-base ">{t("home.boardSubtitle")}</p>
         </Reveal>
 
         {loading || !members ? (
@@ -73,7 +73,7 @@ export default function BoardMembers({ members, loading }) {
 
                   <div>
                     <p className="text-sm font-bold text-forest-900 transition-colors duration-300 group-hover:text-forest-700 sm:text-base">{name}</p>
-                    <p className="relative mt-1 inline-block text-xs font-semibold uppercase tracking-wide text-gilt-600">
+                    <p className="relative mt-1 inline-block text-xs font-semibold uppercase tracking-wide text-[#FF8C00]">
                       {designation}
                      
                     </p>

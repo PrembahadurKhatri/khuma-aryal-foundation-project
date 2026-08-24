@@ -256,8 +256,8 @@ export default function Hero({ siteInfo }) {
 
       {/* ================= MISSION ================= */}
       <section className="relative overflow-hidden bg-cream-100 pb-16 pt-4 sm:pb-24 sm:pt-6">
-        <div className="pointer-events-none absolute -left-32 top-0 h-72 w-72 rounded-full bg-gilt-500/10 blur-3xl" />
-        <div className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-forest-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -left-32 top-0 h-72 w-72 rounded-full blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full blur-3xl" />
 
         <Container className="relative">
           <div className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">

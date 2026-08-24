@@ -24,7 +24,7 @@ function PersonIcon() {
 /** Small navy pill badge sitting above the Founder/President feature cards. */
 function RoleBadge({ children }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-yellow-600 px-4 py-2 font-body text-sm font-semibold text-white shadow-soft">
+    <span className="inline-flex items-center gap-2 rounded-full bg-[#FF8C00] px-4 py-2 font-body text-sm font-semibold text-white shadow-soft">
       <PersonIcon />
       {children}
     </span>

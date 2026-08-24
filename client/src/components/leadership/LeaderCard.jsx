@@ -26,7 +26,7 @@ export default function LeaderCard({ leader, onRead, delay = 0 }) {
         </div>
         <div>
           <p className="font-body text-lg font-bold text-forest-900">{name}</p>
-          <p className="font-body text-xs font-semibold uppercase tracking-wide text-gilt-600">{title}</p>
+          <p className="font-body text-xs font-semibold uppercase tracking-wide text-[#FF8C00]">{title}</p>
 
         </div>
       </div>
