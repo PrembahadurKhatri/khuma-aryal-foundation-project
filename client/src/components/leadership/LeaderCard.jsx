@@ -22,7 +22,7 @@ export default function LeaderCard({ leader, onRead, delay = 0 }) {
 
       <div className="flex items-center gap-4 pr-8">
         <div className="shrink-0 rounded-full p-0.5 ring-2 ring-gilt-400/50 transition-transform duration-300 group-hover:scale-105">
-          <Avatar name={name} src={leader.photo} size="lg" />
+          <Avatar name={name} src={leader.photo} fallbackSrc="/images/blank.avif" size="lg" />
         </div>
         <div>
           <p className="font-body text-lg font-bold text-forest-900">{name}</p>

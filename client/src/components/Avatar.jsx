@@ -16,11 +16,17 @@ function initialsFor(name = "") {
 }
 
 /**
- * Photo avatar with automatic fallback to a colored initials badge if `src`
- * is empty or fails to load (e.g. the real photo hasn't been added yet).
+ * Photo avatar with automatic fallback if `src` is empty or fails to load
+ * (e.g. the real photo hasn't been added yet). Defaults to a colored
+ * initials badge (used for contact-message senders, where there's no
+ * sensible generic photo) — pass `fallbackSrc` to show a real placeholder
+ * image instead (Leadership/Board Members use "/images/blank.avif" so an
+ * admin who hasn't uploaded a photo yet still gets a proper-looking
+ * silhouette instead of a colored-letter badge).
  */
-export default function Avatar({ name, src, size = "md", className = "" }) {
+export default function Avatar({ name, src, fallbackSrc, size = "md", className = "" }) {
   const [failed, setFailed] = useState(false);
+  const [fallbackFailed, setFallbackFailed] = useState(false);
 
   const sizeClasses = {
     sm: "h-12 w-12 text-sm",
@@ -30,6 +36,7 @@ export default function Avatar({ name, src, size = "md", className = "" }) {
   }[size];
 
   const showImage = src && !failed;
+  const showFallbackImage = !showImage && fallbackSrc && !fallbackFailed;
 
   return (
     <div
@@ -38,6 +45,8 @@ export default function Avatar({ name, src, size = "md", className = "" }) {
     >
       {showImage ? (
         <img src={src} alt={name} onError={() => setFailed(true)} className="h-full w-full object-cover" loading="lazy" />
+      ) : showFallbackImage ? (
+        <img src={fallbackSrc} alt={name} onError={() => setFallbackFailed(true)} className="h-full w-full object-cover" loading="lazy" />
       ) : (
         <div className={`flex h-full w-full items-center justify-center font-body font-semibold text-white ${colorForName(name)}`}>
           {initialsFor(name)}

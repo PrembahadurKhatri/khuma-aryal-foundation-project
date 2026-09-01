@@ -54,7 +54,7 @@ export default function MessageModal({ leader, onClose }) {
           </button>
 
           <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:gap-6 sm:text-left">
-            <Avatar name={name} src={leader.photo} size="xl" />
+            <Avatar name={name} src={leader.photo} fallbackSrc="/images/blank.avif" size="xl" />
             <div>
               <span className="font-body text-5xl leading-none text-[#FF8C00]">&ldquo;</span>
               <h3 className="font-body text-xl font-semibold text-forest-900">{name}</h3>

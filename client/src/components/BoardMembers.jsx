@@ -66,7 +66,7 @@ export default function BoardMembers({ members, loading }) {
                     <div className="absolute inset-0 -z-10 rounded-full bg-gilt-400/0 blur-xl transition-colors duration-500 group-hover:bg-gilt-400/35" />
                     <div className="rounded-full ring-0 ring-gilt-400/0 transition-all duration-500 group-hover:ring-4 group-hover:ring-gilt-400/60">
                       <div className="overflow-hidden rounded-full transition-transform duration-500 ease-out group-hover:scale-110">
-                        <Avatar name={name} src={member.photo} size="lg" />
+                        <Avatar name={name} src={member.photo} fallbackSrc="/images/blank.avif" size="lg" />
                       </div>
                     </div>
                   </div>

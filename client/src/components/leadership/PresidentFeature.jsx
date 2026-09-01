@@ -42,7 +42,10 @@ export default function PresidentFeature({ leader, onRead }) {
         {/* Portrait — first in the DOM (so it's on top on mobile), pushed to the right on desktop */}
         <div className="order-1 mx-auto w-full max-w-sm lg:order-2">
           <div className="aspect-[4/5] overflow-hidden rounded-xl2 border-2 border-gilt-400/70 shadow-card">
-            <PlaceholderImage src={leader.photo} alt={name} label={name} />
+            {/* Falls back to a real placeholder photo, not PlaceholderImage's
+                gradient card — an admin who hasn't uploaded the President's
+                photo yet still gets a proper-looking portrait silhouette. */}
+            <PlaceholderImage src={leader.photo || "/images/blank.avif"} alt={name} label={name} />
           </div>
         </div>
 

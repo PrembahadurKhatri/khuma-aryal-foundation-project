@@ -149,7 +149,7 @@ const LeadersManage = () => {
                 {data?.data?.map((item) => (
                   <tr key={item._id} className={`border-t ${rowClass}`}>
                     <td className="px-4 py-3">
-                      <img src={item.photo} alt="" className="h-10 w-10 rounded-full object-cover" />
+                      <img src={item.photo || "/images/blank.avif"} alt="" className="h-10 w-10 rounded-full object-cover" />
                     </td>
                     <td className="px-4 py-3">{item.name?.en}</td>
                     <td className="px-4 py-3">
