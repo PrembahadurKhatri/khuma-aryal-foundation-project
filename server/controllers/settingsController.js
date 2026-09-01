@@ -24,6 +24,7 @@ export const updateSettings = asyncHandler(async (req, res) => {
     nameEn, nameNe, taglineEn, taglineNe, addressEn, addressNe, officeHoursEn, officeHoursNe, phone, email, facebook, instagram, youtube,
     statYears, statBeneficiaries, statProjects, statVolunteers,
     maintenanceEnabled, maintenanceMessage,
+    metaTitle, metaDescription,
   } = req.body;
 
   settings.name = { en: nameEn ?? settings.name?.en, ne: nameNe ?? settings.name?.ne };
@@ -57,6 +58,13 @@ export const updateSettings = asyncHandler(async (req, res) => {
     settings.maintenanceMode = {
       enabled: settings.maintenanceMode?.enabled ?? false,
       message: maintenanceMessage,
+    };
+  }
+
+  if (metaTitle !== undefined || metaDescription !== undefined) {
+    settings.seo = {
+      metaTitle: metaTitle ?? settings.seo?.metaTitle ?? "",
+      metaDescription: metaDescription ?? settings.seo?.metaDescription ?? "",
     };
   }
 

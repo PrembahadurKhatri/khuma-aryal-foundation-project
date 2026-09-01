@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar.jsx";
@@ -16,6 +17,28 @@ function MainLayoutContent() {
   useTrackVisit();
   const location = useLocation();
   const siteInfo = useSiteInfo();
+
+  // Settings → SEO (see admin/SettingsManage.jsx) overrides index.html's
+  // static <title>/<meta name="description"> once an admin fills them in.
+  // Site-wide, not per-page — there's no per-route Seo component in this
+  // project, and the admin form only exposes one title/description, so
+  // this is the whole of what "add SEO" means here. Left untouched
+  // (index.html's static defaults keep showing) if the admin hasn't set
+  // either field yet, rather than blanking them to an empty string.
+  useEffect(() => {
+    if (siteInfo?.seo?.metaTitle) {
+      document.title = siteInfo.seo.metaTitle;
+    }
+    if (siteInfo?.seo?.metaDescription) {
+      let tag = document.querySelector('meta[name="description"]');
+      if (!tag) {
+        tag = document.createElement("meta");
+        tag.setAttribute("name", "description");
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute("content", siteInfo.seo.metaDescription);
+    }
+  }, [siteInfo?.seo?.metaTitle, siteInfo?.seo?.metaDescription]);
 
   // /admin/* never renders through this layout (see App.jsx — it has its
   // own AdminLayout), so this only ever gates the public site, never the

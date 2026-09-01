@@ -45,6 +45,14 @@ const settingsSchema = new mongoose.Schema(
         default: "We're currently performing scheduled maintenance. We'll be back online shortly — thank you for your patience.",
       },
     },
+    // Overrides index.html's static <title>/<meta name="description"> once
+    // the public site loads (see MainLayout.jsx) — empty by default so an
+    // admin who hasn't filled these in yet doesn't blank out the site's
+    // real title/description.
+    seo: {
+      metaTitle: { type: String, default: "" },
+      metaDescription: { type: String, default: "" },
+    },
   },
   { timestamps: true }
 );

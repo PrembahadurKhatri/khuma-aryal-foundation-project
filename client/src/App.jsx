@@ -30,7 +30,6 @@ import SettingsManage from "./pages/admin/SettingsManage.jsx";
 import NoticesManage from "./pages/admin/NoticesManage.jsx";
 import EventsManage from "./pages/admin/EventsManage.jsx";
 import StoriesManage from "./pages/admin/StoriesManage.jsx";
-import DownloadsManage from "./pages/admin/DownloadsManage.jsx";
 import VacanciesManage from "./pages/admin/VacanciesManage.jsx";
 import VideosManage from "./pages/admin/VideosManage.jsx";
 import ApplicationsManage from "./pages/admin/ApplicationsManage.jsx";
@@ -76,7 +75,6 @@ export default function App() {
           <Route path="notices" element={<NoticesManage />} />
           <Route path="events" element={<EventsManage />} />
           <Route path="stories" element={<StoriesManage />} />
-          <Route path="downloads" element={<DownloadsManage />} />
           <Route path="vacancies" element={<VacanciesManage />} />
           <Route path="applications" element={<ApplicationsManage />} />
           <Route path="videos" element={<VideosManage />} />

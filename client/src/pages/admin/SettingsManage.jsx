@@ -11,6 +11,7 @@ const emptyForm = {
   nameEn: "", nameNe: "", taglineEn: "", taglineNe: "", addressEn: "", addressNe: "",
   officeHoursEn: "", officeHoursNe: "", phone: "", email: "", facebook: "", instagram: "", youtube: "",
   statYears: "", statBeneficiaries: "", statProjects: "", statVolunteers: "",
+  metaTitle: "", metaDescription: "",
   maintenanceEnabled: false, maintenanceMessage: "",
 };
 
@@ -43,6 +44,7 @@ const SettingsManage = () => {
       facebook: s.social?.facebook || "", instagram: s.social?.instagram || "", youtube: s.social?.youtube || "",
       statYears: s.stats?.years || "", statBeneficiaries: s.stats?.beneficiaries || "",
       statProjects: s.stats?.projects || "", statVolunteers: s.stats?.volunteers || "",
+      metaTitle: s.seo?.metaTitle || "", metaDescription: s.seo?.metaDescription || "",
       maintenanceEnabled: s.maintenanceMode?.enabled || false,
       maintenanceMessage: s.maintenanceMode?.message || "",
     });
@@ -200,6 +202,34 @@ const SettingsManage = () => {
             <div>
               <label className={labelClass}>Active Volunteers</label>
               <input placeholder="120+" value={form.statVolunteers} onChange={(e) => setForm({ ...form, statVolunteers: e.target.value })} className={inputClass} />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-3 font-body font-semibold">SEO</h2>
+          <p className={`mb-3 text-xs ${mutedClass}`}>
+            Shown in browser tabs and search results — overrides the site's default title/description once filled in.
+          </p>
+          <div className="grid gap-3">
+            <div>
+              <label className={labelClass}>Meta title</label>
+              <input
+                placeholder="Khuma Aryal Foundation | Nepal NGO"
+                value={form.metaTitle}
+                onChange={(e) => setForm({ ...form, metaTitle: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Meta description</label>
+              <textarea
+                rows={2}
+                placeholder="Working for Education, Healthcare, Sports & Employment in Syangja, Nepal."
+                value={form.metaDescription}
+                onChange={(e) => setForm({ ...form, metaDescription: e.target.value })}
+                className={inputClass}
+              />
             </div>
           </div>
         </div>
