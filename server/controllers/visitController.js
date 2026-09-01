@@ -22,3 +22,11 @@ export const getVisitStats = asyncHandler(async (req, res) => {
 
   res.json({ success: true, data: { total, last7Days, last30Days } });
 });
+
+// @desc   Reset the visitor counter back to 0 by deleting every recorded
+//         Visit document. Irreversible — admin-only (see visitRoutes.js).
+// @route  DELETE /api/visits
+export const resetVisits = asyncHandler(async (req, res) => {
+  const { deletedCount } = await Visit.deleteMany({});
+  res.json({ success: true, message: `Visitor count reset to 0 (${deletedCount} records cleared).` });
+});

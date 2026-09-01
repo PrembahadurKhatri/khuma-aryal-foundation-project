@@ -7,3 +7,9 @@ export const fetchVisitStats = async () => {
   const { data } = await api.get("/visits/stats");
   return data;
 };
+
+// Admin-only, irreversible — see server/controllers/visitController.js.
+export const resetVisits = async () => {
+  const { data } = await api.delete("/visits");
+  return data;
+};
