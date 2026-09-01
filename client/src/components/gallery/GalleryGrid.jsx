@@ -9,23 +9,30 @@ import Lightbox from "./Lightbox.jsx";
 //   auto-fill. Used embedded inside Notice/Event/Project/Story detail
 //   pages, sharing space with other content — a couple of photos there
 //   should sit as a modest row, not dominate the column.
-// - "large": a responsive auto-fit grid that grows tiles to fill the row
-//   (up to a cap) when there are few photos. Used by AlbumDetail.jsx, a
-//   full page whose only job is showcasing this album's photos — a
-//   handful of photos there should read as a proper gallery, not a
-//   leftover strip of small thumbnails floating in mostly empty page.
-const SIZE_STYLES = {
-  compact: { gridTemplateColumns: "repeat(auto-fill, minmax(132px, 132px))" },
-  large: { gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" },
+// - "large": a plain fixed-column-count grid (not auto-fit/minmax — that
+//   approach let tile width vary with exactly how many columns fit at a
+//   given viewport width, which read as inconsistent sizing between
+//   photos). A fixed column count is what AlbumCard.jsx's own grid already
+//   uses for the same reason: every tile is guaranteed the exact same
+//   width, full stop, regardless of photo count or window width. Used by
+//   AlbumDetail.jsx, a full page whose only job is showcasing an album's
+//   photos.
+const SIZE_CLASSES = {
+  compact: "",
+  large: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
 };
 
 export default function GalleryGrid({ images, size = "compact" }) {
   const { language } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(null);
+  const isCompact = size !== "large";
 
   return (
     <>
-      <div className="grid gap-3 sm:gap-4" style={SIZE_STYLES[size] || SIZE_STYLES.compact}>
+      <div
+        className={`grid gap-3 sm:gap-4 ${SIZE_CLASSES[size] || ""}`}
+        style={isCompact ? { gridTemplateColumns: "repeat(auto-fill, minmax(132px, 132px))" } : undefined}
+      >
         {images.map((image, idx) => {
           const caption = pick(image.alt, language);
           return (
