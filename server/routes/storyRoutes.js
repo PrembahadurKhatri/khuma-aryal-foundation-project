@@ -1,7 +1,9 @@
 import express from "express";
+import { body } from "express-validator";
 import { getStories, getStory, createStory, updateStory, deleteStory } from "../controllers/storyController.js";
 import { protect, authorize } from "../middleware/auth.js";
 import upload from "../middleware/upload.js";
+import validate from "../middleware/validate.js";
 
 const router = express.Router();
 
@@ -13,10 +15,18 @@ const storyUpload = upload.fields([
   { name: "images", maxCount: 6 },
 ]);
 
+// storyController.js's fromFlatFields always rebuilds `summary` from
+// summaryEn/summaryNe unconditionally on both create AND update, so both
+// are required here on both routes too.
+const summaryValidators = [
+  body("summaryEn").trim().notEmpty().withMessage("English summary is required"),
+  body("summaryNe").trim().notEmpty().withMessage("Nepali summary is required"),
+];
+
 router.get("/", getStories);
 router.get("/:id", getStory);
-router.post("/", protect, authorize("admin", "editor"), storyUpload, createStory);
-router.put("/:id", protect, authorize("admin", "editor"), storyUpload, updateStory);
+router.post("/", protect, authorize("admin", "editor"), storyUpload, summaryValidators, validate, createStory);
+router.put("/:id", protect, authorize("admin", "editor"), storyUpload, summaryValidators, validate, updateStory);
 router.delete("/:id", protect, authorize("admin"), deleteStory);
 
 export default router;

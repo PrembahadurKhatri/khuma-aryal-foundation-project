@@ -49,6 +49,12 @@ const clientDistPath = path.join(__dirname, "../client/dist");
 connectDB();
 
 const app = express();
+// Render (like most PaaS) puts the app behind a reverse proxy — without
+// this, req.ip resolves to the proxy's own internal address for every
+// request, silently collapsing every visitor into one shared IP bucket
+// for both the rate limiter below and the login-attempt limiter in
+// authRoutes.js.
+app.set("trust proxy", 1);
 
 // Security & parsing middleware
 app.use(

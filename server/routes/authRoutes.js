@@ -1,5 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
+import rateLimit from "express-rate-limit";
 import {
   register,
   login,
@@ -28,6 +29,25 @@ const strongPassword = (field) =>
     .matches(/^(?=.*[A-Za-z])(?=.*\d).+$/)
     .withMessage(`${field === "password" ? "Password" : "New password"} must include at least one letter and one number`);
 
+// 5 failed attempts / 15 minutes, keyed by the email being attempted (not
+// just IP) — this app has exactly one real admin account, so keying by
+// email means the lock actually follows the account being attacked even if
+// the attacker rotates IPs, while a legitimate user mistyping their own
+// password doesn't get blocked by unrelated traffic hitting the same IP.
+// skipSuccessfulRequests so a correct login (or a login attempt against a
+// wrong/nonexistent email — express-validator's isEmail() check runs first
+// and never reaches this far) doesn't count against the real account's
+// budget.
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  keyGenerator: (req) => (req.body?.email || req.ip || "unknown").toLowerCase(),
+  message: { success: false, message: "Too many failed login attempts. Try again in 15 minutes." },
+});
+
 // Every email field is trimmed BEFORE isEmail() checks it — a stray
 // leading/trailing space (an easy copy-paste artifact) otherwise fails
 // isEmail() outright, and express-validator's own default message for that
@@ -51,6 +71,7 @@ router.post(
 
 router.post(
   "/login",
+  loginLimiter,
   [
     body("email").trim().isEmail().withMessage("Enter a valid email address"),
     body("password").notEmpty().withMessage("Password is required"),
