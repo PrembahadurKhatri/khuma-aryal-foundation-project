@@ -4,22 +4,28 @@ import { pick } from "../../utils/localize.js";
 import PlaceholderImage from "../PlaceholderImage.jsx";
 import Lightbox from "./Lightbox.jsx";
 
-// Tiles are capped at a fixed size and left-aligned (not stretched to fill
-// the row) via auto-fill — a set of 1-2 photos sits as a compact, modestly
-// sized row instead of stretching into oversized tiles on a wide desktop
-// container, while a full set still packs neatly edge-to-edge.
-const TILE = 132;
+// Two sizing modes for two genuinely different contexts:
+// - "compact" (default): fixed 132px tiles that never stretch, via
+//   auto-fill. Used embedded inside Notice/Event/Project/Story detail
+//   pages, sharing space with other content — a couple of photos there
+//   should sit as a modest row, not dominate the column.
+// - "large": a responsive auto-fit grid that grows tiles to fill the row
+//   (up to a cap) when there are few photos. Used by AlbumDetail.jsx, a
+//   full page whose only job is showcasing this album's photos — a
+//   handful of photos there should read as a proper gallery, not a
+//   leftover strip of small thumbnails floating in mostly empty page.
+const SIZE_STYLES = {
+  compact: { gridTemplateColumns: "repeat(auto-fill, minmax(132px, 132px))" },
+  large: { gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" },
+};
 
-export default function GalleryGrid({ images }) {
+export default function GalleryGrid({ images, size = "compact" }) {
   const { language } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(null);
 
   return (
     <>
-      <div
-        className="grid gap-3 sm:gap-4"
-        style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${TILE}px, ${TILE}px))` }}
-      >
+      <div className="grid gap-3 sm:gap-4" style={SIZE_STYLES[size] || SIZE_STYLES.compact}>
         {images.map((image, idx) => {
           const caption = pick(image.alt, language);
           return (

@@ -78,7 +78,7 @@ export default function AlbumDetail() {
             <p className="text-center text-ink-600">{t("gallery.empty")}</p>
           ) : (
             <Reveal>
-              <GalleryGrid images={photos} />
+              <GalleryGrid images={photos} size="large" />
             </Reveal>
           )}
         </Container>
