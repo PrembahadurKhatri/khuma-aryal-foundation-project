@@ -35,17 +35,17 @@ export const getLeader = asyncHandler(async (req, res) => {
 // @desc   Create a leader — photo (field "photo") required
 // @route  POST /api/leaders
 export const createLeader = asyncHandler(async (req, res) => {
-  if (!req.file) {
-    res.status(400);
-    throw new Error("A photo is required");
-  }
+  // Photo is optional — falls back to a generic silhouette (same asset the
+  // public site's own PlaceholderImage/Avatar fallbacks use) so an admin
+  // can add a leader before a real photo is ready, instead of being
+  // blocked entirely.
   const payload = {
     role: req.body.role || "advisor",
     order: Number(req.body.order) || 0,
     name: { en: req.body.nameEn, ne: req.body.nameNe },
     title: { en: req.body.titleEn, ne: req.body.titleNe },
     message: { en: req.body.messageEn, ne: req.body.messageNe },
-    photo: req.file.path,
+    photo: req.file ? req.file.path : "/images/blank.avif",
   };
   const leader = await Leader.create(payload);
   res.status(201).json({ success: true, data: leader });

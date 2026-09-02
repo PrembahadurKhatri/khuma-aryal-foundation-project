@@ -92,13 +92,12 @@ const LeadersManage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Photo is optional — the server falls back to a generic silhouette
+    // (public/images/blank.avif) when none is uploaded, so there's nothing
+    // to block submission on here.
     if (editing) {
       await updateMutation.mutateAsync({ id: editing._id, payload: form });
     } else {
-      if (!form.photoFile) {
-        toast.error("A photo is required.");
-        return;
-      }
       await createMutation.mutateAsync(form);
     }
     setShowForm(false);
@@ -242,8 +241,7 @@ const LeadersManage = () => {
 
             <ImageSourceField
               theme={theme}
-              label="Photo"
-              required={!editing}
+              label="Photo (optional — falls back to a generic silhouette if left empty)"
               existingUrl={editing?.photo}
               fileValue={form.photoFile}
               onFileChange={(f) => setForm((prev) => ({ ...prev, photoFile: f }))}

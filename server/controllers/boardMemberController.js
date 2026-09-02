@@ -35,15 +35,15 @@ export const getBoardMember = asyncHandler(async (req, res) => {
 // @desc   Create a board member — photo (field "photo") required
 // @route  POST /api/board-members
 export const createBoardMember = asyncHandler(async (req, res) => {
-  if (!req.file) {
-    res.status(400);
-    throw new Error("A photo is required");
-  }
+  // Photo is optional — falls back to a generic silhouette (same asset the
+  // public site's own PlaceholderImage/Avatar fallbacks use) so an admin
+  // can add a board member before a real photo is ready, instead of being
+  // blocked entirely.
   const payload = {
     order: Number(req.body.order) || 0,
     name: { en: req.body.nameEn, ne: req.body.nameNe },
     designation: { en: req.body.designationEn, ne: req.body.designationNe },
-    photo: req.file.path,
+    photo: req.file ? req.file.path : "/images/blank.avif",
   };
   const member = await BoardMember.create(payload);
   res.status(201).json({ success: true, data: member });

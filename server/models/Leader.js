@@ -14,7 +14,10 @@ const leaderSchema = new mongoose.Schema(
     name: { type: bilingual, required: true },
     title: { type: bilingual, required: true },
     message: { type: bilingual, required: true },
-    photo: { type: String, required: true },
+    // Optional — leaderController.js's createLeader defaults this to
+    // /images/blank.avif when no file is uploaded, so an admin isn't
+    // blocked from adding a leader before a real photo is ready.
+    photo: { type: String, default: "/images/blank.avif" },
     // Display order within the "Other Leadership" grid (ascending). Ignored
     // for founder/president, which each always get their own featured slot.
     order: { type: Number, default: 0 },

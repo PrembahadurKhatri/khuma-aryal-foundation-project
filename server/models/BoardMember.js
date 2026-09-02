@@ -11,7 +11,10 @@ const boardMemberSchema = new mongoose.Schema(
   {
     name: { type: bilingual, required: true },
     designation: { type: bilingual, required: true },
-    photo: { type: String, required: true },
+    // Optional — boardMemberController.js's createBoardMember defaults this
+    // to /images/blank.avif when no file is uploaded, so an admin isn't
+    // blocked from adding a member before a real photo is ready.
+    photo: { type: String, default: "/images/blank.avif" },
     // Display order within the Board Members grid (ascending).
     order: { type: Number, default: 0 },
   },
