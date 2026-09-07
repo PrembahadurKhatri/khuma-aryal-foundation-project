@@ -18,6 +18,8 @@ jobs:
           node-version: 18
 
       - name: Install & Build
+        env:
+          VITE_API_TARGET: https://api.khumaaryalfoundation.org.np
         run: |
           cd client
           npm install
