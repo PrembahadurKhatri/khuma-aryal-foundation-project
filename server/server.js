@@ -77,18 +77,36 @@ app.use(
     },
   })
 );
-// CLIENT_URL may be a single origin or a comma-separated list.
-const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+// CLIENT_URL may be a single origin or a comma-separated list. Each
+// configured origin also implicitly allows its www./non-www. counterpart
+// and tolerates a trailing slash — a real visitor opening the exact same
+// site via a link shared on Instagram/Facebook (which often normalizes or
+// rewrites the URL slightly, e.g. adding "www.") was hitting a strict
+// exact-string mismatch here and getting every API call blocked, even
+// though the page itself loaded fine.
+const normalizeOrigin = (o) => o.trim().replace(/\/+$/, "");
+const configuredOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
-  .map((o) => o.trim())
+  .map(normalizeOrigin)
   .filter(Boolean);
+const allowedOrigins = new Set(
+  configuredOrigins.flatMap((o) => [o, o.includes("://www.") ? o.replace("://www.", "://") : o.replace("://", "://www.")])
+);
 
 app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true); // curl, server-to-server, same-origin
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS: origin ${origin} not allowed`));
+      if (allowedOrigins.has(normalizeOrigin(origin))) return callback(null, true);
+      // Reject by simply not granting CORS (callback(null, false)) instead of
+      // passing an Error -- an Error here falls through to the generic error
+      // handler as an uncaught 500 (res.statusCode is still 200 at this
+      // point, so errorHandler.js defaults it to 500) instead of a clean,
+      // deliberate rejection. The browser still blocks the response either
+      // way; this just avoids a misleading server error for what is, from
+      // the server's point of view, entirely expected behavior.
+      console.warn(`CORS: rejected origin ${origin}`);
+      callback(null, false);
     },
     credentials: true,
   })
