@@ -24,8 +24,20 @@ const nameValidators = [
   body("nameEn").trim().notEmpty().withMessage("English name is required"),
   body("nameNe").trim().notEmpty().withMessage("Nepali name is required"),
 ];
-const createValidators = [...nameValidators, body("date").isISO8601().withMessage("A valid date is required")];
-const updateValidators = [...nameValidators, body("date").optional().isISO8601().withMessage("Invalid date")];
+const descriptionValidators = [
+  body("descriptionEn").optional({ checkFalsy: true }).trim(),
+  body("descriptionNe").optional({ checkFalsy: true }).trim(),
+];
+const createValidators = [
+  ...nameValidators,
+  ...descriptionValidators,
+  body("date").isISO8601().withMessage("A valid date is required"),
+];
+const updateValidators = [
+  ...nameValidators,
+  ...descriptionValidators,
+  body("date").optional().isISO8601().withMessage("Invalid date"),
+];
 
 router.get("/", getEvents);
 router.get("/:id", getEvent);

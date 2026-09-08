@@ -15,8 +15,14 @@ const eventSchema = new mongoose.Schema(
     // aren't required, so this isn't a bilingual field.
     time: { type: String, trim: true, default: "" },
     location: { type: optionalBilingual, default: () => ({}) },
-    // External registration link (Google Form, etc.) the "Register" button
-    // opens in a new tab. Left empty, the card just doesn't show a button.
+    // Full write-up shown on the event's own detail page, below the
+    // date/time/location — same optional-bilingual shape as `location`.
+    description: { type: optionalBilingual, default: () => ({}) },
+    // Legacy field from when cards had a "Register" button linking out to an
+    // external form. The button was removed in favor of a single "Read
+    // More" link to the full detail page; left here (unused, no longer
+    // collected by the admin form) only so any pre-existing value on old
+    // documents isn't silently dropped.
     registerLink: { type: String, trim: true, default: "" },
     image: { type: String, default: "" },
     // Additional photos for this event's own detail page gallery (up to 6)

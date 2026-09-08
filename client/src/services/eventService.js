@@ -6,8 +6,8 @@ export const fetchEvents = async () => {
 };
 
 // payload: { nameEn, nameNe, date, time, locationEn, locationNe,
-//            registerLink, imageFile?, album, keepImages: string[],
-//            newImageFiles: File[] }
+//            descriptionEn, descriptionNe, imageFile?, album,
+//            keepImages: string[], newImageFiles: File[] }
 //
 // Empty strings are sent through on purpose (not skipped like undefined/
 // null) — clearing a text field or the album link submits "", and that has

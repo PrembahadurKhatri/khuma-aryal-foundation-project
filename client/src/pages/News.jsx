@@ -73,7 +73,7 @@ function StarIcon() {
 const NEWS_CAP = 6;
 const NOTICES_CAP = 6;
 const STORIES_CAP = 3;
-const ACTIVITIES_COUNT = 3;
+const ACTIVITIES_COUNT = 4;
 
 function GridIcon() {
   return (
@@ -202,19 +202,21 @@ export default function News() {
     return [...events].filter((e) => new Date(e.date) >= new Date(new Date().toDateString())).sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [events]);
 
-  // "Recent Activities" — projects from the last 30 days (falls back to
-  // createdAt when a project has no explicit `date` set), any status, newest
-  // first, capped at 3. Not restricted to status="completed" — the section
-  // is about what's recently happened/been added, not specifically finished
-  // work.
+  // "Recent Activities" — projects AND news from the last 30 days (falls
+  // back to createdAt when an item has no explicit `date` set), mixed
+  // together and sorted newest-first, capped at ACTIVITIES_COUNT. Not
+  // restricted to status="completed" projects — the section is about what's
+  // recently happened/been added, not specifically finished work.
   const recentActivities = useMemo(() => {
-    if (!projects) return [];
     const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
-    return projects
+    const recentProjects = (projects || [])
       .filter((p) => new Date(p.date || p.createdAt).getTime() >= cutoff)
-      .sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt))
-      .slice(0, ACTIVITIES_COUNT);
-  }, [projects]);
+      .map((p) => ({ ...p, __type: "project", __date: new Date(p.date || p.createdAt) }));
+    const recentNews = (news || [])
+      .filter((n) => new Date(n.date || n.createdAt).getTime() >= cutoff)
+      .map((n) => ({ ...n, __type: "news", __date: new Date(n.date || n.createdAt) }));
+    return [...recentProjects, ...recentNews].sort((a, b) => b.__date - a.__date).slice(0, ACTIVITIES_COUNT);
+  }, [projects, news]);
 
   const openVacancies = useMemo(() => {
     if (!vacancies) return [];
@@ -420,7 +422,7 @@ export default function News() {
               title={t("news.sectionActivities")}
               action={<ViewAllLink to="/projects" label={t("news.viewAllActivities")} />}
             />
-            {projectsLoading || !projects ? (
+            {(projectsLoading || !projects) && (newsLoading || !news) ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <div key={i} className="h-72 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
@@ -430,9 +432,9 @@ export default function News() {
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("news.emptyActivities")}</p>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {recentActivities.map((project, i) => (
-                  <Reveal key={project.id} delay={(i % 3) * 0.05} className="h-full">
-                    <ProjectCard project={project} />
+                {recentActivities.map((item, i) => (
+                  <Reveal key={`${item.__type}-${item.id}`} delay={(i % 3) * 0.05} className="h-full">
+                    {item.__type === "news" ? <NewsCard news={item} /> : <ProjectCard project={item} />}
                   </Reveal>
                 ))}
               </div>

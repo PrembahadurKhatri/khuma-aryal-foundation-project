@@ -71,6 +71,7 @@ export default function EventDetail() {
 
   const name = event ? pick(event.name, language) : "";
   const location = event ? pick(event.location, language) : "";
+  const description = event ? pick(event.description, language) : "";
   const album = event?.album;
   const photos = event?.images ? event.images.map((src, i) => ({ id: `${event.id}-${i}`, src, alt: name })) : [];
 
@@ -134,15 +135,8 @@ export default function EventDetail() {
 
                   <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{name}</h1>
 
-                  {event.registerLink && (
-                    <a
-                      href={event.registerLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-forest-700 px-6 py-3 font-body text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-forest-800 hover:shadow-lift"
-                    >
-                      {t("news.register")} →
-                    </a>
+                  {description && (
+                    <p className="whitespace-pre-line font-body text-base leading-relaxed text-ink-700">{description}</p>
                   )}
                 </div>
               </div>

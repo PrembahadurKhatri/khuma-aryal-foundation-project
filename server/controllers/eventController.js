@@ -8,6 +8,9 @@ const fromFlatFields = (body) => ({
   ...(body.locationEn !== undefined || body.locationNe !== undefined
     ? { location: { en: body.locationEn || "", ne: body.locationNe || "" } }
     : {}),
+  ...(body.descriptionEn !== undefined || body.descriptionNe !== undefined
+    ? { description: { en: body.descriptionEn || "", ne: body.descriptionNe || "" } }
+    : {}),
   ...(body.registerLink !== undefined ? { registerLink: body.registerLink } : {}),
   // "" (the <select>'s "None" option) explicitly clears the link — only a
   // genuinely absent field leaves the existing album untouched.

@@ -13,7 +13,8 @@ const emptyForm = {
   time: "",
   locationEn: "",
   locationNe: "",
-  registerLink: "",
+  descriptionEn: "",
+  descriptionNe: "",
   imageFile: null,
   album: "",
   keepImages: [],
@@ -83,7 +84,8 @@ const EventsManage = () => {
       time: item.time || "",
       locationEn: item.location?.en || "",
       locationNe: item.location?.ne || "",
-      registerLink: item.registerLink || "",
+      descriptionEn: item.description?.en || "",
+      descriptionNe: item.description?.ne || "",
       imageFile: null,
       album: (typeof item.album === "object" ? item.album?._id : item.album) || "",
       keepImages: item.images || [],
@@ -187,11 +189,22 @@ const EventsManage = () => {
             <input placeholder="स्थान (नेपाली)" value={form.locationNe} onChange={(e) => setForm({ ...form, locationNe: e.target.value })} className={inputClass} />
 
             <div>
-              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Register Link (optional)</label>
-              <input
-                placeholder="https://forms.gle/..."
-                value={form.registerLink}
-                onChange={(e) => setForm({ ...form, registerLink: e.target.value })}
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Description (English, optional)</label>
+              <textarea
+                rows={3}
+                placeholder="What's this event about? Shown in full on the event's detail page."
+                value={form.descriptionEn}
+                onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>विवरण (नेपाली, वैकल्पिक)</label>
+              <textarea
+                rows={3}
+                placeholder="यो कार्यक्रम के बारे मा हो?"
+                value={form.descriptionNe}
+                onChange={(e) => setForm({ ...form, descriptionNe: e.target.value })}
                 className={inputClass}
               />
             </div>

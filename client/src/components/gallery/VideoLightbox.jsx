@@ -56,11 +56,13 @@ export default function VideoLightbox({ video, onClose }) {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.25 }}
-          className="w-full max-w-3xl"
+          className="flex max-h-[90vh] w-full max-w-3xl flex-col items-center"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="relative aspect-video w-full overflow-hidden rounded-xl2 bg-black shadow-lift">
-            {embedSrc ? (
+          {embedSrc ? (
+            // External embeds (YouTube/Vimeo/etc.) render inside their own
+            // player chrome, so a standard 16:9 box is the right default.
+            <div className="aspect-video w-full overflow-hidden rounded-xl2 bg-black shadow-lift">
               <iframe
                 src={embedSrc}
                 title={title}
@@ -68,12 +70,22 @@ export default function VideoLightbox({ video, onClose }) {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
-            ) : video.videoFile ? (
-              <video src={video.videoFile} controls autoPlay className="h-full w-full" />
-            ) : null}
-          </div>
+            </div>
+          ) : video.videoFile ? (
+            // Directly-uploaded files: size the player to the video's own
+            // dimensions (capped to fit the viewport) instead of forcing a
+            // 16:9 box, so vertical/portrait clips play uncropped and
+            // unstretched, at their original shape.
+            <video
+              src={video.videoFile}
+              controls
+              autoPlay
+              className="max-h-[80vh] max-w-full rounded-xl2 bg-black shadow-lift"
+            />
+          ) : null}
+
           {(title || description) && (
-            <div className="mt-4 rounded-xl2 bg-white/5 p-4 text-white backdrop-blur-sm">
+            <div className="mt-4 w-full rounded-xl2 bg-white/5 p-4 text-white backdrop-blur-sm">
               {title && <h3 className="font-body text-base font-semibold">{title}</h3>}
               {description && <p className="mt-1 font-body text-sm leading-relaxed text-white/80">{description}</p>}
             </div>
