@@ -40,9 +40,11 @@ export default function StoryDetail() {
     return <Navigate to="/news" replace />;
   }
 
+  const name = story ? pick(story.name, language) : "";
   const summary = story ? pick(story.summary, language) : "";
+  const description = story ? pick(story.description, language) : "";
   const album = story?.album;
-  const photos = story?.images ? story.images.map((src, i) => ({ id: `${story.id}-${i}`, src, alt: story.name || "" })) : [];
+  const photos = story?.images ? story.images.map((src, i) => ({ id: `${story.id}-${i}`, src, alt: name })) : [];
 
   return (
     <>
@@ -51,7 +53,7 @@ export default function StoryDetail() {
           one), no title text overlaid since the headline is already shown
           right below in the card. */}
       <PageHero
-        label={loading ? t("news.sectionStories") : story?.name || t("news.sectionStories")}
+        label={loading ? t("news.sectionStories") : name || t("news.sectionStories")}
         images={story?.photo ? [story.photo] : undefined}
         hideLabel
       />
@@ -80,8 +82,14 @@ export default function StoryDetail() {
             <Reveal>
               <div className="overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card">
                 <div className="flex flex-col gap-5 p-7 sm:p-9">
-                  {story.name && <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{story.name}</h1>}
-                  <p className="whitespace-pre-line font-body text-base leading-relaxed text-ink-600">{summary}</p>
+                  {name && <h1 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{name}</h1>}
+                  <p className="font-body text-lg font-medium leading-relaxed text-forest-800">{summary}</p>
+                  {/* Full write-up, if the admin added one — falls back to
+                      just the summary above for older stories that only
+                      ever had one. */}
+                  {description && (
+                    <p className="whitespace-pre-line border-t border-forest-100 pt-5 font-body text-base leading-relaxed text-ink-600">{description}</p>
+                  )}
                 </div>
               </div>
             </Reveal>

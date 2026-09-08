@@ -21,6 +21,10 @@ const storyUpload = upload.fields([
 const summaryValidators = [
   body("summaryEn").trim().notEmpty().withMessage("English summary is required"),
   body("summaryNe").trim().notEmpty().withMessage("Nepali summary is required"),
+  body("nameEn").optional({ checkFalsy: true }).trim(),
+  body("nameNe").optional({ checkFalsy: true }).trim(),
+  body("descriptionEn").optional({ checkFalsy: true }).trim(),
+  body("descriptionNe").optional({ checkFalsy: true }).trim(),
 ];
 
 router.get("/", getStories);

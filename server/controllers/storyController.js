@@ -2,8 +2,11 @@ import asyncHandler from "express-async-handler";
 import Story from "../models/Story.js";
 
 const fromFlatFields = (body) => ({
-  ...(body.name !== undefined ? { name: body.name } : {}),
+  ...(body.nameEn !== undefined || body.nameNe !== undefined ? { name: { en: body.nameEn || "", ne: body.nameNe || "" } } : {}),
   summary: { en: body.summaryEn, ne: body.summaryNe },
+  ...(body.descriptionEn !== undefined || body.descriptionNe !== undefined
+    ? { description: { en: body.descriptionEn || "", ne: body.descriptionNe || "" } }
+    : {}),
   // "" (the <select>'s "None" option) explicitly clears the link — only a
   // genuinely absent field leaves the existing album untouched.
   ...(body.album !== undefined ? { album: body.album || null } : {}),

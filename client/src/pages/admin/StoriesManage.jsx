@@ -6,7 +6,18 @@ import { fetchAlbums } from "../../services/galleryService.js";
 import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
 import useToast from "../../hooks/useToast.js";
 
-const emptyForm = { name: "", summaryEn: "", summaryNe: "", photoFile: null, album: "", keepImages: [], newImageFiles: [] };
+const emptyForm = {
+  nameEn: "",
+  nameNe: "",
+  summaryEn: "",
+  summaryNe: "",
+  descriptionEn: "",
+  descriptionNe: "",
+  photoFile: null,
+  album: "",
+  keepImages: [],
+  newImageFiles: [],
+};
 
 const StoriesManage = () => {
   const queryClient = useQueryClient();
@@ -63,9 +74,12 @@ const StoriesManage = () => {
   const openEdit = (item) => {
     setEditing(item);
     setForm({
-      name: item.name || "",
+      nameEn: item.name?.en || "",
+      nameNe: item.name?.ne || "",
       summaryEn: item.summary?.en || "",
       summaryNe: item.summary?.ne || "",
+      descriptionEn: item.description?.en || "",
+      descriptionNe: item.description?.ne || "",
       photoFile: null,
       album: (typeof item.album === "object" ? item.album?._id : item.album) || "",
       keepImages: item.images || [],
@@ -130,7 +144,7 @@ const StoriesManage = () => {
                 )}
                 {data?.data?.map((item) => (
                   <tr key={item._id} className={`border-t ${rowClass}`}>
-                    <td className="px-4 py-3">{item.name || "—"}</td>
+                    <td className="px-4 py-3">{item.name?.en || "—"}</td>
                     <td className="max-w-xs truncate px-4 py-3">{item.summary?.en}</td>
                     <td className="space-x-3 px-4 py-3 text-right">
                       <button onClick={() => openEdit(item)} className="text-forest-700 hover:underline dark:text-forest-400">
@@ -153,11 +167,13 @@ const StoriesManage = () => {
           <form onSubmit={handleSubmit} className={`my-0 max-h-[92vh] w-full space-y-3 overflow-y-auto rounded-t-2xl border p-6 sm:my-8 sm:max-w-lg sm:rounded-2xl ${panelClass}`}>
             <h2 className="mb-2 font-body text-lg font-semibold">{editing ? "Edit Story" : "New Story"}</h2>
 
-            <input placeholder="Beneficiary Name (optional)" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} />
+            <input placeholder="Beneficiary Name (English, optional)" value={form.nameEn} onChange={(e) => setForm({ ...form, nameEn: e.target.value })} className={inputClass} />
+            <input placeholder="लाभग्राहीको नाम (नेपाली, वैकल्पिक)" value={form.nameNe} onChange={(e) => setForm({ ...form, nameNe: e.target.value })} className={inputClass} />
+
             <textarea
               required
               rows={3}
-              placeholder="Story Summary (English)"
+              placeholder="Story Summary (English) — short blurb shown on the card"
               value={form.summaryEn}
               onChange={(e) => setForm({ ...form, summaryEn: e.target.value })}
               className={inputClass}
@@ -170,6 +186,27 @@ const StoriesManage = () => {
               onChange={(e) => setForm({ ...form, summaryNe: e.target.value })}
               className={inputClass}
             />
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Full Description (English, optional)</label>
+              <textarea
+                rows={5}
+                placeholder="The full story, shown on this story's own detail page. Leave blank to just show the summary there."
+                value={form.descriptionEn}
+                onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>पूर्ण विवरण (नेपाली, वैकल्पिक)</label>
+              <textarea
+                rows={5}
+                placeholder="पूरा कथा, यस कथाको आफ्नै पृष्ठमा देखाइन्छ।"
+                value={form.descriptionNe}
+                onChange={(e) => setForm({ ...form, descriptionNe: e.target.value })}
+                className={inputClass}
+              />
+            </div>
 
             <ImageSourceField
               theme={theme}
