@@ -59,6 +59,20 @@ function CardSkeleton({ count = 3, className = "h-72" }) {
   );
 }
 
+// Surfaces a failed fetch instead of leaving the section stuck on its
+// skeleton forever (data stays null on error, so a bare `!data` loading
+// check never resolves) — visible proof-on-page of what went wrong, so a
+// visitor (or admin) can screenshot the actual reason without needing
+// devtools, which matters a lot on mobile / in-app browsers.
+function LoadFailed({ error }) {
+  const reason = error?.response?.status ? `Server responded with status ${error.response.status}.` : error?.message || "Network error.";
+  return (
+    <p className="rounded-xl2 border border-red-200 bg-red-50 py-8 text-center font-body text-sm text-red-700 shadow-card">
+      Couldn't load this section right now. ({reason})
+    </p>
+  );
+}
+
 const PILLARS = [
   { key: "pillarEducation", descKey: "pillarEducationDesc",  },
   { key: "pillarHealth", descKey: "pillarHealthDesc",  },
@@ -77,9 +91,9 @@ export default function Home() {
   const { t } = useLanguage();
   const { data: messages, loading } = useContent(getMessages);
   const { data: boardMembers, loading: boardLoading } = useContent(getBoardMembers);
-  const { data: projects, loading: projectsLoading } = useContent(getProjects);
-  const { data: news, loading: newsLoading } = useContent(getNews);
-  const { data: notices, loading: noticesLoading } = useContent(getNotices);
+  const { data: projects, loading: projectsLoading, error: projectsError } = useContent(getProjects);
+  const { data: news, loading: newsLoading, error: newsError } = useContent(getNews);
+  const { data: notices, loading: noticesLoading, error: noticesError } = useContent(getNotices);
   const { data: siteInfo } = useContent(getSiteInfo);
 
   // Projects/News/Notices come back newest-first already (see
@@ -112,8 +126,10 @@ export default function Home() {
           {/* Latest News */}
           <div>
             <SectionHeader title={t("home.updatesNewsTitle")} action={<ViewAllLink to="/news" label={t("home.readMore")} />} />
-            {newsLoading || !news ? (
+            {newsLoading || (!news && !newsError) ? (
               <CardSkeleton />
+            ) : newsError ? (
+              <LoadFailed error={newsError} />
             ) : latestNews.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyNews")}</p>
             ) : (
@@ -130,12 +146,14 @@ export default function Home() {
           {/* Important Notices */}
           <div className="mt-20">
             <SectionHeader title={t("home.updatesNoticesTitle")} action={<ViewAllLink to="/news" label={t("home.readMore")} />} />
-            {noticesLoading || !notices ? (
+            {noticesLoading || (!notices && !noticesError) ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <div key={i} className="h-20 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
                 ))}
               </div>
+            ) : noticesError ? (
+              <LoadFailed error={noticesError} />
             ) : latestNotices.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyNotices")}</p>
             ) : (
@@ -152,8 +170,10 @@ export default function Home() {
           {/* Latest Projects */}
           <div className="mt-20">
             <SectionHeader title={t("home.updatesProjectsTitle")} action={<ViewAllLink to="/projects" label={t("home.readMore")} />} />
-            {projectsLoading || !projects ? (
+            {projectsLoading || (!projects && !projectsError) ? (
               <CardSkeleton />
+            ) : projectsError ? (
+              <LoadFailed error={projectsError} />
             ) : latestProjects.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyProjects")}</p>
             ) : (
