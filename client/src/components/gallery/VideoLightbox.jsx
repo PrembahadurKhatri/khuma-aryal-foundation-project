@@ -31,6 +31,13 @@ export default function VideoLightbox({ video, onClose }) {
   const title = pick(video.title, language);
   const description = pick(video.description, language);
   const embedSrc = video.embedUrl ? toEmbedUrl(video.embedUrl) : null;
+  // YouTube/Vimeo's own embed players are near-always landscape and
+  // letterbox correctly inside a 16:9 frame even for the occasional Short.
+  // Facebook's video plugin (and any other passthrough embed we don't
+  // recognize) has no such guarantee — a portrait clip forced into a 16:9
+  // box gets center-cropped by Facebook's player instead of pillarboxed, so
+  // those get a taller, portrait-friendly frame instead.
+  const isLandscapePlatform = embedSrc && (embedSrc.includes("youtube.com/embed") || embedSrc.includes("player.vimeo.com"));
 
   return (
     <AnimatePresence>
@@ -60,9 +67,11 @@ export default function VideoLightbox({ video, onClose }) {
           onClick={(e) => e.stopPropagation()}
         >
           {embedSrc ? (
-            // External embeds (YouTube/Vimeo/etc.) render inside their own
-            // player chrome, so a standard 16:9 box is the right default.
-            <div className="aspect-video w-full overflow-hidden rounded-xl2 bg-black shadow-lift">
+            <div
+              className={`w-full overflow-hidden rounded-xl2 bg-black shadow-lift ${
+                isLandscapePlatform ? "aspect-video" : "mx-auto aspect-[9/16] max-h-[80vh] max-w-sm"
+              }`}
+            >
               <iframe
                 src={embedSrc}
                 title={title}
