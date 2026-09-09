@@ -27,6 +27,9 @@ export default function Lightbox({ images, index, onClose, onNavigate }) {
   }, [handleKeyDown]);
 
   if (!current) return null;
+  // Same value repeated for every photo in the set (see GalleryGrid.jsx's
+  // comment) — kept only as the <img>'s real `alt` attribute, not shown as
+  // an on-photo overlay here either.
   const caption = pick(current.alt, language);
 
   return (
@@ -70,11 +73,6 @@ export default function Lightbox({ images, index, onClose, onNavigate }) {
           onClick={(e) => e.stopPropagation()}
         >
           <PlaceholderImage src={current.src} alt={caption} label={caption} />
-          {caption && (
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-sm text-white">
-              {caption}
-            </div>
-          )}
         </motion.div>
 
         <button

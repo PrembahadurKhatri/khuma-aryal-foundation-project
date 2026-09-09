@@ -34,6 +34,15 @@ export default function GalleryGrid({ images, size = "compact" }) {
         style={isCompact ? { gridTemplateColumns: "repeat(auto-fill, minmax(132px, 132px))" } : undefined}
       >
         {images.map((image, idx) => {
+          // `image.alt` is really just the parent content's own title/name,
+          // repeated identically across every photo in the set (there's no
+          // per-photo caption in the data model) — every caller passes the
+          // same string for all of an item's images. Showing that as a
+          // hover overlay just repeated the same text on every single photo
+          // rather than saying anything about that specific photo, so it's
+          // kept only as the <img>'s real `alt` attribute (accessibility,
+          // and PlaceholderImage's broken-image fallback text) and no longer
+          // rendered as a visible on-photo overlay.
           const caption = pick(image.alt, language);
           return (
             <button
@@ -43,9 +52,6 @@ export default function GalleryGrid({ images, size = "compact" }) {
               className="group relative aspect-square overflow-hidden rounded-xl2 border border-forest-100 shadow-card transition-shadow duration-300 hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-500"
             >
               <PlaceholderImage src={image.src} alt={caption} label={caption} imgClassName="transition-transform duration-300 group-hover:scale-105" />
-              <span className="absolute inset-0 flex items-end bg-gradient-to-t from-black/55 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                <span className="text-xs font-medium text-white line-clamp-2">{caption}</span>
-              </span>
             </button>
           );
         })}

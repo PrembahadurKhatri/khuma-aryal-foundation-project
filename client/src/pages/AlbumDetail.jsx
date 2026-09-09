@@ -45,6 +45,7 @@ export default function AlbumDetail() {
   }
 
   const title = album ? pick(album.title, language) : "";
+  const description = album ? pick(album.description, language) : "";
   // GalleryGrid/Lightbox render { id, src, alt } objects — an album's
   // `photos` is just an array of URL strings, so wrap each one here rather
   // than changing those shared components.
@@ -74,12 +75,28 @@ export default function AlbumDetail() {
                 <div key={i} className="aspect-square animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
               ))}
             </div>
-          ) : photos.length === 0 ? (
-            <p className="text-center text-ink-600">{t("gallery.empty")}</p>
           ) : (
-            <Reveal>
-              <GalleryGrid images={photos} size="large" />
-            </Reveal>
+            <>
+              {/* Title + description shown once, here, instead of overlaid on
+                  every photo (see GalleryGrid.jsx/Lightbox.jsx) — title is a
+                  required field so this always renders; description is
+                  optional and simply omitted when the album doesn't have one,
+                  rather than leaving a blank gap. */}
+              <Reveal>
+                <div className="mb-10">
+                  <h1 className="font-body text-2xl font-bold text-forest-900 sm:text-3xl">{title}</h1>
+                  {description && <p className="mt-3 max-w-2xl font-body text-base leading-relaxed text-ink-600">{description}</p>}
+                </div>
+              </Reveal>
+
+              {photos.length === 0 ? (
+                <p className="text-center text-ink-600">{t("gallery.empty")}</p>
+              ) : (
+                <Reveal delay={0.06}>
+                  <GalleryGrid images={photos} size="large" />
+                </Reveal>
+              )}
+            </>
           )}
         </Container>
       </section>
