@@ -129,18 +129,29 @@ export default function PageHero({ label, images, mobileImage, colorBackground =
       >
         {/* `label` still drives the image's `alt` text either way — `hideLabel`
             only skips the visible pill (e.g. NewsDetail, where the headline
-            would otherwise be shown twice: once here, once in the article body). */}
+            would otherwise be shown twice: once here, once in the article body).
+            The circular KAF emblem overlaps the pill's left edge (negative
+            margin + higher z-index) rather than sitting inside it, echoing
+            the badge/button style used elsewhere in the brand's own graphics
+            — the pill sits a touch taller than the plain-text version it
+            replaced so the overlapping logo doesn't crowd the label text. */}
         {!hideLabel && (
-          <motion.span
+          <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 rounded-full border border-gilt-400/40 bg-forest-950/55 px-4 py-1.5 font-body text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-soft backdrop-blur-md"
-            style={{ textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}
+            className="inline-flex items-center"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-gilt-400" />
-            {label}
-          </motion.span>
+            <span className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border-[3px] border-gilt-400 bg-white shadow-[0_4px_14px_rgba(0,0,0,0.4)] sm:h-12 sm:w-12">
+              <img src="/images/haha.png" alt="" className="h-full w-full object-cover" />
+            </span>
+            <span
+              className="-ml-5 rounded-full border-2 border-gilt-400 bg-gradient-to-b from-forest-800 to-forest-950 py-2 pl-8 pr-5 font-body text-xs font-bold uppercase tracking-[0.18em] text-white shadow-[0_4px_16px_rgba(0,0,0,0.35)] sm:py-2.5 sm:pl-9 sm:pr-6 sm:text-sm"
+              style={{ textShadow: "0 1px 3px rgba(0,0,0,0.35)" }}
+            >
+              {label}
+            </span>
+          </motion.div>
         )}
 
         {title && (
