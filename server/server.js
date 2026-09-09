@@ -118,10 +118,18 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
-// Rate limiting
+// Rate limiting -- a general abuse/DDoS guard, not auth-specific (login
+// already has its own stricter, dedicated limiter in authRoutes.js, and is
+// excluded below so this one doesn't double up on it). 300 req/15min
+// turned out far too tight for how this app actually behaves: a single
+// homepage load alone fires 6 parallel public GETs (Home.jsx's
+// useContent calls), and several other pages fire a handful more each --
+// normal browsing/reloading during real use or testing could exhaust 300
+// within minutes, well before anything resembling abuse. Raised well
+// above realistic legitimate traffic from one visitor.
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 300,
+  max: 2000,
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => ["/auth/login", "/auth/refresh", "/auth/forgot-password", "/auth/reset-password"].includes(req.path),
