@@ -19,7 +19,6 @@ const emptyForm = {
   educationEn: "",
   educationNe: "",
   deadline: "",
-  applyLink: "",
 };
 
 const toDateInput = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
@@ -89,7 +88,6 @@ const VacanciesManage = () => {
       educationEn: item.education?.en || "",
       educationNe: item.education?.ne || "",
       deadline: toDateInput(item.deadline),
-      applyLink: item.applyLink || "",
     });
     setShowForm(true);
   };
@@ -238,16 +236,6 @@ const VacanciesManage = () => {
                 value={form.educationNe}
                 onChange={(e) => setForm({ ...form, educationNe: e.target.value })}
                 className={`mt-2 ${inputClass}`}
-              />
-            </div>
-
-            <div>
-              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Apply Link (optional)</label>
-              <input
-                placeholder="https://forms.gle/... or mailto:hr@..."
-                value={form.applyLink}
-                onChange={(e) => setForm({ ...form, applyLink: e.target.value })}
-                className={inputClass}
               />
             </div>
 
