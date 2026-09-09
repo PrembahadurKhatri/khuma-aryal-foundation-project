@@ -181,6 +181,13 @@ export default function VacancyDetail() {
   const type = vacancy?.type || "FullTime";
   const tone = TYPE_TONE[type] || TYPE_TONE.FullTime;
 
+  // The backend's isURL() validator accepts a bare domain with no scheme
+  // (e.g. "khumaaryalfoundation.org.np") -- used directly as an <a href>,
+  // a browser treats that as a relative path on this same site instead of
+  // an external link. Normalize at render time rather than tightening the
+  // validator, so an admin can still paste a bare domain and have it work.
+  const applyHref = vacancy?.applyLink ? (/^(https?:|mailto:)/i.test(vacancy.applyLink) ? vacancy.applyLink : `https://${vacancy.applyLink}`) : "";
+
   let deadline = vacancy?.deadline;
   try {
     deadline = vacancy?.deadline
@@ -302,6 +309,31 @@ export default function VacancyDetail() {
                   )}
                 </div>
               </Reveal>
+
+              {/* ================= External apply link (optional) =================
+                  Separate from the in-site application form below -- an admin can
+                  set this (a Google Form, mailto:, third-party job board, ...) via
+                  Apply Link in the admin panel when they'd rather collect
+                  applications there instead of / in addition to here. Only shown
+                  when set; otherwise the in-site form is the only way to apply. */}
+              {applyHref && (
+                <Reveal delay={0.04}>
+                  <div className="flex flex-col items-center gap-3 rounded-xl3 border border-dashed border-forest-200 bg-forest-50/50 p-6 text-center sm:flex-row sm:justify-between sm:text-left">
+                    <p className="font-body text-sm font-medium text-ink-700">{t("news.orApplyExternally")}</p>
+                    <a
+                      href={applyHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`group relative inline-flex w-fit shrink-0 items-center gap-2 overflow-hidden rounded-full px-6 py-2.5 font-body text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift ${tone.button}`}
+                    >
+                      {t("news.applyNow")}
+                      <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+                        <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </a>
+                  </div>
+                </Reveal>
+              )}
 
               {/* ================= Application form ================= */}
               <Reveal delay={0.08}>
