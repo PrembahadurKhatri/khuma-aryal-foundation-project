@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { withAutoFormat } from "../utils/cloudinaryUrl.js";
 
 const GRADIENTS = [
@@ -17,15 +18,26 @@ function gradientFor(seed = "") {
 /** Image with automatic fallback to a soft gradient placeholder card. */
 export default function PlaceholderImage({ src, alt, label, className = "", imgClassName = "" }) {
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const showImage = src && !failed;
 
   if (showImage) {
     return (
-      <img
+      <motion.img
         src={withAutoFormat(src)}
         alt={alt}
         onError={() => setFailed(true)}
+        onLoad={() => setLoaded(true)}
         loading="lazy"
+        // A lazy-loaded image popping in the instant it finishes fetching
+        // reads as janky, especially scrolling through a grid where several
+        // load in a staggered burst — fading each one in individually
+        // smooths that out. initial/animate keyed off `loaded` (not
+        // whileInView) since this needs to react to the load event itself,
+        // not just scroll position.
+        initial={{ opacity: 0 }}
+        animate={{ opacity: loaded ? 1 : 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className={`h-full w-full object-cover ${imgClassName} ${className}`}
       />
     );
