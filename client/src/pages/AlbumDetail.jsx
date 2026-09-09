@@ -8,6 +8,28 @@ import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
 import GalleryGrid from "../components/gallery/GalleryGrid.jsx";
 
+// Same tag glyph ProjectDetail.jsx uses for its category badge — kept
+// consistent across every detail page's "info card" header.
+function TagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 shrink-0" aria-hidden="true">
+      <path d="M11 4h6a3 3 0 0 1 3 3v6l-9 9-9-9 9-9Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <circle cx="15.5" cy="8.5" r="1.3" fill="currentColor" />
+    </svg>
+  );
+}
+
+function ImagesIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 shrink-0" aria-hidden="true">
+      <rect x="3.5" y="5.5" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="8" cy="10" r="1.4" fill="currentColor" />
+      <path d="M4 15.5l3.5-3.5a1.3 1.3 0 0 1 1.8 0L13.5 16M13 13.5l1-1a1.3 1.3 0 0 1 1.8 0l1.7 1.7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20.5 8.5V16a2 2 0 0 1-2 2H10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function AlbumDetail() {
   const { id } = useParams();
   const { t, language } = useLanguage();
@@ -70,22 +92,45 @@ export default function AlbumDetail() {
           </Link>
 
           {loading || !album ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="aspect-square animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
-              ))}
+            <div className="flex flex-col gap-8">
+              <div className="h-40 animate-pulse rounded-xl3 border border-forest-100 bg-forest-50/60" />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="aspect-square animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
+                ))}
+              </div>
             </div>
           ) : (
-            <>
-              {/* Title + description shown once, here, instead of overlaid on
-                  every photo (see GalleryGrid.jsx/Lightbox.jsx) — title is a
-                  required field so this always renders; description is
-                  optional and simply omitted when the album doesn't have one,
-                  rather than leaving a blank gap. */}
+            <div className="flex flex-col gap-8">
+              {/* Title + description shown once, here, as a proper info card
+                  — instead of overlaid on every photo (see GalleryGrid.jsx/
+                  Lightbox.jsx). Same "info card" shell every other detail
+                  page (Project/Event/Vacancy) uses, so this page matches the
+                  rest of the site instead of sitting bare on the page
+                  background. Title is a required field so it always
+                  renders; description is optional and simply omitted (no
+                  blank gap) when the album doesn't have one. */}
               <Reveal>
-                <div className="mb-10">
-                  <h1 className="font-body text-2xl font-bold text-forest-900 sm:text-3xl">{title}</h1>
-                  {description && <p className="mt-3 max-w-2xl font-body text-base leading-relaxed text-ink-600">{description}</p>}
+                <div className="relative flex flex-col gap-4 overflow-hidden rounded-xl3 border border-forest-100 bg-white p-7 shadow-card sm:p-9">
+                  <div className="pointer-events-none absolute -right-14 -top-14 h-44 w-44 rounded-full bg-gilt-400/10 blur-3xl" aria-hidden="true" />
+
+                  <div className="relative flex flex-wrap items-center gap-3">
+                    <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-forest-50 px-3 py-1 font-body text-xs font-semibold text-forest-600">
+                      <TagIcon />
+                      {t(`gallery.category${album.category || "Event"}`)}
+                    </span>
+                    <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-gilt-50 px-3 py-1 font-body text-xs font-semibold text-gilt-700">
+                      <ImagesIcon />
+                      {photos.length} {t("gallery.photosLabel")}
+                    </span>
+                  </div>
+
+                  <div className="relative flex flex-col gap-3">
+                    <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-gilt-600">{t("gallery.kicker")}</span>
+                    <h1 className="font-body text-2xl font-bold leading-[1.25] tracking-tight text-forest-900 sm:text-3xl lg:text-[2.25rem]">{title}</h1>
+                  </div>
+
+                  {description && <p className="relative font-body text-base leading-relaxed text-ink-600 sm:text-lg">{description}</p>}
                 </div>
               </Reveal>
 
@@ -96,7 +141,7 @@ export default function AlbumDetail() {
                   <GalleryGrid images={photos} size="large" />
                 </Reveal>
               )}
-            </>
+            </div>
           )}
         </Container>
       </section>
