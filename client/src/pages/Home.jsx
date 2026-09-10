@@ -1,4 +1,5 @@
 ﻿import { useMemo } from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { useContent } from "../hooks/useContent.js";
@@ -59,6 +60,52 @@ function CardSkeleton({ count = 3, className = "h-72" }) {
   );
 }
 
+// Small icon set for the Facebook section's badge + feature row below —
+// kept local to this file since nothing else on the page needs them.
+function PeopleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+      <circle cx="9" cy="8.5" r="2.5" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M3.5 19c0-3 2.46-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <circle cx="17" cy="9" r="2" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M15 19c0-2.3 1-4 3.5-4.3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+function CameraIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h2l1-2h7l1 2h2A1.5 1.5 0 0 1 20 8.5v9A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5v-9Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <circle cx="12" cy="13" r="3.2" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <path d="M6 10.5a6 6 0 0 1 12 0v3.2l1.6 2.6H4.4L6 13.7v-3.2Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M9.5 18.5a2.5 2.5 0 0 0 5 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+function UsersIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+      <circle cx="9.5" cy="9" r="3" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M3.5 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M15 8a2.8 2.8 0 1 1 0 5.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M17 13.6c2.2.4 3.5 2 3.5 4.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+function ThumbsUpIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M2 10h3v10H2V10Zm6.5-7 .5.2c.6.3.9 1 .7 1.6L8.7 9H18a2 2 0 0 1 1.9 2.7l-2.1 6A2 2 0 0 1 15.9 19H7V10l3-6.5c.3-.6.9-.9 1.5-.5Z" />
+    </svg>
+  );
+}
+
 // Surfaces a failed fetch instead of leaving the section stuck on its
 // skeleton forever (data stays null on error, so a bare `!data` loading
 // check never resolves) — visible proof-on-page of what went wrong, so a
@@ -101,6 +148,21 @@ export default function Home() {
   const latestNews = useMemo(() => (news || []).slice(0, UPDATES_COUNT), [news]);
   const latestNotices = useMemo(() => (notices || []).slice(0, UPDATES_COUNT), [notices]);
   const latestProjects = useMemo(() => (projects || []).slice(0, UPDATES_COUNT), [projects]);
+
+  // Splits out "Facebook" (English) / "फेसबुक" (Nepali) from the
+  // translated social-section title so it can render bigger and in
+  // Facebook's own blue on its own line — same substring-split technique
+  // PageHero.jsx's `titleHighlight` uses, done here directly since the
+  // word to look for differs by language rather than being passed in.
+  const socialTitleRaw = t("home.socialTitle");
+  const socialHighlightWord = socialTitleRaw.includes("Facebook") ? "Facebook" : socialTitleRaw.includes("फेसबुक") ? "फेसबुक" : null;
+  const [socialTitleBefore, socialTitleAfter] = socialHighlightWord ? socialTitleRaw.split(socialHighlightWord) : [socialTitleRaw, null];
+
+  const SOCIAL_FEATURES = [
+    { icon: <CameraIcon />, tone: "bg-blue-50 text-blue-600", title: t("home.socialFeature1Title"), desc: t("home.socialFeature1Desc") },
+    { icon: <BellIcon />, tone: "bg-forest-50 text-forest-600", title: t("home.socialFeature2Title"), desc: t("home.socialFeature2Desc") },
+    { icon: <UsersIcon />, tone: "bg-gilt-100 text-gilt-700", title: t("home.socialFeature3Title"), desc: t("home.socialFeature3Desc") },
+  ];
 
   return (
     <>
@@ -199,45 +261,143 @@ export default function Home() {
           frame-src, added earlier for the same reason on Gallery's video
           embeds. */}
       {siteInfo?.social?.facebook && (
-        <section className="relative overflow-hidden bg-cream-100 py-20 sm:py-24">
-          <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-forest-100/50 blur-3xl" aria-hidden="true" />
+        <section className="relative overflow-hidden bg-gradient-to-b from-cream-100 via-cream-100 to-forest-50 py-20 sm:py-24">
+          <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-blue-100/40 blur-3xl" aria-hidden="true" />
           <div className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full bg-gilt-200/20 blur-3xl" aria-hidden="true" />
-          <Container className="relative grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+          {/* Faint dot-grid accents, top-left and bottom-right of the whole
+              section — a texture flourish, same spirit as the reference. */}
+          <div
+            className="pointer-events-none absolute left-6 top-6 h-24 w-24 opacity-[0.15] sm:left-10 sm:top-10"
+            style={{ backgroundImage: "radial-gradient(currentColor 1.5px, transparent 1.5px)", backgroundSize: "14px 14px" }}
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute bottom-10 right-6 h-24 w-24 opacity-[0.15] sm:right-10"
+            style={{ backgroundImage: "radial-gradient(currentColor 1.5px, transparent 1.5px)", backgroundSize: "14px 14px" }}
+            aria-hidden="true"
+          />
+
+          <Container className="relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
             <Reveal variant="left">
-              <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-gilt-600">{t("home.socialKicker")}</span>
-              <h2 className="mt-4 font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl lg:text-[2.25rem]">{t("home.socialTitle")}</h2>
+              <span className="inline-flex items-center gap-2 rounded-full border border-forest-200 bg-forest-50 px-4 py-1.5 font-body text-xs font-bold uppercase tracking-[0.15em] text-forest-700">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-forest-600 text-white">
+                  <PeopleIcon />
+                </span>
+                <span className="h-px w-3 bg-forest-300" aria-hidden="true" />
+                {t("home.socialKicker")}
+                <span className="h-px w-3 bg-forest-300" aria-hidden="true" />
+              </span>
+
+              <h2 className="mt-5 font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">
+                {socialTitleBefore}
+                {socialHighlightWord && (
+                  <span className="block text-4xl font-extrabold leading-tight text-blue-600 sm:text-5xl">{socialHighlightWord}</span>
+                )}
+                {socialTitleAfter}
+              </h2>
               <p className="mt-4 max-w-md font-body text-base leading-relaxed text-ink-600">{t("home.socialSubtitle")}</p>
-              <a
-                href={siteInfo.social.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative mt-7 inline-flex w-fit items-center gap-2 overflow-hidden rounded-full bg-forest-600 px-7 py-3 font-body text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-forest-700 hover:shadow-lift"
-              >
-                <Shine />
-                <svg viewBox="0 0 24 24" fill="currentColor" className="relative z-10 h-4 w-4" aria-hidden="true">
-                  <path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.1 4.3c-2.3 0-3.87 1.4-3.87 3.98v2.22H7.67v2.96h2.56V21h3.27Z" />
-                </svg>
-                <span className="relative z-10">{t("home.socialFollowButton")}</span>
-              </a>
+
+              <div className="mt-7 flex items-center gap-3">
+                {/* Small diagonal "spark" marks flanking the button, echoing
+                    the reference's highlight flourish. */}
+                <span className="hidden shrink-0 -rotate-6 gap-0.5 sm:flex" aria-hidden="true">
+                  {[0, 1, 2].map((i) => (
+                    <span key={i} className="h-4 w-[2.5px] rounded-full bg-blue-300" style={{ opacity: 1 - i * 0.28 }} />
+                  ))}
+                </span>
+                <a
+                  href={siteInfo.social.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex w-fit items-center gap-2.5 overflow-hidden rounded-full bg-gradient-to-b from-blue-500 to-blue-700 px-7 py-3.5 font-body text-sm font-semibold text-white shadow-[0_10px_30px_rgba(37,99,235,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_rgba(37,99,235,0.45)]"
+                >
+                  <Shine />
+                  <span className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white text-blue-600">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5" aria-hidden="true">
+                      <path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.1 4.3c-2.3 0-3.87 1.4-3.87 3.98v2.22H7.67v2.96h2.56V21h3.27Z" />
+                    </svg>
+                  </span>
+                  <span className="relative z-10">{t("home.socialFollowButton")}</span>
+                  <svg viewBox="0 0 24 24" fill="none" className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Feature row — three small callouts under the CTA, giving the
+                  reason to click rather than leaving the button to speak for
+                  itself. */}
+              <div className="mt-9 flex flex-wrap gap-x-7 gap-y-4">
+                {SOCIAL_FEATURES.map((f) => (
+                  <div key={f.title} className="flex items-center gap-2.5">
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${f.tone}`}>{f.icon}</span>
+                    <div className="leading-tight">
+                      <div className="font-body text-sm font-bold text-forest-900">{f.title}</div>
+                      <div className="font-body text-xs text-ink-500">{f.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </Reveal>
 
             <Reveal variant="right" delay={0.1}>
-              {/* Meta's plugin isn't fully fluid past ~500px, so it's capped
-                  and centered rather than stretched full-width on a wide
-                  desktop column. adapt_container_width still lets it shrink
-                  down cleanly on mobile. */}
-              <div className="mx-auto w-full max-w-md overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
-                <iframe
-                  key={siteInfo.social.facebook}
-                  title="Facebook feed"
-                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(siteInfo.social.facebook)}&tabs=timeline&width=500&height=560&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
-                  width="100%"
-                  height="560"
-                  style={{ border: "none", overflow: "hidden", display: "block" }}
-                  scrolling="yes"
-                  loading="lazy"
-                  allow="encrypted-media"
-                />
+              <div className="relative mx-auto w-full max-w-md">
+                {/* Decorative rings behind the card — purely ornamental, no
+                    rotation on the embed itself (see below): a tilted iframe
+                    would make its live scroll/click interaction unusable. */}
+                <div className="pointer-events-none absolute -left-6 top-10 h-40 w-40 rounded-full border-[10px] border-blue-200/60" aria-hidden="true" />
+                <div className="pointer-events-none absolute -right-8 bottom-6 h-28 w-28 rounded-full bg-forest-200/30 blur-2xl" aria-hidden="true" />
+
+                {/* Floating glossy Facebook badge, top-right corner. */}
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
+                  whileInView={{ opacity: 1, scale: 1, rotate: 12 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="pointer-events-none absolute -right-5 -top-6 z-20 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 text-white shadow-[0_10px_24px_rgba(37,99,235,0.45)] sm:h-20 sm:w-20"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-8 w-8 sm:h-10 sm:w-10">
+                    <path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.1 4.3c-2.3 0-3.87 1.4-3.87 3.98v2.22H7.67v2.96h2.56V21h3.27Z" />
+                  </svg>
+                </motion.span>
+
+                {/* The live embed itself — kept flat/unrotated so the real
+                    Facebook scroll, clicks and links inside it stay usable;
+                    all the tilt/depth is confined to the purely decorative
+                    elements around it. */}
+                <div className="relative overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
+                  {/* Meta's plugin isn't fully fluid past ~500px, so it's
+                      given a fixed reference width and adapt_container_width
+                      shrinks it cleanly to fit on mobile. */}
+                  <iframe
+                    key={siteInfo.social.facebook}
+                    title="Facebook feed"
+                    src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(siteInfo.social.facebook)}&tabs=timeline&width=500&height=560&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                    width="100%"
+                    height="560"
+                    style={{ border: "none", overflow: "hidden", display: "block" }}
+                    scrolling="yes"
+                    loading="lazy"
+                    allow="encrypted-media"
+                  />
+                </div>
+
+                {/* Floating "Like · Share · Support" pill, bottom-right —
+                    decorative only (not wired to the real page), echoing
+                    Facebook's own reaction bar for visual flavor. */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.45 }}
+                  className="absolute -bottom-5 right-3 z-20 hidden items-center gap-1.5 rounded-full border border-forest-100 bg-white px-4 py-2 font-body text-xs font-semibold text-ink-700 shadow-lift sm:flex"
+                >
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white">
+                    <ThumbsUpIcon />
+                  </span>
+                  Like · Share · Support
+                </motion.div>
               </div>
             </Reveal>
           </Container>
