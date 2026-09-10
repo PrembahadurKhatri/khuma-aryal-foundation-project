@@ -189,6 +189,61 @@ export default function Home() {
         </Container>
       </section>
 
+      {/* Live Facebook feed — only when Settings has a Facebook link saved
+          (admin/SettingsManage.jsx's Social Media Links); silently omitted
+          otherwise rather than showing an empty/broken embed. Uses Meta's
+          own Page Plugin iframe, which needs nothing but the public page
+          URL — no API key/token, and it updates itself as new posts go up,
+          so this never goes stale the way a manually-copied screenshot
+          would. Helmet's CSP (server.js) already allows facebook.com as a
+          frame-src, added earlier for the same reason on Gallery's video
+          embeds. */}
+      {siteInfo?.social?.facebook && (
+        <section className="relative overflow-hidden bg-cream-100 py-20 sm:py-24">
+          <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-forest-100/50 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full bg-gilt-200/20 blur-3xl" aria-hidden="true" />
+          <Container className="relative grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+            <Reveal variant="left">
+              <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-gilt-600">{t("home.socialKicker")}</span>
+              <h2 className="mt-4 font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl lg:text-[2.25rem]">{t("home.socialTitle")}</h2>
+              <p className="mt-4 max-w-md font-body text-base leading-relaxed text-ink-600">{t("home.socialSubtitle")}</p>
+              <a
+                href={siteInfo.social.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative mt-7 inline-flex w-fit items-center gap-2 overflow-hidden rounded-full bg-forest-600 px-7 py-3 font-body text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-forest-700 hover:shadow-lift"
+              >
+                <Shine />
+                <svg viewBox="0 0 24 24" fill="currentColor" className="relative z-10 h-4 w-4" aria-hidden="true">
+                  <path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.1 4.3c-2.3 0-3.87 1.4-3.87 3.98v2.22H7.67v2.96h2.56V21h3.27Z" />
+                </svg>
+                <span className="relative z-10">{t("home.socialFollowButton")}</span>
+              </a>
+            </Reveal>
+
+            <Reveal variant="right" delay={0.1}>
+              {/* Meta's plugin isn't fully fluid past ~500px, so it's capped
+                  and centered rather than stretched full-width on a wide
+                  desktop column. adapt_container_width still lets it shrink
+                  down cleanly on mobile. */}
+              <div className="mx-auto w-full max-w-md overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
+                <iframe
+                  key={siteInfo.social.facebook}
+                  title="Facebook feed"
+                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(siteInfo.social.facebook)}&tabs=timeline&width=500&height=560&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                  width="100%"
+                  height="560"
+                  style={{ border: "none", overflow: "hidden", display: "block" }}
+                  scrolling="yes"
+                  loading="lazy"
+                  allow="encrypted-media"
+                />
+              </div>
+            </Reveal>
+          </Container>
+        </section>
+      )}
+
       {/* Footer CTA — last section on the page, right above the site Footer */}
       <section className="relative overflow-hidden bg-gradient-to-br from-forest-950 via-forest-850 to-forest-700 py-16 sm:py-20">
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gilt-500/15 blur-3xl" aria-hidden="true" />

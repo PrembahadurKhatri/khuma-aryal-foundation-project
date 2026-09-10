@@ -109,6 +109,13 @@ const translations = {
       updatesEmptyNews: "No news yet.",
       updatesEmptyNotices: "No notices at the moment.",
       updatesEmptyEvents: "No upcoming events.",
+      // Live Facebook feed section — shown between the News/Notices/Projects
+      // teasers and the Footer CTA, only when Settings has a Facebook link
+      // saved (see admin/SettingsManage.jsx's Social Media Links).
+      socialKicker: "Stay Connected",
+      socialTitle: "Follow Our Journey on Facebook",
+      socialSubtitle: "Scroll through our page below for the latest photos, updates and announcements — or follow us to never miss one.",
+      socialFollowButton: "Follow on Facebook",
       // Footer CTA — moved here from the News page per request, shown as the
       // last section on Home, right above the site Footer.
       ctaTitle: "Want to make a difference?",
@@ -431,6 +438,10 @@ const translations = {
       updatesEmptyNews: "अहिलेसम्म कुनै समाचार छैन।",
       updatesEmptyNotices: "हाल कुनै सूचना छैन।",
       updatesEmptyEvents: "हाल कुनै आगामी कार्यक्रम छैन।",
+      socialKicker: "जोडिएर रहनुहोस्",
+      socialTitle: "फेसबुकमा हाम्रो यात्रा फलो गर्नुहोस्",
+      socialSubtitle: "पछिल्ला तस्बिरहरू, अपडेटहरू र सूचनाहरूका लागि तलको पेज स्क्रोल गर्नुहोस् — वा फलो गरेर कुनै पनि अपडेट नछुटाउनुहोस्।",
+      socialFollowButton: "फेसबुकमा फलो गर्नुहोस्",
       ctaTitle: "परिवर्तन ल्याउन चाहनुहुन्छ?",
       ctaSubtitle: "स्वास्थ्य, शिक्षा, खेलकुद, स्वरोजगार र विपद् राहतमार्फत जीवनस्तर सुधार्ने हाम्रो अभियानमा स्वयंसेवक, साझेदार वा दाताको रूपमा सामेल हुनुहोस्।",
       ctaButton: "सहभागी हुनुहोस्",
