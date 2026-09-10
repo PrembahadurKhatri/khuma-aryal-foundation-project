@@ -50,6 +50,18 @@ function ViewAllLink({ to, label }) {
   );
 }
 
+// A grid fixed at 3 columns still defines 3 explicit column tracks even
+// when only 1-2 items exist to fill them, leaving a large, awkward blank
+// void beside a lone/sparse card (this is exactly what "Latest Projects"
+// looked like with a single project). Scaling both the column count and
+// a max-width cap to the real item count keeps a sparse row looking
+// deliberately centered/sized instead of stranded in a mostly-empty grid.
+function updatesGridClass(count, gap = "gap-6") {
+  if (count === 1) return `grid grid-cols-1 ${gap} sm:max-w-md sm:mx-auto`;
+  if (count === 2) return `grid grid-cols-1 ${gap} sm:grid-cols-2 lg:max-w-2xl lg:mx-auto`;
+  return `grid grid-cols-1 ${gap} sm:grid-cols-2 lg:grid-cols-3`;
+}
+
 function CardSkeleton({ count = 3, className = "h-72" }) {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -185,7 +197,7 @@ export default function Home() {
             ) : latestNews.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyNews")}</p>
             ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className={updatesGridClass(latestNews.length)}>
                 {latestNews.map((item, i) => (
                   <Reveal key={item.id} delay={i * 0.08} className="h-full">
                     <NewsCard news={item} />
@@ -209,7 +221,7 @@ export default function Home() {
             ) : latestNotices.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyNotices")}</p>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className={updatesGridClass(latestNotices.length, "gap-4")}>
                 {latestNotices.map((notice, i) => (
                   <Reveal key={notice.id} delay={i * 0.08}>
                     <NoticeCard notice={notice} />
@@ -229,7 +241,7 @@ export default function Home() {
             ) : latestProjects.length === 0 ? (
               <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("home.updatesEmptyProjects")}</p>
             ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className={updatesGridClass(latestProjects.length)}>
                 {latestProjects.map((project, i) => (
                   <Reveal key={project.id} delay={i * 0.08} className="h-full">
                     <ProjectCard project={project} />
@@ -251,7 +263,13 @@ export default function Home() {
           frame-src, added earlier for the same reason on Gallery's video
           embeds. */}
       {siteInfo?.social?.facebook && (
-        <section className="relative overflow-hidden bg-gradient-to-b from-cream-100 via-cream-100 to-forest-50 py-20 sm:py-24">
+        // Asymmetric padding on purpose -- this section follows directly
+        // after the News/Notices/Projects section (which already ends with
+        // its own py-20/24 bottom padding), so matching top padding here
+        // stacked into a distractingly large, near-empty gap between them,
+        // especially when Projects has few items to fill its row. Full
+        // padding is kept on the bottom, before the CTA section.
+        <section className="relative overflow-hidden bg-gradient-to-b from-cream-100 via-cream-100 to-forest-50 pb-20 pt-6 sm:pb-24 sm:pt-8">
           {/* Ambient floating blobs — a slow, looping breathe/drift instead
               of sitting static, replacing the flat dot-grid texture that
               was here before. Purely decorative, never interactive. */}
