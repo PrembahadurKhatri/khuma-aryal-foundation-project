@@ -252,19 +252,20 @@ export default function Home() {
           embeds. */}
       {siteInfo?.social?.facebook && (
         <section className="relative overflow-hidden bg-gradient-to-b from-cream-100 via-cream-100 to-forest-50 py-20 sm:py-24">
-          <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-blue-100/40 blur-3xl" aria-hidden="true" />
-          <div className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full bg-gilt-200/20 blur-3xl" aria-hidden="true" />
-          {/* Faint dot-grid accents, top-left and bottom-right of the whole
-              section — a texture flourish, same spirit as the reference. */}
-          <div
-            className="pointer-events-none absolute left-6 top-6 h-24 w-24 opacity-[0.15] sm:left-10 sm:top-10"
-            style={{ backgroundImage: "radial-gradient(currentColor 1.5px, transparent 1.5px)", backgroundSize: "14px 14px" }}
+          {/* Ambient floating blobs — a slow, looping breathe/drift instead
+              of sitting static, replacing the flat dot-grid texture that
+              was here before. Purely decorative, never interactive. */}
+          <motion.div
+            className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-blue-100/40 blur-3xl"
             aria-hidden="true"
+            animate={{ x: [0, -24, 0], y: [0, 20, 0], scale: [1, 1.08, 1] }}
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
           />
-          <div
-            className="pointer-events-none absolute bottom-10 right-6 h-24 w-24 opacity-[0.15] sm:right-10"
-            style={{ backgroundImage: "radial-gradient(currentColor 1.5px, transparent 1.5px)", backgroundSize: "14px 14px" }}
+          <motion.div
+            className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full bg-gilt-200/20 blur-3xl"
             aria-hidden="true"
+            animate={{ x: [0, 22, 0], y: [0, -18, 0], scale: [1, 1.06, 1] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
           />
 
           <Container className="relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
