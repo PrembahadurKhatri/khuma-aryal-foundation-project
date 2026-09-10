@@ -288,20 +288,18 @@ export default function Home() {
 
           <Container className="relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
             <Reveal variant="left">
-              {/* Plain kicker — same font/weight/color as the "Latest News"/
-                  "Important Notices"/"Latest Projects" headings above this
-                  section (SectionHeader's h2, font-body font-bold
-                  text-forest-900), just at kicker size rather than a
-                  decorative pill/badge. */}
-              <span className="font-body text-sm font-bold uppercase tracking-wide text-forest-900">{t("home.socialKicker")}</span>
+              {/* "Stay Connected" is now the main heading — same size as the
+                  "Latest News"/"Important Notices"/"Latest Projects"
+                  headings above this section (SectionHeader's h2). "Follow
+                  Our Journey on Facebook" drops to kicker size beneath it,
+                  the reverse of the previous hierarchy. */}
+              <h2 className="font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">{t("home.socialKicker")}</h2>
 
-              <h2 className="mt-5 font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">
+              <p className="mt-3 font-body text-sm font-bold uppercase tracking-wide text-forest-700">
                 {socialTitleBefore}
-                {socialHighlightWord && (
-                  <span className="block text-4xl font-extrabold leading-tight text-blue-600 sm:text-5xl">{socialHighlightWord}</span>
-                )}
+                {socialHighlightWord && <span className="text-blue-600">{socialHighlightWord}</span>}
                 {socialTitleAfter}
-              </h2>
+              </p>
               <p className="mt-4 max-w-md font-body text-base leading-relaxed text-ink-600">{t("home.socialSubtitle")}</p>
 
               <div className="mt-7 flex items-center gap-3">
@@ -368,6 +366,26 @@ export default function Home() {
                     <path d="M13.5 21v-7.6h2.55l.38-2.96h-2.93V8.55c0-.86.24-1.44 1.47-1.44h1.57V4.46A21 21 0 0 0 14.1 4.3c-2.3 0-3.87 1.4-3.87 3.98v2.22H7.67v2.96h2.56V21h3.27Z" />
                   </svg>
                 </motion.span>
+
+                {/* The iframe is Facebook's own cross-origin document, so its
+                    internal scrollbar can't be restyled from here (a hard
+                    browser security boundary, not a choice) — it may render
+                    faint/thin/hidden depending on the visitor's OS and
+                    browser. This hint makes "there's more, scroll inside the
+                    box" unmistakable regardless of how prominent Facebook's
+                    own scrollbar looks. Placed above the card (not below,
+                    where it would collide with the floating "Like · Share ·
+                    Support" pill overlapping the card's bottom edge). */}
+                <motion.div
+                  className="relative z-10 mb-2 flex items-center justify-center gap-1.5 font-body text-xs font-medium text-ink-500"
+                  animate={{ y: [0, 4, 0] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <span>{t("home.socialScrollHint")}</span>
+                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+                    <path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </motion.div>
 
                 {/* The live embed itself — kept flat/unrotated so the real
                     Facebook scroll, clicks and links inside it stay usable;

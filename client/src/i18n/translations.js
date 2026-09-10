@@ -122,6 +122,7 @@ const translations = {
       socialFeature2Desc: "News & Announcements",
       socialFeature3Title: "Be a Part",
       socialFeature3Desc: "Our Growing Community",
+      socialScrollHint: "Scroll inside the box to see more posts",
       // Footer CTA — moved here from the News page per request, shown as the
       // last section on Home, right above the site Footer.
       ctaTitle: "Want to make a difference?",
@@ -454,6 +455,7 @@ const translations = {
       socialFeature2Desc: "समाचार र सूचनाहरू",
       socialFeature3Title: "सामेल हुनुहोस्",
       socialFeature3Desc: "हाम्रो बढ्दो समुदाय",
+      socialScrollHint: "थप पोस्टहरू हेर्न बक्स भित्र स्क्रोल गर्नुहोस्",
       ctaTitle: "परिवर्तन ल्याउन चाहनुहुन्छ?",
       ctaSubtitle: "स्वास्थ्य, शिक्षा, खेलकुद, स्वरोजगार र विपद् राहतमार्फत जीवनस्तर सुधार्ने हाम्रो अभियानमा स्वयंसेवक, साझेदार वा दाताको रूपमा सामेल हुनुहोस्।",
       ctaButton: "सहभागी हुनुहोस्",
