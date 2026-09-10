@@ -136,8 +136,25 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-// Locally-stored uploads (see middleware/upload.js).
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Locally-stored uploads (see middleware/upload.js). helmet's default
+// Cross-Origin-Resource-Policy: same-origin (set globally above) blocks the
+// browser from loading these cross-origin -- the frontend and this API run
+// on different subdomains in production (example.com vs api.example.com),
+// and that header makes the browser refuse the image/video/document load
+// entirely (net::ERR_BLOCKED_BY_RESPONSE.NotSameOrigin), even though the
+// request itself succeeds and CORS would otherwise allow it. Cloudinary
+// never hit this because it doesn't send that header at all. Only this
+// route is relaxed to "cross-origin" -- the actual JSON API responses stay
+// under the stricter default, since they're never meant to be embedded as
+// a sub-resource on another page the way these files are.
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  },
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // Health check
 app.get("/api/health", (req, res) => res.json({ success: true, message: "API is running" }));

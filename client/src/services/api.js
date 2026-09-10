@@ -1,8 +1,11 @@
 import axios from "axios";
 
 // Strip any trailing slash so this can't produce a double slash regardless
-// of how VITE_API_TARGET is set.
-const API = (import.meta.env.VITE_API_TARGET || "").replace(/\/+$/, "");
+// of how VITE_API_TARGET is set. Exported so contentService.js's withId()
+// can resolve locally-stored-upload paths ("/uploads/...", relative to
+// this origin, not the frontend's) against the same origin used for every
+// other API call.
+export const API = (import.meta.env.VITE_API_TARGET || "").replace(/\/+$/, "");
 
 const api = axios.create({
   baseURL: `${API}/api`,

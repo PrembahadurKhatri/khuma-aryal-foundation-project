@@ -128,15 +128,23 @@ const baseNoticeUpload = multer({
   },
 });
 
-// Cloudinary storage already leaves req.file.path as a secure_url. Local
-// disk storage leaves it as an absolute filesystem path — normalize that to
-// the public URL controllers should actually save.
+// Cloudinary storage already leaves req.file.path as a secure_url (a full
+// absolute URL). Local disk storage leaves it as an absolute filesystem
+// path — normalize that to a full absolute URL too, the same shape either
+// way, rather than a path relative to this API's own origin. A relative
+// path silently 404s once it's rendered on the frontend, which runs on a
+// different domain in production (api.example.com vs example.com) — the
+// browser resolves "/uploads/x.jpg" against whatever page is showing it,
+// not this server. `trust proxy` (see server.js) makes req.protocol/
+// req.get("host") reflect the real public-facing host even behind
+// Cloudflare's proxy, not an internal address.
 const normalizePaths = (req, res, next) => {
   if (!isCloudinaryConfigured) {
-    if (req.file) req.file.path = `/uploads/${req.file.filename}`;
+    const origin = `${req.protocol}://${req.get("host")}`;
+    if (req.file) req.file.path = `${origin}/uploads/${req.file.filename}`;
     if (req.files) {
       Object.values(req.files).flat().forEach((f) => {
-        f.path = `/uploads/${f.filename}`;
+        f.path = `${origin}/uploads/${f.filename}`;
       });
     }
   }

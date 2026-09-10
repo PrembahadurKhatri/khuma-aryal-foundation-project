@@ -13,9 +13,33 @@
 // backed by the Leader model — see server/models/Leader.js and the admin
 // "Leadership" page (admin/LeadersManage.jsx).
 // ---------------------------------------------------------------------------
-import api from "./api.js";
+import api, { API } from "./api.js";
 
-const withId = (doc) => ({ ...doc, id: doc._id });
+// Locally-stored uploads (server/uploads/, see middleware/upload.js's
+// disk-storage fallback used whenever Cloudinary isn't configured) are
+// saved as a path relative to the API's own origin ("/uploads/xyz.jpg"),
+// not the frontend's. On this project's split-domain deployment (frontend
+// on the apex domain, API on a separate api. subdomain), resolving that
+// relative path against the *page's* origin instead of the API's silently
+// 404s — the browser has no way to know it should mean a different host.
+// This never surfaced with Cloudinary, which always returns full absolute
+// URLs regardless of deployment shape. Walks the whole document (including
+// nested arrays/objects like a populated `album`) so every field is
+// covered without having to know each one's name up front.
+function resolveUploadPaths(value) {
+  if (typeof value === "string") {
+    return value.startsWith("/uploads/") ? `${API}${value}` : value;
+  }
+  if (Array.isArray(value)) return value.map(resolveUploadPaths);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const [key, v] of Object.entries(value)) out[key] = resolveUploadPaths(v);
+    return out;
+  }
+  return value;
+}
+
+const withId = (doc) => resolveUploadPaths({ ...doc, id: doc._id });
 
 export async function getSiteInfo() {
   const { data } = await api.get("/settings");
