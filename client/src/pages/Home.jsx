@@ -60,18 +60,8 @@ function CardSkeleton({ count = 3, className = "h-72" }) {
   );
 }
 
-// Small icon set for the Facebook section's badge + feature row below —
-// kept local to this file since nothing else on the page needs them.
-function PeopleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
-      <circle cx="9" cy="8.5" r="2.5" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M3.5 19c0-3 2.46-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      <circle cx="17" cy="9" r="2" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M15 19c0-2.3 1-4 3.5-4.3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-    </svg>
-  );
-}
+// Small icon set for the Facebook section's feature row below — kept
+// local to this file since nothing else on the page needs them.
 function CameraIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
@@ -279,14 +269,12 @@ export default function Home() {
 
           <Container className="relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
             <Reveal variant="left">
-              <span className="inline-flex items-center gap-2 rounded-full border border-forest-200 bg-forest-50 px-4 py-1.5 font-body text-xs font-bold uppercase tracking-[0.15em] text-forest-700">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-forest-600 text-white">
-                  <PeopleIcon />
-                </span>
-                <span className="h-px w-3 bg-forest-300" aria-hidden="true" />
-                {t("home.socialKicker")}
-                <span className="h-px w-3 bg-forest-300" aria-hidden="true" />
-              </span>
+              {/* Plain kicker — same font/weight/color as the "Latest News"/
+                  "Important Notices"/"Latest Projects" headings above this
+                  section (SectionHeader's h2, font-body font-bold
+                  text-forest-900), just at kicker size rather than a
+                  decorative pill/badge. */}
+              <span className="font-body text-sm font-bold uppercase tracking-wide text-forest-900">{t("home.socialKicker")}</span>
 
               <h2 className="mt-5 font-body text-2xl font-bold leading-tight text-forest-900 sm:text-3xl">
                 {socialTitleBefore}
