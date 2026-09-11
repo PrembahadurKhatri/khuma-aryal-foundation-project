@@ -102,8 +102,8 @@ export default function Navbar() {
             />
           </div>
 
-          {/* Foundation name — desktop only; mobile shows just the logo mark */}
-          <div className="hidden min-w-0 font-body leading-tight lg:block">
+          {/* Foundation name — shown at every width, next to the logo mark */}
+          <div className="min-w-0 font-body leading-tight">
             <span
               className={`block truncate font-semibold tracking-tight text-forest-700 transition-all duration-300 ${
                 scrolled ? "text-sm" : "text-sm sm:text-base"
