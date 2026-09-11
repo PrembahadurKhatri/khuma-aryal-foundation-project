@@ -1,10 +1,17 @@
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { UKFlag, NepalFlag } from "./icons/Flags.jsx";
 
-export default function LanguageSwitcher({ light = false }) {
+// `compact` drops the "EN"/"ने" text labels and tightens padding, keeping
+// only the flag icons — used in the mobile navbar where the site name next
+// to the logo needs every spare pixel it can get to avoid wrapping/cutting
+// off. The full labelled version is still used everywhere else (desktop
+// navbar, footer, etc.) since there's no space pressure there.
+export default function LanguageSwitcher({ light = false, compact = false }) {
   const { language, setLanguage, t } = useLanguage();
 
-  const base = "flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-all duration-200";
+  const base = `flex items-center rounded-full font-semibold transition-all duration-200 ${
+    compact ? "justify-center px-1.5 py-1.5" : "gap-1.5 px-2.5 py-1.5 text-xs"
+  }`;
   const activeClasses = light ? "bg-white text-forest-800 shadow-sm" : "bg-forest-600 text-white shadow-sm";
   const inactiveClasses = light ? "text-white/70 hover:text-white" : "text-ink-600 hover:text-forest-800";
 
@@ -21,18 +28,20 @@ export default function LanguageSwitcher({ light = false }) {
         onClick={() => setLanguage("en")}
         className={`${base} ${language === "en" ? activeClasses : inactiveClasses}`}
         aria-pressed={language === "en"}
+        aria-label="English"
       >
         <UKFlag className="h-4 w-4 rounded-full ring-1 ring-black/5" />
-        EN
+        {!compact && "EN"}
       </button>
       <button
         type="button"
         onClick={() => setLanguage("ne")}
         className={`${base} ${language === "ne" ? activeClasses : inactiveClasses}`}
         aria-pressed={language === "ne"}
+        aria-label="Nepali"
       >
         <NepalFlag className="h-4 w-4 rounded-full ring-1 ring-black/5" />
-        ने
+        {!compact && "ने"}
       </button>
     </div>
   );

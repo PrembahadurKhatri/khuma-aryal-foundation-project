@@ -78,18 +78,18 @@ export default function Navbar() {
       />
 
       <Container
-        className={`flex items-center justify-between gap-5 transition-all duration-500 ${
-          scrolled ? "h-16" : "h-20"
+        className={`flex items-center justify-between gap-5 py-2 transition-all duration-500 ${
+          scrolled ? "min-h-16" : "min-h-20"
         }`}
       >
         {/* Logo */}
         <NavLink
           to="/"
           onClick={closeMenu}
-          className="group flex shrink-0 items-center gap-3.5"
+          className="group flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3.5 lg:flex-none"
         >
           <div
-            className={`relative flex items-center justify-center overflow-hidden rounded-2xl border border-forest-100/80 bg-white shadow-[0_2px_10px_rgba(31,55,45,0.08)] ring-1 ring-transparent transition-all duration-500 group-hover:border-gilt-300/70 group-hover:shadow-[0_6px_20px_rgba(190,150,70,0.18)] group-hover:ring-gilt-200/60 ${
+            className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-forest-100/80 bg-white shadow-[0_2px_10px_rgba(31,55,45,0.08)] ring-1 ring-transparent transition-all duration-500 group-hover:border-gilt-300/70 group-hover:shadow-[0_6px_20px_rgba(190,150,70,0.18)] group-hover:ring-gilt-200/60 ${
               scrolled ? "h-10 w-10 rounded-xl" : "h-12 w-12"
             }`}
           >
@@ -102,11 +102,21 @@ export default function Navbar() {
             />
           </div>
 
-          {/* Foundation name — shown at every width, next to the logo mark */}
-          <div className="min-w-0 font-body leading-tight">
+          {/* Foundation name — shown at every width, next to the logo mark.
+              min-w-0 flex-1 on the NavLink above (instead of shrink-0) lets
+              this claim whatever space is actually left over after the
+              logo + the protected right-side controls (shrink-0 on that
+              group below). On real phone widths the language switcher +
+              menu button alone leave too little room for the full name on
+              one line at a readable size, so instead of a single-line
+              mid-word ellipsis (truncate) it's allowed to wrap onto a
+              second line (line-clamp-2 caps it there as a safety net) —
+              Container's fixed height was switched to min-h so a wrapped
+              second line grows the bar instead of spilling out of it. */}
+          <div className="min-w-0 font-body">
             <span
-              className={`block truncate font-semibold tracking-tight text-forest-700 transition-all duration-300 ${
-                scrolled ? "text-sm" : "text-sm sm:text-base"
+              className={`line-clamp-2 font-semibold leading-snug tracking-tight text-forest-700 transition-all duration-300 ${
+                scrolled ? "text-sm sm:text-base" : "text-base sm:text-lg"
               }`}
             >
               {pick(siteInfo.name, language)}
@@ -202,8 +212,8 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Language + Menu Button */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <LanguageSwitcher />
+        <div className="flex shrink-0 items-center gap-2 lg:hidden">
+          <LanguageSwitcher compact />
 
           <button
             type="button"
