@@ -84,7 +84,6 @@ export default function NewsCard({ news }) {
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-3 p-6">
-        <span className={`h-1 w-10 rounded-full ${tone.bg}`} aria-hidden="true" />
         <h3 className="font-body text-lg font-bold leading-snug text-forest-900 line-clamp-2">{title}</h3>
         <p className="line-clamp-2 flex-1 font-body text-sm leading-relaxed text-ink-600">{shown}</p>
         <div className="mt-1 flex items-center justify-between gap-2 border-t border-forest-50 pt-4">
