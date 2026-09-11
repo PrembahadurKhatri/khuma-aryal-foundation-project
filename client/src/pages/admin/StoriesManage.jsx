@@ -4,6 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { fetchStories, createStory, updateStory, deleteStory } from "../../services/storyService.js";
 import { fetchAlbums } from "../../services/galleryService.js";
 import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
+import Spinner from "../../components/admin/Spinner.jsx";
 import useToast from "../../hooks/useToast.js";
 
 const emptyForm = {
@@ -92,18 +93,29 @@ const StoriesManage = () => {
     setForm((prev) => ({ ...prev, keepImages: prev.keepImages.filter((u) => u !== url) }));
   };
 
+  // Uploads (files going through the API server) can take a few seconds —
+  // with no feedback the admin tends to click "Create"/"Save" again, firing
+  // duplicate requests. The loading toast + disabled/spinner button below
+  // (isSaving) both exist to make that wait visible instead of silent.
+  const isSaving = createMutation.isPending || updateMutation.isPending;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editing) {
-      await updateMutation.mutateAsync({ id: editing._id, payload: form });
-    } else {
-      if (!form.photoFile) {
-        toast.error("A photo is required.");
-        return;
-      }
-      await createMutation.mutateAsync(form);
+    if (!editing && !form.photoFile) {
+      toast.error("A photo is required.");
+      return;
     }
-    setShowForm(false);
+    const loadingId = toast.loading(editing ? "Saving changes — please wait…" : "Uploading and creating — please wait…");
+    try {
+      if (editing) {
+        await updateMutation.mutateAsync({ id: editing._id, payload: form });
+      } else {
+        await createMutation.mutateAsync(form);
+      }
+      setShowForm(false);
+    } finally {
+      toast.dismiss(loadingId);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -284,11 +296,21 @@ const StoriesManage = () => {
             </div>
 
             <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end sm:gap-3">
-              <button type="button" onClick={() => setShowForm(false)} className={`w-full rounded-lg px-4 py-2.5 text-center sm:w-auto ${mutedClass}`}>
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => setShowForm(false)}
+                className={`w-full rounded-lg px-4 py-2.5 text-center disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto ${mutedClass}`}
+              >
                 Cancel
               </button>
-              <button type="submit" className="w-full rounded-lg bg-forest-700 px-4 py-2.5 font-semibold text-white shadow-soft hover:bg-forest-800 sm:w-auto sm:py-2">
-                {editing ? "Save Changes" : "Create Story"}
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-forest-700 px-4 py-2.5 font-semibold text-white shadow-soft hover:bg-forest-800 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:py-2"
+              >
+                {isSaving && <Spinner />}
+                {isSaving ? (editing ? "Saving…" : "Uploading…") : editing ? "Save Changes" : "Create Story"}
               </button>
             </div>
           </form>

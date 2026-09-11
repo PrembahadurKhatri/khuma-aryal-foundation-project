@@ -21,6 +21,12 @@ const TONE = {
     iconBg: "bg-red-500/15 text-red-600 dark:text-red-400",
     bar: "bg-red-500",
   },
+  loading: {
+    accent: "bg-forest-500",
+    ring: "ring-forest-500/15",
+    iconBg: "bg-forest-500/15 text-forest-600 dark:text-forest-400",
+    bar: "bg-forest-500",
+  },
 };
 
 function CheckIcon() {
@@ -42,7 +48,19 @@ function AlertIcon() {
   );
 }
 
-const ICON = { success: CheckIcon, error: AlertIcon };
+// Spins in place — used for in-flight "uploading/saving" toasts so it's
+// visually obvious at a glance (not just readable text) that something is
+// still happening and the admin should wait rather than click again.
+function SpinnerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 animate-spin" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="2" strokeOpacity="0.25" />
+      <path d="M21.5 12a9.5 9.5 0 0 0-9.5-9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+const ICON = { success: CheckIcon, error: AlertIcon, loading: SpinnerIcon };
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
@@ -55,7 +73,13 @@ export const ToastProvider = ({ children }) => {
     (type, message) => {
       const id = ++idCounter;
       setToasts((t) => [...t, { id, type, message }]);
-      setTimeout(() => remove(id), DURATION);
+      // "loading" toasts represent work that's still in flight (a create/
+      // update request, often with a file upload) — they stay on screen
+      // until the caller explicitly dismisses them once the request
+      // settles, rather than disappearing on a fixed timer that has no
+      // relation to how long the actual upload takes.
+      if (type !== "loading") setTimeout(() => remove(id), DURATION);
+      return id;
     },
     [remove]
   );
@@ -63,6 +87,8 @@ export const ToastProvider = ({ children }) => {
   const value = {
     success: (message) => push("success", message),
     error: (message) => push("error", message),
+    loading: (message) => push("loading", message),
+    dismiss: (id) => remove(id),
   };
 
   return (
@@ -88,22 +114,28 @@ export const ToastProvider = ({ children }) => {
                   <Icon />
                 </span>
                 <p className="flex-1 self-center text-sm font-semibold leading-snug text-ink-900 dark:text-gray-100">{toast.message}</p>
-                <button
-                  onClick={() => remove(toast.id)}
-                  aria-label="Dismiss"
-                  className="shrink-0 self-start rounded-full p-1 text-ink-400 opacity-60 transition-opacity hover:opacity-100 dark:text-gray-500"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
-                    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                </button>
-                {/* Countdown bar */}
-                <motion.span
-                  className={`absolute bottom-0 left-0 h-[3px] ${tone.bar}`}
-                  initial={{ width: "100%" }}
-                  animate={{ width: "0%" }}
-                  transition={{ duration: DURATION / 1000, ease: "linear" }}
-                />
+                {toast.type !== "loading" && (
+                  <button
+                    onClick={() => remove(toast.id)}
+                    aria-label="Dismiss"
+                    className="shrink-0 self-start rounded-full p-1 text-ink-400 opacity-60 transition-opacity hover:opacity-100 dark:text-gray-500"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+                      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                )}
+                {/* Countdown bar — only meaningful for toasts that actually
+                    auto-dismiss on a timer; a "loading" toast's real
+                    lifetime is the in-flight request, not a fixed clock. */}
+                {toast.type !== "loading" && (
+                  <motion.span
+                    className={`absolute bottom-0 left-0 h-[3px] ${tone.bar}`}
+                    initial={{ width: "100%" }}
+                    animate={{ width: "0%" }}
+                    transition={{ duration: DURATION / 1000, ease: "linear" }}
+                  />
+                )}
               </motion.div>
             );
           })}
