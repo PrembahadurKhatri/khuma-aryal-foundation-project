@@ -30,14 +30,24 @@ export default function VideoLightbox({ video, onClose }) {
   if (!video) return null;
   const title = pick(video.title, language);
   const description = pick(video.description, language);
-  const embedSrc = video.embedUrl ? toEmbedUrl(video.embedUrl) : null;
   // YouTube/Vimeo's own embed players are near-always landscape and
   // letterbox correctly inside a 16:9 frame even for the occasional Short.
   // Facebook's video plugin (and any other passthrough embed we don't
   // recognize) has no such guarantee — a portrait clip forced into a 16:9
   // box gets center-cropped by Facebook's player instead of pillarboxed, so
-  // those get a taller, portrait-friendly frame instead.
-  const isLandscapePlatform = embedSrc && (embedSrc.includes("youtube.com/embed") || embedSrc.includes("player.vimeo.com"));
+  // those get a taller, portrait-friendly frame instead. Checked against
+  // the *raw* URL (not the converted embed src) so this decision doesn't
+  // depend on toEmbedUrl's output shape.
+  const isLandscapePlatform = video.embedUrl && /youtube\.com|youtu\.be|vimeo\.com/i.test(video.embedUrl);
+  // Facebook's plugin needs explicit width/height matching the box it'll
+  // actually be displayed in, or it renders its player at its own fixed
+  // default size regardless of the real clip's actual shape (see
+  // videoEmbed.js) — sized close to a real portrait phone recording
+  // (1080x1920) for the portrait box, a plain 16:9 pair otherwise. Ignored
+  // by the YouTube/Vimeo branches, which don't take width/height at all.
+  const embedSrc = video.embedUrl
+    ? toEmbedUrl(video.embedUrl, isLandscapePlatform ? { width: 640, height: 360 } : { width: 380, height: 676 })
+    : null;
 
   return (
     <AnimatePresence>
