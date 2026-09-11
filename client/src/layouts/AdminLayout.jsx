@@ -28,7 +28,7 @@ const navItems = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/news", label: "News", icon: Newspaper },
   { to: "/admin/notices", label: "Notices", icon: Megaphone },
-  { to: "/admin/events", label: "Events", icon: CalendarDays },
+  { to: "/admin/events", label: "Upcoming Events", icon: CalendarDays },
   { to: "/admin/stories", label: "Impact Stories", icon: Heart },
   { to: "/admin/vacancies", label: "Job Vacancies", icon: Briefcase },
   { to: "/admin/applications", label: "Applications", icon: ClipboardList },

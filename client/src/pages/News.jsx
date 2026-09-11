@@ -392,27 +392,32 @@ export default function News() {
             </div>
           )}
 
-          {/* ================= Upcoming Events ================= */}
-          <div className="mt-20">
-            <SectionHeader title={t("news.sectionEvents")} />
-            {eventsLoading || !events ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="h-64 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
-                ))}
-              </div>
-            ) : upcomingEvents.length === 0 ? (
-              <p className="rounded-xl2 border border-forest-100 bg-white py-8 text-center font-body text-sm text-ink-600 shadow-card">{t("news.emptyEvents")}</p>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {upcomingEvents.map((event, i) => (
-                  <Reveal key={event.id} delay={(i % 3) * 0.05} className="h-full">
-                    <EventCard event={event} />
-                  </Reveal>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* ================= Upcoming Events =================
+              Shown only while still loading (skeleton — we don't yet know
+              if there are any) or once there's at least one real event.
+              An empty section is omitted entirely rather than padding the
+              page with a "no events" placeholder message, same pattern as
+              Success Stories above. */}
+          {(eventsLoading || !events || upcomingEvents.length > 0) && (
+            <div className="mt-20">
+              <SectionHeader title={t("news.sectionEvents")} />
+              {eventsLoading || !events ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="h-64 animate-pulse rounded-xl2 border border-forest-100 bg-forest-50/60" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {upcomingEvents.map((event, i) => (
+                    <Reveal key={event.id} delay={(i % 3) * 0.05} className="h-full">
+                      <EventCard event={event} />
+                    </Reveal>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* ================= Recent Activities (Projects, last 30 days) ================= */}
           <div className="mt-20">
