@@ -71,12 +71,11 @@ export default function BoardMembers({ members, loading }) {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="flex flex-col items-center">
                     <p className="text-sm font-bold text-forest-900 transition-colors duration-300 group-hover:text-forest-700 sm:text-base">{name}</p>
-                    <p className="relative mt-1 inline-block text-xs font-semibold uppercase tracking-wide text-[#FF8C00]">
+                    <span className="mt-1.5 inline-block w-fit rounded-full bg-[#FF8C00] px-3 py-1 font-body text-xs font-semibold uppercase tracking-wide text-white shadow-soft">
                       {designation}
-                     
-                    </p>
+                    </span>
                   </div>
                 </Reveal>
               );
