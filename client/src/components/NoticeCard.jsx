@@ -58,7 +58,7 @@ export default function NoticeCard({ notice }) {
   return (
     <Link
       to={`/notices/${notice.id}`}
-      className={`group flex items-center gap-4 rounded-xl2 border border-l-4 border-forest-100 p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:p-5 ${tone.border} ${tone.wash}`}
+      className={`group flex h-full items-center gap-4 rounded-xl2 border border-l-4 border-forest-100 p-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:p-5 ${tone.border} ${tone.wash}`}
     >
       <div className="flex flex-1 flex-col gap-1.5">
         <div className="flex flex-wrap items-center gap-2">
@@ -68,7 +68,7 @@ export default function NoticeCard({ notice }) {
           <span className="font-body text-xs text-ink-400">{formatted}</span>
         </div>
         <h3 className="font-body text-base font-bold text-forest-900">{title}</h3>
-        {shownDescription && <p className="line-clamp-2 font-body text-sm leading-relaxed text-ink-600">{shownDescription}</p>}
+        {shownDescription && <p className="line-clamp-2 flex-1 font-body text-sm leading-relaxed text-ink-600">{shownDescription}</p>}
       </div>
       <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-white transition-all duration-300 ${tone.chevron}`}>
         <ChevronIcon />

@@ -223,7 +223,7 @@ export default function Home() {
             ) : (
               <div className={updatesGridClass(latestNotices.length, "gap-4")}>
                 {latestNotices.map((notice, i) => (
-                  <Reveal key={notice.id} delay={i * 0.08}>
+                  <Reveal key={notice.id} delay={i * 0.08} className="h-full">
                     <NoticeCard notice={notice} />
                   </Reveal>
                 ))}

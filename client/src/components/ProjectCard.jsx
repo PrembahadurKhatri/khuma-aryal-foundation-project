@@ -35,13 +35,17 @@ const STATUS_TONE = {
 // string manipulation, because Tailwind's build-time scanner only
 // generates CSS for class names that appear as complete literal strings
 // in the source — a class assembled at runtime never matches anything in
-// the compiled stylesheet.
+// the compiled stylesheet. Only use shades that actually exist in
+// tailwind.config.js's ramps — "ink" in particular only defines
+// 50/100/400/600/800/900 (no 700), and a nonexistent shade fails the
+// exact same silent way (no CSS generated, no build error) as the
+// string-manipulation mistake above.
 const CATEGORY_TONE = {
   Event: { bg: "bg-forest-700", border: "border-b-forest-700" },
   Education: { bg: "bg-gilt-600", border: "border-b-gilt-600" },
   Health: { bg: "bg-forest-600", border: "border-b-forest-600" },
   Community: { bg: "bg-forest-800", border: "border-b-forest-800" },
-  Distribution: { bg: "bg-ink-700", border: "border-b-ink-700" },
+  Distribution: { bg: "bg-ink-600", border: "border-b-ink-600" },
   DisasterRelief: { bg: "bg-ink-800", border: "border-b-ink-800" },
 };
 

@@ -73,7 +73,7 @@ function StarIcon() {
 const NEWS_CAP = 6;
 const NOTICES_CAP = 6;
 const STORIES_CAP = 3;
-const ACTIVITIES_COUNT = 4;
+const ACTIVITIES_COUNT = 3;
 
 function GridIcon() {
   return (
@@ -202,19 +202,17 @@ export default function News() {
     return [...events].filter((e) => new Date(e.date) >= new Date(new Date().toDateString())).sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [events]);
 
-  // "Recent Activities" — projects AND news from the last 30 days (falls
-  // back to createdAt when an item has no explicit `date` set), mixed
-  // together and sorted newest-first, capped at ACTIVITIES_COUNT. Not
-  // restricted to status="completed" projects — the section is about what's
-  // recently happened/been added, not specifically finished work.
+  // "Recent Activities" — the latest ACTIVITIES_COUNT items overall, mixing
+  // projects and news together and sorted newest-first by `date` (falls
+  // back to createdAt when an item has no explicit `date` set) — not
+  // restricted to any particular time window, so the section always shows
+  // something as long as any project/news exists, however old. Not
+  // restricted to status="completed" projects either — the section is
+  // about what's recently happened/been added, not specifically finished
+  // work.
   const recentActivities = useMemo(() => {
-    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
-    const recentProjects = (projects || [])
-      .filter((p) => new Date(p.date || p.createdAt).getTime() >= cutoff)
-      .map((p) => ({ ...p, __type: "project", __date: new Date(p.date || p.createdAt) }));
-    const recentNews = (news || [])
-      .filter((n) => new Date(n.date || n.createdAt).getTime() >= cutoff)
-      .map((n) => ({ ...n, __type: "news", __date: new Date(n.date || n.createdAt) }));
+    const recentProjects = (projects || []).map((p) => ({ ...p, __type: "project", __date: new Date(p.date || p.createdAt) }));
+    const recentNews = (news || []).map((n) => ({ ...n, __type: "news", __date: new Date(n.date || n.createdAt) }));
     return [...recentProjects, ...recentNews].sort((a, b) => b.__date - a.__date).slice(0, ACTIVITIES_COUNT);
   }, [projects, news]);
 
@@ -362,7 +360,7 @@ export default function News() {
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {visibleNotices.map((notice, i) => (
-                  <Reveal key={notice.id} delay={(i % 4) * 0.05}>
+                  <Reveal key={notice.id} delay={(i % 4) * 0.05} className="h-full">
                     <NoticeCard notice={notice} />
                   </Reveal>
                 ))}
