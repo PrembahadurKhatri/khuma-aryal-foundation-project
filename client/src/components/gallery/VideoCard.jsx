@@ -33,7 +33,7 @@ export default function VideoCard({ video, onPlay }) {
     <button
       type="button"
       onClick={() => onPlay(video)}
-      className="group flex h-full flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-500"
+      className="group flex h-full w-full flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-500"
     >
       <div className="relative aspect-video w-full overflow-hidden bg-forest-950">
         <PlaceholderImage src={video.thumbnail} alt={title} label={title} imgClassName="transition-transform duration-500 group-hover:scale-105" />
