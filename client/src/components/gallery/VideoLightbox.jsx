@@ -2,7 +2,7 @@ import { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import { pick } from "../../utils/localize.js";
-import { toEmbedUrl } from "../../utils/videoEmbed.js";
+import { toEmbedUrl, isFacebookReel } from "../../utils/videoEmbed.js";
 
 // Same modal chrome as Lightbox.jsx (photos) — dark backdrop, top-right
 // close button, centered content box — swapped to a 16:9 video player: an
@@ -30,15 +30,15 @@ export default function VideoLightbox({ video, onClose }) {
   if (!video) return null;
   const title = pick(video.title, language);
   const description = pick(video.description, language);
-  // YouTube/Vimeo's own embed players are near-always landscape and
-  // letterbox correctly inside a 16:9 frame even for the occasional Short.
-  // Facebook's video plugin (and any other passthrough embed we don't
-  // recognize) has no such guarantee — a portrait clip forced into a 16:9
-  // box gets center-cropped by Facebook's player instead of pillarboxed, so
-  // those get a taller, portrait-friendly frame instead. Checked against
-  // the *raw* URL (not the converted embed src) so this decision doesn't
-  // depend on toEmbedUrl's output shape.
-  const isLandscapePlatform = video.embedUrl && /youtube\.com|youtu\.be|vimeo\.com/i.test(video.embedUrl);
+  // Every video (YouTube, Vimeo, and Facebook) shares the same 16:9 box by
+  // default, for a consistent player size across the whole gallery — the
+  // one deliberate exception is a Facebook Reel, which is always portrait
+  // 9:16 and gets its own taller frame instead, since Facebook's player
+  // *center-crops* rather than letterboxing a mismatched shape (confirmed
+  // by testing): forcing a Reel into the landscape box would crop it, not
+  // just resize it. isFacebookReel checks the *raw* URL (not the converted
+  // embed src) so this decision doesn't depend on toEmbedUrl's output shape.
+  const isLandscapePlatform = !video.embedUrl || !isFacebookReel(video.embedUrl);
   // Facebook's plugin needs explicit width/height matching the box it'll
   // actually be displayed in, or it renders its player at its own fixed
   // default size regardless of the real clip's actual shape (see

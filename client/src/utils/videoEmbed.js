@@ -17,9 +17,13 @@ const FACEBOOK_RE = /(?:facebook\.com|fb\.watch)/i;
 // unfilled remainder showing as plain black — the player itself was
 // undersized, not (as it first looks) mis-cropped. Passing width/height
 // matching our own intended box lets the plugin size its player to
-// actually fill it. Defaults are a plain 16:9 landscape pair;
-// VideoLightbox.jsx passes a portrait pair instead for anything that
-// isn't YouTube/Vimeo, matching the box it renders those into.
+// actually fill it. Defaults are a plain 16:9 landscape pair, the same box
+// every other (YouTube/Vimeo/landscape Facebook) video uses — kept
+// consistent on purpose; only genuine Reels get a different, portrait pair
+// from VideoLightbox.jsx, since Facebook's player *center-crops* rather
+// than letterboxing a mismatched shape (confirmed by testing), so forcing
+// a portrait clip into this box would crop it rather than just look
+// different-sized.
 export function toEmbedUrl(url, { width = 640, height = 360 } = {}) {
   if (!url) return null;
   const youtube = url.match(YOUTUBE_RE);
@@ -30,4 +34,12 @@ export function toEmbedUrl(url, { width = 640, height = 360 } = {}) {
     return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=${width}&height=${height}`;
   }
   return url;
+}
+
+// Facebook Reels (facebook.com/reel/...) are always portrait 9:16 — unlike
+// a plain facebook.com/.../videos/... link, which is normally landscape, a
+// /reel/ URL is a fully reliable signal (not a guess) that the clip is
+// portrait and needs its own box instead of the shared landscape one.
+export function isFacebookReel(url) {
+  return /facebook\.com\/reel\//i.test(url || "");
 }
