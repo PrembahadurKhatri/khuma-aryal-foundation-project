@@ -12,12 +12,37 @@ function TagIcon() {
   );
 }
 
+function CalendarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 shrink-0" aria-hidden="true">
+      <rect x="3.5" y="5" width="17" height="15.5" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M3.5 9.5h17M8 3v3.5M16 3v3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
 
 const STATUS_TONE = {
-  ongoing: "bg-forest-600 text-white",
-  completed: "bg-ink-600 text-white",
-  upcoming: "bg-gilt-500 text-white",
+  ongoing: "text-forest-700",
+  completed: "text-ink-600",
+  upcoming: "text-gilt-700",
+};
+
+// Badge/border color keyed by category — every ALBUM_CATEGORIES value
+// (Project reuses Album's category enum — see server/models/Project.js)
+// covered. `border` is a separate explicit map, not derived from `bg` by
+// string manipulation, because Tailwind's build-time scanner only
+// generates CSS for class names that appear as complete literal strings
+// in the source — a class assembled at runtime never matches anything in
+// the compiled stylesheet.
+const CATEGORY_TONE = {
+  Event: { bg: "bg-forest-700", border: "border-b-forest-700" },
+  Education: { bg: "bg-gilt-600", border: "border-b-gilt-600" },
+  Health: { bg: "bg-forest-600", border: "border-b-forest-600" },
+  Community: { bg: "bg-forest-800", border: "border-b-forest-800" },
+  Distribution: { bg: "bg-ink-700", border: "border-b-ink-700" },
+  DisasterRelief: { bg: "bg-ink-800", border: "border-b-ink-800" },
 };
 
 // Links through to ProjectDetail.jsx, which shows the full description and
@@ -30,6 +55,7 @@ export default function ProjectCard({ project }) {
   const cover = project.thumbnail || project.images?.[0];
   const status = project.status || "ongoing";
   const category = project.category || "Event";
+  const tone = CATEGORY_TONE[category] || CATEGORY_TONE.Event;
 
   let formattedDate = "";
   try {
@@ -43,24 +69,36 @@ export default function ProjectCard({ project }) {
   return (
     <Link
       to={`/projects/${project.id}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl2 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-500"
+      className={`group flex h-full flex-col overflow-hidden rounded-xl2 border-b-4 border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-500 ${tone.border}`}
     >
-      <div className="relative h-48 w-full overflow-hidden">
+      <div className="relative h-52 w-full overflow-hidden">
         <PlaceholderImage src={cover} alt={title} label={title} imgClassName="transition-transform duration-500 group-hover:scale-105" />
-        <span className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold shadow-soft ${STATUS_TONE[status] || STATUS_TONE.ongoing}`}>
-          {t(`common.${status}`)}
+        <span className={`absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-body text-[11px] font-semibold text-white shadow-soft ${tone.bg}`}>
+          <TagIcon />
+          {t(`gallery.category${category}`)}
         </span>
-      </div>
-      <div className="flex flex-1 flex-col gap-1.5 p-6">
-        <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex w-fit items-center gap-1 font-body text-xs font-semibold text-forest-600">
-            <TagIcon />
-            {t(`gallery.category${category}`)}
+        {formattedDate && (
+          <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-forest-950/70 px-3 py-1.5 font-body text-[11px] font-semibold text-white shadow-soft backdrop-blur-sm">
+            <CalendarIcon />
+            {formattedDate}
           </span>
-          {formattedDate && <span className="font-body text-xs text-ink-400">{formattedDate}</span>}
+        )}
+      </div>
+      <div className="flex flex-1 flex-col gap-3 p-6">
+        <span className={`h-1 w-10 rounded-full ${tone.bg}`} aria-hidden="true" />
+        <h3 className="font-body text-lg font-bold leading-snug text-forest-900 line-clamp-2">{title}</h3>
+        <p className="line-clamp-2 flex-1 font-body text-sm leading-relaxed text-ink-600">{description}</p>
+        <div className="mt-1 flex items-center justify-between gap-2 border-t border-forest-50 pt-4">
+          <span className="inline-flex items-center gap-2 font-body text-sm font-semibold text-forest-700">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-forest-700 text-white transition-transform duration-300 group-hover:translate-x-0.5">
+              <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            {t("common.readMore")}
+          </span>
+          <span className={`font-body text-xs font-semibold ${STATUS_TONE[status] || STATUS_TONE.ongoing}`}>{t(`common.${status}`)}</span>
         </div>
-        <h3 className="font-body text-lg font-semibold text-forest-900">{title}</h3>
-        <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-ink-600">{description}</p>
       </div>
     </Link>
   );
