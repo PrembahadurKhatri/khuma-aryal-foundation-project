@@ -144,15 +144,20 @@ export default function BoardMembers({ members, loading }) {
                   variant="scale"
                   className="group flex flex-col items-center gap-3  rounded-2xl border border-transparent p-3 text-center font-body transition-all duration-500 hover:-translate-y-2 hover:border-forest-100 hover:bg-white hover:shadow-lift"
                 >
-                  {/* Photo — a soft gilt glow blooms behind it and the ring
-                      tightens + gilds on hover, while the photo itself
-                      zooms slightly, all purely on the wrapping elements so
-                      Avatar's own fallback/ring styling stays untouched. */}
+                  {/* Photo — a permanent gold-to-orange "story ring" (like
+                      the reference design) instead of only appearing on
+                      hover: the gradient ring is a padded outer circle, a
+                      thin cream gap sits between it and the photo, and
+                      Avatar itself renders inside untouched. A soft glow
+                      blooms behind it and the whole ring scales up
+                      slightly on hover for a bit of life. */}
                   <div className="relative">
-                    <div className="absolute inset-0 -z-10 rounded-full bg-gilt-400/0 blur-xl transition-colors duration-500 group-hover:bg-gilt-400/35" />
-                    <div className="rounded-full ring-0 ring-gilt-400/0 transition-all duration-500 group-hover:ring-4 group-hover:ring-gilt-400/60">
-                      <div className="overflow-hidden rounded-full transition-transform duration-500 ease-out group-hover:scale-110">
-                        <Avatar name={name} src={member.photo} fallbackSrc="/images/blank.avif" size="lg" />
+                    <div className="absolute inset-0 -z-10 rounded-full bg-gilt-400/20 blur-xl transition-colors duration-500 group-hover:bg-gilt-400/40" />
+                    <div className="rounded-full bg-gradient-to-br from-gilt-300 via-[#FFA53D] to-[#FF6B00] p-[3px] shadow-card transition-transform duration-500 group-hover:scale-105">
+                      <div className="rounded-full bg-cream-50 p-[3px]">
+                        <div className="overflow-hidden rounded-full transition-transform duration-500 ease-out group-hover:scale-110">
+                          <Avatar name={name} src={member.photo} fallbackSrc="/images/blank.avif" size="lg" />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -164,8 +169,9 @@ export default function BoardMembers({ members, loading }) {
                         badge in the grid the same size — designations range
                         from one short word ("President") to several
                         ("Election Committee Member"), so letting each pill
-                        hug its own text left them visibly different sizes. */}
-                    <span className="mt-1.5 flex min-h-[2.5rem] w-full items-center justify-center gap-1.5 rounded-full bg-[#FF8C00] px-3 py-1.5 text-center font-body text-xs font-semibold uppercase leading-tight tracking-wide text-white shadow-soft">
+                        hug its own text left them visibly different sizes.
+                        Gradient (not flat) orange to match the ring above. */}
+                    <span className="mt-1.5 flex min-h-[2.5rem] w-full items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-[#FFA53D] to-[#FF6B00] px-3 py-1.5 text-center font-body text-xs font-semibold uppercase leading-tight tracking-wide text-white shadow-soft">
                       {designationIcon(member.designation?.en)}
                       {designation}
                     </span>
