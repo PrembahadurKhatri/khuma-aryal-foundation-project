@@ -123,49 +123,73 @@ const ApplicationsManage = () => {
 
       {isLoading ? (
         <p className={mutedClass}>Loading...</p>
+      ) : data?.data?.length === 0 ? (
+        <div className={`rounded-xl border p-6 text-center ${panelClass} ${mutedClass}`}>No applications yet.</div>
       ) : (
-        <div className={`overflow-hidden rounded-xl border ${panelClass}`}>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
-                <tr>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Applicant</th>
-                  <th className="px-4 py-3">Position</th>
-                  <th className="px-4 py-3">Received</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.data?.length === 0 && (
+        <>
+          {/* Desktop: table, whole row opens the detail panel. */}
+          <div className={`hidden overflow-hidden rounded-xl border md:block ${panelClass}`}>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
                   <tr>
-                    <td colSpan={5} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No applications yet.
-                    </td>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Applicant</th>
+                    <th className="px-4 py-3">Position</th>
+                    <th className="px-4 py-3">Received</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
-                )}
-                {data?.data?.map((app) => (
-                  <tr key={app._id} className={`cursor-pointer border-t ${rowClass}`} onClick={() => openApplication(app)}>
-                    <td className="px-4 py-3">
-                      <StatusBadge status={app.status} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="font-medium">{app.applicantName}</div>
-                      <div className={`text-xs ${mutedClass}`}>{app.email}</div>
-                    </td>
-                    <td className="max-w-[220px] truncate px-4 py-3">{app.vacancyTitle}</td>
-                    <td className="px-4 py-3">{new Date(app.createdAt).toLocaleDateString()}</td>
-                    <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
-                      <button onClick={() => handleDelete(app._id)} className="text-red-500 hover:underline dark:text-red-400">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data?.data?.map((app) => (
+                    <tr key={app._id} className={`cursor-pointer border-t ${rowClass}`} onClick={() => openApplication(app)}>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={app.status} />
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="font-medium">{app.applicantName}</div>
+                        <div className={`text-xs ${mutedClass}`}>{app.email}</div>
+                      </td>
+                      <td className="max-w-[220px] truncate px-4 py-3">{app.vacancyTitle}</td>
+                      <td className="px-4 py-3">{new Date(app.createdAt).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => handleDelete(app._id)} className="text-red-500 hover:underline dark:text-red-400">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile: whole card still opens the detail panel (same as
+              tapping a table row would) — Delete sits in its own corner
+              with stopPropagation so it doesn't also trigger that. */}
+          <div className="space-y-3 md:hidden">
+            {data?.data?.map((app) => (
+              <div key={app._id} onClick={() => openApplication(app)} className={`cursor-pointer rounded-xl border p-4 ${panelClass}`}>
+                <div className="flex items-start justify-between gap-2">
+                  <StatusBadge status={app.status} />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(app._id);
+                    }}
+                    className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-red-500 dark:text-red-400"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <p className="mt-2 font-body text-sm font-semibold text-ink-900 dark:text-gray-100">{app.applicantName}</p>
+                <p className={`font-body text-xs ${mutedClass}`}>{app.email}</p>
+                <p className={`mt-1 truncate font-body text-xs ${mutedClass}`}>{app.vacancyTitle}</p>
+                <p className={`mt-1 font-body text-xs ${mutedClass}`}>{new Date(app.createdAt).toLocaleDateString()}</p>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {selected && (

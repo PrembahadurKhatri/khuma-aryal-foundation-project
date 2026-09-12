@@ -4,6 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { fetchLeaders, createLeader, updateLeader, deleteLeader } from "../../services/leaderService.js";
 import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
 import Spinner from "../../components/admin/Spinner.jsx";
+import AdminMobileCard from "../../components/admin/AdminMobileCard.jsx";
 import useToast from "../../hooks/useToast.js";
 
 // "founder" and "president" are special (see server/models/Leader.js) — each
@@ -135,8 +136,13 @@ const LeadersManage = () => {
 
       {isLoading ? (
         <p className={mutedClass}>Loading...</p>
+      ) : data?.data?.length === 0 ? (
+        <div className={`rounded-xl border p-6 text-center ${panelClass} ${mutedClass}`}>
+          No leaders yet — add the Founder and President first.
+        </div>
       ) : (
-        <div className={`overflow-hidden rounded-xl border ${panelClass}`}>
+        <>
+        <div className={`hidden overflow-hidden rounded-xl border md:block ${panelClass}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
@@ -150,13 +156,6 @@ const LeadersManage = () => {
                 </tr>
               </thead>
               <tbody>
-                {data?.data?.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No leaders yet — add the Founder and President first.
-                    </td>
-                  </tr>
-                )}
                 {data?.data?.map((item) => (
                   <tr key={item._id} className={`border-t ${rowClass}`}>
                     <td className="px-4 py-3">
@@ -192,6 +191,24 @@ const LeadersManage = () => {
             </table>
           </div>
         </div>
+
+        <div className="space-y-3 md:hidden">
+          {data?.data?.map((item) => (
+            <AdminMobileCard key={item._id} theme={theme} onEdit={() => openEdit(item)} onDelete={() => handleDelete(item._id)}>
+              <div className="flex items-center gap-3">
+                <img src={item.photo || "/images/blank.avif"} alt="" className="h-11 w-11 shrink-0 rounded-full object-cover" />
+                <div className="min-w-0">
+                  <p className="truncate font-body text-sm font-semibold text-ink-900 dark:text-gray-100">{item.name?.en}</p>
+                  <p className={`truncate font-body text-xs ${mutedClass}`}>
+                    {item.role === "founder" ? "Founder" : item.role === "president" ? "President" : "Other"}
+                    {item.title?.en ? ` · ${item.title.en}` : ""}
+                  </p>
+                </div>
+              </div>
+            </AdminMobileCard>
+          ))}
+        </div>
+        </>
       )}
 
       {showForm && (

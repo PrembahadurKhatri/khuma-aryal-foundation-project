@@ -6,6 +6,7 @@ import { fetchAlbums } from "../../services/galleryService.js";
 import useToast from "../../hooks/useToast.js";
 import NepaliDateField from "../../components/admin/NepaliDateField.jsx";
 import Spinner from "../../components/admin/Spinner.jsx";
+import AdminMobileCard from "../../components/admin/AdminMobileCard.jsx";
 
 // Same category list as gallery Albums (see admin/GalleryManage.jsx) — value
 // is what's stored (and used for the public Projects page's gallery.category*
@@ -179,55 +180,68 @@ const ProjectsManage = () => {
 
       {isLoading ? (
         <p className={mutedClass}>Loading...</p>
+      ) : data?.data?.length === 0 ? (
+        <div className={`rounded-xl border p-6 text-center ${panelClass} ${mutedClass}`}>No projects yet.</div>
       ) : (
-        <div className={`overflow-hidden rounded-xl border ${panelClass}`}>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
-                <tr>
-                  <th className="px-4 py-3">Title (EN)</th>
-                  <th className="px-4 py-3">Category</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Images</th>
-                  <th className="px-4 py-3">Featured</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.data?.length === 0 && (
+        <>
+          <div className={`hidden overflow-hidden rounded-xl border md:block ${panelClass}`}>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
                   <tr>
-                    <td colSpan={6} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No projects yet.
-                    </td>
+                    <th className="px-4 py-3">Title (EN)</th>
+                    <th className="px-4 py-3">Category</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Images</th>
+                    <th className="px-4 py-3">Featured</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
-                )}
-                {data?.data?.map((project) => (
-                  <tr key={project._id} className={`border-t ${rowClass}`}>
-                    <td className="px-4 py-3">{project.title?.en}</td>
-                    <td className="px-4 py-3">{CATEGORIES.find((c) => c.value === project.category)?.label || "Event"}</td>
-                    <td className="px-4 py-3">
-                      <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusTone[project.status] || ""}`}>{project.status}</span>
-                    </td>
-                    <td className="px-4 py-3">{project.images?.length || 0}</td>
-                    <td className="px-4 py-3">
-                      {project.featured && (
-                        <span className="rounded-full bg-gilt-500 px-2.5 py-1 text-xs font-semibold text-white">Featured</span>
-                      )}
-                    </td>
-                    <td className="space-x-3 px-4 py-3 text-right">
-                      <button onClick={() => openEdit(project)} className="text-forest-700 hover:underline dark:text-forest-400">
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(project._id)} className="text-red-500 hover:underline dark:text-red-400">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data?.data?.map((project) => (
+                    <tr key={project._id} className={`border-t ${rowClass}`}>
+                      <td className="px-4 py-3">{project.title?.en}</td>
+                      <td className="px-4 py-3">{CATEGORIES.find((c) => c.value === project.category)?.label || "Event"}</td>
+                      <td className="px-4 py-3">
+                        <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusTone[project.status] || ""}`}>{project.status}</span>
+                      </td>
+                      <td className="px-4 py-3">{project.images?.length || 0}</td>
+                      <td className="px-4 py-3">
+                        {project.featured && (
+                          <span className="rounded-full bg-gilt-500 px-2.5 py-1 text-xs font-semibold text-white">Featured</span>
+                        )}
+                      </td>
+                      <td className="space-x-3 px-4 py-3 text-right">
+                        <button onClick={() => openEdit(project)} className="text-forest-700 hover:underline dark:text-forest-400">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(project._id)} className="text-red-500 hover:underline dark:text-red-400">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          <div className="space-y-3 md:hidden">
+            {data?.data?.map((project) => (
+              <AdminMobileCard key={project._id} theme={theme} onEdit={() => openEdit(project)} onDelete={() => handleDelete(project._id)}>
+                <p className="font-body text-sm font-semibold text-ink-900 dark:text-gray-100">{project.title?.en}</p>
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${statusTone[project.status] || ""}`}>{project.status}</span>
+                  <span className={`font-body text-xs ${mutedClass}`}>{CATEGORIES.find((c) => c.value === project.category)?.label || "Event"}</span>
+                  <span className={`font-body text-xs ${mutedClass}`}>· {project.images?.length || 0} photo{project.images?.length === 1 ? "" : "s"}</span>
+                  {project.featured && (
+                    <span className="rounded-full bg-gilt-500 px-2 py-0.5 text-[11px] font-semibold text-white">Featured</span>
+                  )}
+                </div>
+              </AdminMobileCard>
+            ))}
+          </div>
+        </>
       )}
 
       {showForm && (

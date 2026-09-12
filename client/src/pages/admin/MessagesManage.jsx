@@ -51,55 +51,81 @@ const MessagesManage = () => {
 
       {isLoading ? (
         <p className={mutedClass}>Loading...</p>
+      ) : data?.data?.length === 0 ? (
+        <div className={`rounded-xl border p-6 text-center ${panelClass} ${mutedClass}`}>No messages yet.</div>
       ) : (
-        <div className={`overflow-hidden rounded-xl border ${panelClass}`}>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
-                <tr>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">From</th>
-                  <th className="px-4 py-3">Subject</th>
-                  <th className="px-4 py-3">Received</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.data?.length === 0 && (
+        <>
+          <div className={`hidden overflow-hidden rounded-xl border md:block ${panelClass}`}>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
                   <tr>
-                    <td colSpan={5} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No messages yet.
-                    </td>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">From</th>
+                    <th className="px-4 py-3">Subject</th>
+                    <th className="px-4 py-3">Received</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
-                )}
-                {data?.data?.map((msg) => (
-                  <tr key={msg._id} className={`cursor-pointer border-t ${rowClass}`} onClick={() => openMessage(msg)}>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                          msg.status === "new" ? "bg-forest-600/15 text-forest-700 dark:text-forest-400" : mutedClass
-                        }`}
-                      >
-                        {msg.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="font-medium">{msg.name}</div>
-                      <div className={`text-xs ${mutedClass}`}>{msg.email}</div>
-                    </td>
-                    <td className="max-w-[220px] truncate px-4 py-3">{msg.subject || "—"}</td>
-                    <td className="px-4 py-3">{new Date(msg.createdAt).toLocaleDateString()}</td>
-                    <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
-                      <button onClick={() => handleDelete(msg._id)} className="text-red-500 hover:underline dark:text-red-400">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data?.data?.map((msg) => (
+                    <tr key={msg._id} className={`cursor-pointer border-t ${rowClass}`} onClick={() => openMessage(msg)}>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                            msg.status === "new" ? "bg-forest-600/15 text-forest-700 dark:text-forest-400" : mutedClass
+                          }`}
+                        >
+                          {msg.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="font-medium">{msg.name}</div>
+                        <div className={`text-xs ${mutedClass}`}>{msg.email}</div>
+                      </td>
+                      <td className="max-w-[220px] truncate px-4 py-3">{msg.subject || "—"}</td>
+                      <td className="px-4 py-3">{new Date(msg.createdAt).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => handleDelete(msg._id)} className="text-red-500 hover:underline dark:text-red-400">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          <div className="space-y-3 md:hidden">
+            {data?.data?.map((msg) => (
+              <div key={msg._id} onClick={() => openMessage(msg)} className={`cursor-pointer rounded-xl border p-4 ${panelClass}`}>
+                <div className="flex items-start justify-between gap-2">
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                      msg.status === "new" ? "bg-forest-600/15 text-forest-700 dark:text-forest-400" : mutedClass
+                    }`}
+                  >
+                    {msg.status}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(msg._id);
+                    }}
+                    className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-red-500 dark:text-red-400"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <p className="mt-2 font-body text-sm font-semibold text-ink-900 dark:text-gray-100">{msg.name}</p>
+                <p className={`font-body text-xs ${mutedClass}`}>{msg.email}</p>
+                <p className={`mt-1 truncate font-body text-xs ${mutedClass}`}>{msg.subject || "—"}</p>
+                <p className={`mt-1 font-body text-xs ${mutedClass}`}>{new Date(msg.createdAt).toLocaleDateString()}</p>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {selected && (

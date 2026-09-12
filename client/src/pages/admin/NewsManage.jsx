@@ -5,6 +5,7 @@ import { fetchNews, createNews, updateNews, deleteNews } from "../../services/ne
 import { fetchAlbums } from "../../services/galleryService.js";
 import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
 import Spinner from "../../components/admin/Spinner.jsx";
+import AdminMobileCard from "../../components/admin/AdminMobileCard.jsx";
 import useToast from "../../hooks/useToast.js";
 
 // Matches server/models/News.js's NEWS_CATEGORIES.
@@ -149,8 +150,15 @@ const NewsManage = () => {
 
       {isLoading ? (
         <p className={mutedClass}>Loading...</p>
+      ) : data?.data?.length === 0 ? (
+        <div className={`rounded-xl border p-6 text-center ${panelClass} ${mutedClass}`}>No news items yet.</div>
       ) : (
-        <div className={`overflow-hidden rounded-xl border ${panelClass}`}>
+        <>
+          {/* Desktop: table. A 3-column table still reads fine on a phone
+              width in theory, but Edit/Delete as plain small text links are
+              an easy-to-mistap target on touch — the card list below is
+              the real mobile view; this is hidden below md. */}
+          <div className={`hidden overflow-hidden rounded-xl border md:block ${panelClass}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
@@ -161,13 +169,6 @@ const NewsManage = () => {
                 </tr>
               </thead>
               <tbody>
-                {data?.data?.length === 0 && (
-                  <tr>
-                    <td colSpan={3} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No news items yet.
-                    </td>
-                  </tr>
-                )}
                 {data?.data?.map((item) => (
                   <tr key={item._id} className={`border-t ${rowClass}`}>
                     <td className="px-4 py-3">{item.title?.en}</td>
@@ -185,7 +186,18 @@ const NewsManage = () => {
               </tbody>
             </table>
           </div>
-        </div>
+          </div>
+
+          {/* Mobile: one card per item, full-width tap-friendly buttons. */}
+          <div className="space-y-3 md:hidden">
+            {data?.data?.map((item) => (
+              <AdminMobileCard key={item._id} theme={theme} onEdit={() => openEdit(item)} onDelete={() => handleDelete(item._id)}>
+                <p className="font-body text-sm font-semibold text-ink-900 dark:text-gray-100">{item.title?.en}</p>
+                <p className={`mt-0.5 font-body text-xs ${mutedClass}`}>{new Date(item.date).toLocaleDateString()}</p>
+              </AdminMobileCard>
+            ))}
+          </div>
+        </>
       )}
 
       {showForm && (

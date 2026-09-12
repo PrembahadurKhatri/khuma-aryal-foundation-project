@@ -5,6 +5,7 @@ import { fetchEvents, createEvent, updateEvent, deleteEvent } from "../../servic
 import { fetchAlbums } from "../../services/galleryService.js";
 import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
 import Spinner from "../../components/admin/Spinner.jsx";
+import AdminMobileCard from "../../components/admin/AdminMobileCard.jsx";
 import useToast from "../../hooks/useToast.js";
 
 const emptyForm = {
@@ -137,8 +138,11 @@ const EventsManage = () => {
 
       {isLoading ? (
         <p className={mutedClass}>Loading...</p>
+      ) : data?.data?.length === 0 ? (
+        <div className={`rounded-xl border p-6 text-center ${panelClass} ${mutedClass}`}>No events yet.</div>
       ) : (
-        <div className={`overflow-hidden rounded-xl border ${panelClass}`}>
+        <>
+        <div className={`hidden overflow-hidden rounded-xl border md:block ${panelClass}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
@@ -150,13 +154,6 @@ const EventsManage = () => {
                 </tr>
               </thead>
               <tbody>
-                {data?.data?.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No events yet.
-                    </td>
-                  </tr>
-                )}
                 {data?.data?.map((item) => (
                   <tr key={item._id} className={`border-t ${rowClass}`}>
                     <td className="px-4 py-3">{item.name?.en}</td>
@@ -176,6 +173,19 @@ const EventsManage = () => {
             </table>
           </div>
         </div>
+
+        <div className="space-y-3 md:hidden">
+          {data?.data?.map((item) => (
+            <AdminMobileCard key={item._id} theme={theme} onEdit={() => openEdit(item)} onDelete={() => handleDelete(item._id)}>
+              <p className="font-body text-sm font-semibold text-ink-900 dark:text-gray-100">{item.name?.en}</p>
+              <p className={`mt-0.5 font-body text-xs ${mutedClass}`}>
+                {new Date(item.date).toLocaleDateString()}
+                {item.location?.en ? ` · ${item.location.en}` : ""}
+              </p>
+            </AdminMobileCard>
+          ))}
+        </div>
+        </>
       )}
 
       {showForm && (

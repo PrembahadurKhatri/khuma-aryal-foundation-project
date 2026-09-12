@@ -5,6 +5,7 @@ import { fetchStories, createStory, updateStory, deleteStory } from "../../servi
 import { fetchAlbums } from "../../services/galleryService.js";
 import ImageSourceField from "../../components/admin/ImageSourceField.jsx";
 import Spinner from "../../components/admin/Spinner.jsx";
+import AdminMobileCard from "../../components/admin/AdminMobileCard.jsx";
 import useToast from "../../hooks/useToast.js";
 
 const emptyForm = {
@@ -135,43 +136,49 @@ const StoriesManage = () => {
 
       {isLoading ? (
         <p className={mutedClass}>Loading...</p>
+      ) : data?.data?.length === 0 ? (
+        <div className={`rounded-xl border p-6 text-center ${panelClass} ${mutedClass}`}>No stories yet.</div>
       ) : (
-        <div className={`overflow-hidden rounded-xl border ${panelClass}`}>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
-                <tr>
-                  <th className="px-4 py-3">Name</th>
-                  <th className="px-4 py-3">Summary (EN)</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.data?.length === 0 && (
+        <>
+          <div className={`hidden overflow-hidden rounded-xl border md:block ${panelClass}`}>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className={`text-left ${theme === "dark" ? "bg-gray-800 text-gray-400" : "bg-cream-100 text-ink-600"}`}>
                   <tr>
-                    <td colSpan={3} className={`px-4 py-6 text-center ${mutedClass}`}>
-                      No stories yet.
-                    </td>
+                    <th className="px-4 py-3">Name</th>
+                    <th className="px-4 py-3">Summary (EN)</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
-                )}
-                {data?.data?.map((item) => (
-                  <tr key={item._id} className={`border-t ${rowClass}`}>
-                    <td className="px-4 py-3">{item.name?.en || "—"}</td>
-                    <td className="max-w-xs truncate px-4 py-3">{item.summary?.en}</td>
-                    <td className="space-x-3 px-4 py-3 text-right">
-                      <button onClick={() => openEdit(item)} className="text-forest-700 hover:underline dark:text-forest-400">
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:underline dark:text-red-400">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data?.data?.map((item) => (
+                    <tr key={item._id} className={`border-t ${rowClass}`}>
+                      <td className="px-4 py-3">{item.name?.en || "—"}</td>
+                      <td className="max-w-xs truncate px-4 py-3">{item.summary?.en}</td>
+                      <td className="space-x-3 px-4 py-3 text-right">
+                        <button onClick={() => openEdit(item)} className="text-forest-700 hover:underline dark:text-forest-400">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:underline dark:text-red-400">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          <div className="space-y-3 md:hidden">
+            {data?.data?.map((item) => (
+              <AdminMobileCard key={item._id} theme={theme} onEdit={() => openEdit(item)} onDelete={() => handleDelete(item._id)}>
+                <p className="font-body text-sm font-semibold text-ink-900 dark:text-gray-100">{item.name?.en || "—"}</p>
+                {item.summary?.en && <p className={`mt-0.5 line-clamp-2 font-body text-xs ${mutedClass}`}>{item.summary.en}</p>}
+              </AdminMobileCard>
+            ))}
+          </div>
+        </>
       )}
 
       {showForm && (
