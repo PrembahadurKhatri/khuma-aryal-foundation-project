@@ -153,6 +153,14 @@ export default function Hero({ siteInfo }) {
               key={index}
               src={HERO_IMAGES[index]}
               alt="Khuma Aryal Foundation"
+              // This is the LCP (Largest Contentful Paint) element on the
+              // homepage — fetchPriority="high" tells the browser to fetch
+              // it ahead of lower-priority requests instead of at its
+              // default priority, shaving time off LCP specifically. Only
+              // matters for whichever slide is currently mounted (index 0
+              // on first load, the one that actually is the LCP image);
+              // harmless to leave on for later slides too.
+              fetchPriority="high"
               initial={{ x: "100%", opacity: 0 }}
               animate={{ x: "0%", opacity: 1 }}
               exit={{ x: "-100%", opacity: 0 }}
