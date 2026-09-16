@@ -288,7 +288,7 @@ export default function About() {
     </Reveal>
 
     {/* Cards */}
-    <div className="grid gap-8 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
       {/* ==================== Mission ==================== */}
 

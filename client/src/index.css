@@ -6,6 +6,17 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Defense-in-depth: nothing on this site is meant to scroll horizontally,
+   so any future layout bug that pushes a child wider than the viewport
+   (e.g. an unconstrained grid/flex track sized to a long paragraph's
+   single-line width — see ProjectDetail.jsx's Objective/Beneficiaries
+   cards, fixed by pinning grid-cols-1 on mobile) gets clipped here instead
+   of creating a page-wide horizontal scrollbar. */
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   @apply bg-cream-100 font-sans text-ink-800 antialiased;
 }

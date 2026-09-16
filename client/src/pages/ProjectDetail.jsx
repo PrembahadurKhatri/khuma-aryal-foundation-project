@@ -209,9 +209,9 @@ export default function ProjectDetail() {
                   </div>
                   <div className="flex flex-col gap-3">
                     <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-gilt-600">{t("projects.overview")}</span>
-                    <h1 className="font-body text-2xl font-bold leading-[1.25] tracking-tight text-forest-900 sm:text-3xl lg:text-[2.25rem]">{title}</h1>
+                    <h1 className="break-words font-body text-2xl font-bold leading-[1.25] tracking-tight text-forest-900 sm:text-3xl lg:text-[2.25rem]">{title}</h1>
                   </div>
-                  <p className="font-body text-base leading-relaxed text-ink-600 sm:text-lg">{description}</p>
+                  <p className="break-words font-body text-base leading-relaxed text-ink-600 sm:text-lg">{description}</p>
                 </div>
               </Reveal>
 
@@ -239,8 +239,8 @@ export default function ProjectDetail() {
               {/* LEFT: linked album + this project's own photos. RIGHT: the
                   objective callout. Stacks to a single column below lg. */}
               {(album || photos.length > 0 || objective) && (
-                <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-                  <div className="flex flex-col gap-6">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-start">
+                  <div className="flex min-w-0 flex-col gap-6">
                     {album && (
                       <Reveal delay={0.08}>
                         <LinkedAlbumCard
@@ -266,14 +266,14 @@ export default function ProjectDetail() {
                   </div>
 
                   {objective && (
-                    <Reveal delay={0.1}>
+                    <Reveal delay={0.1} className="min-w-0">
                       <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 shadow-card sm:p-7">
                         <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gilt-400/10 blur-2xl" aria-hidden="true" />
                         <span className="inline-flex w-fit items-center gap-2 rounded-full bg-forest-50 px-3 py-1.5 font-body text-sm font-semibold text-forest-700">
                           <TargetIcon />
                           {t("projects.objective")}
                         </span>
-                        <p className="font-body text-sm leading-relaxed text-ink-600 sm:text-base">{objective}</p>
+                        <p className="break-words font-body text-sm leading-relaxed text-ink-600 sm:text-base">{objective}</p>
                       </div>
                     </Reveal>
                   )}
@@ -288,7 +288,7 @@ export default function ProjectDetail() {
                       <UsersIcon />
                       {t("projects.beneficiaries")}
                     </span>
-                    <p className="relative font-body text-sm leading-relaxed text-ink-600 sm:text-base">{beneficiaries}</p>
+                    <p className="relative break-words font-body text-sm leading-relaxed text-ink-600 sm:text-base">{beneficiaries}</p>
                   </div>
                 </Reveal>
               )}
