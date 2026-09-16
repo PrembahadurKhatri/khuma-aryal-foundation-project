@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getNewsItem } from "../services/contentService.js";
+import useSeo from "../hooks/useSeo.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -68,6 +69,8 @@ export default function NewsDetail() {
   } catch {
     formatted = news?.date;
   }
+
+  useSeo({ title, description, image: news?.image, path: `/news/${id}` });
 
   return (
     <>

@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getProject } from "../services/contentService.js";
+import useSeo from "../hooks/useSeo.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -135,6 +136,8 @@ export default function ProjectDetail() {
   // to the first gallery image so older projects without one still show a
   // real photo instead of the generic default PageHero uses.
   const heroImage = project?.thumbnail || project?.images?.[0];
+
+  useSeo({ title, description, image: heroImage, path: `/projects/${id}` });
 
   // GalleryGrid/Lightbox render { id, src, alt } objects — a project's
   // `images` is just an array of URL strings, so wrap each one here rather

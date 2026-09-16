@@ -4,6 +4,7 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getVacancy } from "../services/contentService.js";
 import { submitApplication } from "../services/applicationService.js";
+import useSeo from "../hooks/useSeo.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -180,6 +181,8 @@ export default function VacancyDetail() {
     : [];
   const type = vacancy?.type || "FullTime";
   const tone = TYPE_TONE[type] || TYPE_TONE.FullTime;
+
+  useSeo({ title, description, path: `/vacancies/${id}` });
 
   let deadline = vacancy?.deadline;
   try {

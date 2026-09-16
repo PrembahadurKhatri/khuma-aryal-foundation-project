@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getEvent } from "../services/contentService.js";
+import useSeo from "../hooks/useSeo.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -74,6 +75,8 @@ export default function EventDetail() {
   const description = event ? pick(event.description, language) : "";
   const album = event?.album;
   const photos = event?.images ? event.images.map((src, i) => ({ id: `${event.id}-${i}`, src, alt: name })) : [];
+
+  useSeo({ title: name, description, image: event?.image, path: `/events/${id}` });
 
   let formatted = event?.date;
   try {

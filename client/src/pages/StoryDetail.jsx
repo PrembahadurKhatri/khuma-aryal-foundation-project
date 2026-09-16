@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getStory } from "../services/contentService.js";
+import useSeo from "../hooks/useSeo.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -45,6 +46,8 @@ export default function StoryDetail() {
   const description = story ? pick(story.description, language) : "";
   const album = story?.album;
   const photos = story?.images ? story.images.map((src, i) => ({ id: `${story.id}-${i}`, src, alt: name })) : [];
+
+  useSeo({ title: name, description: summary || description, image: story?.photo, path: `/stories/${id}` });
 
   return (
     <>

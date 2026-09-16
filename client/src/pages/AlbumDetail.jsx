@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getGalleryAlbum } from "../services/contentService.js";
+import useSeo from "../hooks/useSeo.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -72,6 +73,8 @@ export default function AlbumDetail() {
   // `photos` is just an array of URL strings, so wrap each one here rather
   // than changing those shared components.
   const photos = album ? album.photos.map((src, i) => ({ id: `${album.id}-${i}`, src, alt: title })) : [];
+
+  useSeo({ title, description, image: album?.photos?.[0], path: `/gallery/${id}` });
 
   return (
     <>
