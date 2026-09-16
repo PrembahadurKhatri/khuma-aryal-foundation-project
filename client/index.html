@@ -2,6 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Google Analytics (GA4) — tracks visitor traffic/behavior. Placed
+         as early as possible in <head> per Google's own install
+         instructions, so it fires before anything else can block it. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0X62WNHB7F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0X62WNHB7F");
+    </script>
     <!-- haha.png is a clean, transparent-background export of the KAF
          emblem at 1254x1254 -- swapped in for logo.jpg (which had a
          visible light-blue background box around the same logo). -->
