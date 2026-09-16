@@ -5,12 +5,23 @@ import { pick } from "../utils/localize.js";
 import { getVacancy } from "../services/contentService.js";
 import { submitApplication } from "../services/applicationService.js";
 import useSeo from "../hooks/useSeo.js";
+import useJsonLd from "../hooks/useJsonLd.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
 import FileDropField from "../components/FileDropField.jsx";
 
 const DATE_LOCALES = { en: "en-US", ne: "ne-NP" };
+
+// schema.org JobPosting's employmentType enum — Google for Jobs validates
+// against this exact set, not our own VACANCY_TYPES spelling.
+const JSONLD_EMPLOYMENT_TYPE = {
+  FullTime: "FULL_TIME",
+  PartTime: "PART_TIME",
+  Volunteer: "VOLUNTEER",
+  Internship: "INTERN",
+  Contract: "CONTRACTOR",
+};
 
 const TYPE_TONE = {
   FullTime: { border: "border-t-forest-600", badge: "bg-forest-50 text-forest-700", button: "bg-forest-700 hover:bg-forest-800", icon: "bg-forest-50 text-forest-700" },
@@ -183,6 +194,28 @@ export default function VacancyDetail() {
   const tone = TYPE_TONE[type] || TYPE_TONE.FullTime;
 
   useSeo({ title, description, path: `/vacancies/${id}` });
+  useJsonLd(
+    vacancy && {
+      "@context": "https://schema.org",
+      "@type": "JobPosting",
+      title,
+      description,
+      datePosted: vacancy.createdAt,
+      validThrough: vacancy.deadline,
+      employmentType: JSONLD_EMPLOYMENT_TYPE[type] || "OTHER",
+      hiringOrganization: {
+        "@type": "Organization",
+        name: "Khuma Aryal Foundation",
+        sameAs: "https://khumaaryalfoundation.org.np",
+      },
+      jobLocation: location
+        ? {
+            "@type": "Place",
+            address: { "@type": "PostalAddress", addressLocality: location, addressCountry: "NP" },
+          }
+        : undefined,
+    }
+  );
 
   let deadline = vacancy?.deadline;
   try {

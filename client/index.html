@@ -73,6 +73,22 @@
     />
     <meta name="twitter:image" content="https://khumaaryalfoundation.org.np/images/og-share.jpg" />
 
+    <!-- JSON-LD structured data (schema.org) — tells Google explicitly
+         "this site is an NGO named X" instead of making it guess from
+         visible text. Static and site-wide (same scope as the OG tags
+         above); per-page types (NewsArticle/Event/JobPosting) are added on
+         top of this by useJsonLd.js on the relevant detail pages. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "NGO",
+        "name": "Khuma Aryal Foundation",
+        "url": "https://khumaaryalfoundation.org.np",
+        "logo": "https://khumaaryalfoundation.org.np/images/og-share.jpg",
+        "description": "Khuma Aryal Foundation — working for Education, Healthcare, Sports & Employment, guiding young people away from problems through good counselling."
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Loaded async (preload as style, swap to a real stylesheet once it

@@ -4,6 +4,7 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getNewsItem } from "../services/contentService.js";
 import useSeo from "../hooks/useSeo.js";
+import useJsonLd from "../hooks/useJsonLd.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -71,6 +72,21 @@ export default function NewsDetail() {
   }
 
   useSeo({ title, description, image: news?.image, path: `/news/${id}` });
+  useJsonLd(
+    news && {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      headline: title,
+      description,
+      image: news.image ? [news.image] : undefined,
+      datePublished: news.date,
+      publisher: {
+        "@type": "Organization",
+        name: "Khuma Aryal Foundation",
+        logo: { "@type": "ImageObject", url: "https://khumaaryalfoundation.org.np/images/og-share.jpg" },
+      },
+    }
+  );
 
   return (
     <>

@@ -4,6 +4,7 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getEvent } from "../services/contentService.js";
 import useSeo from "../hooks/useSeo.js";
+import useJsonLd from "../hooks/useJsonLd.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -77,6 +78,22 @@ export default function EventDetail() {
   const photos = event?.images ? event.images.map((src, i) => ({ id: `${event.id}-${i}`, src, alt: name })) : [];
 
   useSeo({ title: name, description, image: event?.image, path: `/events/${id}` });
+  useJsonLd(
+    event && {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name,
+      description,
+      startDate: event.date,
+      image: event.image ? [event.image] : undefined,
+      location: location ? { "@type": "Place", name: location, address: location } : undefined,
+      organizer: {
+        "@type": "Organization",
+        name: "Khuma Aryal Foundation",
+        url: "https://khumaaryalfoundation.org.np",
+      },
+    }
+  );
 
   let formatted = event?.date;
   try {
