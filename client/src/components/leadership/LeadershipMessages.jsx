@@ -97,7 +97,7 @@ export default function LeadershipMessages({ messages, loading }) {
             {others.length > 0 && (
               <div className="flex flex-col gap-10">
                 <Reveal className="flex flex-col items-center gap-3 text-center">
-                  
+                  <span aria-hidden="true" className="h-1 w-12 rounded-full bg-gradient-to-r from-gilt-400 to-[#FF8C00]" />
                   <h3 className="font-body text-3xl font-bold text-forest-900 sm:text-4xl">
                     {t("home.otherLeadershipTitle")}
                   </h3>
@@ -105,7 +105,7 @@ export default function LeadershipMessages({ messages, loading }) {
                 </Reveal>
                 <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 font-body ">
                   {others.map((leader, i) => (
-                    <LeaderCard key={leader.id} leader={leader} delay={(i % 2) * 0.08} onRead={() => setActiveLeader(leader)} />
+                    <LeaderCard key={leader.id} leader={leader} delay={Math.min(i * 0.08, 0.32)} onRead={() => setActiveLeader(leader)} />
                   ))}
                 </div>
               </div>
