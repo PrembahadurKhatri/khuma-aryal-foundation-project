@@ -6,7 +6,7 @@
 export default function MaintenancePage({ message }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-cream-100 px-6 text-center font-body">
-      <img src="/images/kaf.png" alt="Khuma Aryal Foundation" className="mb-6 h-20 w-20 rounded-full object-cover shadow-soft" />
+      <img src="/images/kaf.webp" alt="Khuma Aryal Foundation" className="mb-6 h-20 w-20 rounded-full object-cover shadow-soft" />
       <h1 className="mb-3 font-display text-3xl font-bold text-forest-800 sm:text-4xl">We'll be right back</h1>
       <p className="max-w-md text-ink-600">
         {message || "We're currently performing scheduled maintenance. We'll be back online shortly — thank you for your patience."}

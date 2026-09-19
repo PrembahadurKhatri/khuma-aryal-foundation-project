@@ -13,8 +13,8 @@ import Skeleton from "../components/Skeleton.jsx";
 // Real photos of the Foundation's work, cycling in the hero the same way
 // the Gallery page's hero does (see GALLERY_HERO_IMAGES in Gallery.jsx).
 const PROJECTS_HERO_IMAGES = [
-  "/images/projectt.jpg",
-  "/images/projectt2.jpg"
+  "/images/projectt.webp",
+  "/images/projectt2.webp"
 ];
 
 // Same category list as the Gallery page (see components/gallery's

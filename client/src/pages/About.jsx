@@ -14,12 +14,12 @@ import PageHero from "../components/PageHero.jsx";
 // Blood Donation & School Support have their own about.work* keys since
 // there's no existing equivalent elsewhere on the site.
 const WORK_ITEMS = [
-  {  titleKey: "home.pillarEducation", descKey: "home.pillarEducationDesc", image: "/images/education.jpg" },
-  {  titleKey: "home.pillarHealth", descKey: "home.pillarHealthDesc", image: "/images/healthcare.jpg" },
-  {  titleKey: "home.pillarSports", descKey: "home.pillarSportsDesc", image: "/images/sports.jpg" },
-  {  titleKey: "about.workBloodDonationTitle", descKey: "about.workBloodDonationDesc", image: "/images/about1.jpg" },
-  {  titleKey: "about.workSchoolSupportTitle", descKey: "about.workSchoolSupportDesc", image: "/images/projectt.jpg" },
-  {  titleKey: "home.pillarEmployment", descKey: "home.pillarEmploymentDesc", image: "/images/selfemp.jpg" },
+  {  titleKey: "home.pillarEducation", descKey: "home.pillarEducationDesc", image: "/images/education.webp" },
+  {  titleKey: "home.pillarHealth", descKey: "home.pillarHealthDesc", image: "/images/healthcare.webp" },
+  {  titleKey: "home.pillarSports", descKey: "home.pillarSportsDesc", image: "/images/sports.webp" },
+  {  titleKey: "about.workBloodDonationTitle", descKey: "about.workBloodDonationDesc", image: "/images/about1.webp" },
+  {  titleKey: "about.workSchoolSupportTitle", descKey: "about.workSchoolSupportDesc", image: "/images/projectt.webp" },
+  {  titleKey: "home.pillarEmployment", descKey: "home.pillarEmploymentDesc", image: "/images/selfemp.webp" },
 ];
 
 function PinIcon() {
@@ -173,7 +173,7 @@ export default function About() {
               <div className="lg:sticky lg:top-28">
                 <div className="group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-lift sm:aspect-[3/4]">
                   <PlaceholderImage
-                    src="/images/aboutus.jpg"
+                    src="/images/aboutus.webp"
                     alt={t("about.profileTitle")}
                     label="Foundation profile photo"
                     imgClassName="transition-transform duration-700 ease-out group-hover:scale-105"

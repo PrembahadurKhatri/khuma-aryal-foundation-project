@@ -45,7 +45,7 @@ const SLIDE_INTERVAL = 3000;
  * real photo's subjects visible.
  */
 export default function PageHero({ label, images, mobileImage, colorBackground = false, title, titleHighlight, description, badges, strongOverlay = false, hideLabel = false }) {
-  const slides = images && images.length > 0 ? images : ["/images/khumalogo.png"];
+  const slides = images && images.length > 0 ? images : ["/images/khumalogo.webp"];
   const [index, setIndex] = useState(0);
 
   const [titleBefore, titleAfter] =
@@ -143,7 +143,7 @@ export default function PageHero({ label, images, mobileImage, colorBackground =
             className="inline-flex items-center"
           >
             <span className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border-[3px] border-gilt-400 bg-white shadow-[0_4px_14px_rgba(0,0,0,0.4)] sm:h-12 sm:w-12">
-              <img src="/images/haha.png" alt="" className="h-full w-full object-cover" />
+              <img src="/images/haha.webp" alt="" className="h-full w-full object-cover" />
             </span>
             <span
               className="-ml-5 rounded-full border-2 border-gilt-400 bg-gradient-to-b from-forest-800 to-forest-950 py-2 pl-8 pr-5 font-body text-xs font-bold uppercase tracking-[0.18em] text-white shadow-[0_4px_16px_rgba(0,0,0,0.35)] sm:py-2.5 sm:pl-9 sm:pr-6 sm:text-sm"

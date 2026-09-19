@@ -234,8 +234,8 @@ export default function News() {
           and the badges row anchored low in the photo. */}
       <PageHero
         label={t("news.kicker")}
-        images={["/images/newz.jpg"]}
-        mobileImage="/images/nz.png"
+        images={["/images/newz.webp"]}
+        mobileImage="/images/nz.webp"
         strongOverlay
         badges={[
           { icon: <NewsIcon />, label: t("news.sectionLatestNews") },

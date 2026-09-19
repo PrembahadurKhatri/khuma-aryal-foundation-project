@@ -43,7 +43,7 @@ const ResetPassword = () => {
     >
       <div className={`w-full max-w-md rounded-2xl border p-8 shadow-xl ${theme === "dark" ? "border-gray-800 bg-gray-900" : "border-forest-100 bg-white"}`}>
         <div className="mb-6 flex flex-col items-center">
-          <img src="/images/kaf.png" alt="Khuma Aryal Foundation" className="mb-3 h-16 w-16 rounded-full object-cover" />
+          <img src="/images/kaf.webp" alt="Khuma Aryal Foundation" className="mb-3 h-16 w-16 rounded-full object-cover" />
           <h1 className="text-2xl font-bold text-forest-700 dark:text-forest-400">Reset Password</h1>
           <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-ink-600"}`}>Choose a new password below.</p>
         </div>

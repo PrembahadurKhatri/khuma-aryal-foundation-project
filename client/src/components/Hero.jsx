@@ -7,15 +7,15 @@ import CountUpStat from "./CountUpStat.jsx";
 import Reveal from "./Reveal.jsx";
 
 const HERO_IMAGES = [
-  "/images/photo1.jpg",
+  "/images/photo1.webp",
 
-  "/images/photo2.jpg",
+  "/images/photo2.webp",
 
-  "/images/photo3.jpg",
+  "/images/photo3.webp",
 
-  "/images/photo4.jpg",
+  "/images/photo4.webp",
 
-  "/images/photo5.jpg",
+  "/images/photo5.webp",
 ];
 
 const SLIDE_INTERVAL = 3000;
