@@ -6,17 +6,7 @@ import Button from "./Button.jsx";
 import CountUpStat from "./CountUpStat.jsx";
 import Reveal from "./Reveal.jsx";
 
-const HERO_IMAGES = [
-  "/images/photo1.jpg",
-
-  "/images/photo2.jpg",
-
-  "/images/photo3.jpg",
-
-  "/images/photo4.jpg",
-
-  "/images/photo5.jpg",
-];
+const HERO_IMAGES = ["/images/photo1.webp", "/images/photo2.webp", "/images/photo3.webp", "/images/photo4.webp", "/images/photo5.webp"];
 
 const SLIDE_INTERVAL = 3000;
 
@@ -307,7 +297,7 @@ export default function Hero({ siteInfo }) {
                 transition={{ duration: 0.7 }}
                 className="aspect-square overflow-hidden rounded-2xl shadow-card sm:aspect-auto"
               >
-                <img src={HERO_IMAGES[1]} alt="" className="h-full w-full object-cover" />
+                <img src={HERO_IMAGES[1]} alt="" loading="lazy" className="h-full w-full object-cover" />
               </motion.div>
 
               <div className="grid grid-cols-2 gap-4">
