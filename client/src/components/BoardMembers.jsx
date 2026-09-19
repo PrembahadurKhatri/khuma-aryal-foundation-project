@@ -3,6 +3,7 @@ import { pick } from "../utils/localize.js";
 import Container from "./Container.jsx";
 import Reveal from "./Reveal.jsx";
 import Skeleton from "./Skeleton.jsx";
+import LoadFailed from "./LoadFailed.jsx";
 import Avatar from "./Avatar.jsx";
 
 function CrownIcon() {
@@ -103,10 +104,13 @@ function designationIcon(designationEn = "") {
  * Renders nothing if there are no board members yet, so an empty admin
  * table doesn't leave a bare, empty-looking section on the live site.
  */
-export default function BoardMembers({ members, loading }) {
+export default function BoardMembers({ members, loading, error }) {
   const { t, language } = useLanguage();
 
-  if (!loading && (!members || members.length === 0)) return null;
+  // A failed fetch must still render (to show the error below) rather than
+  // silently returning null here the same way a genuinely-empty admin
+  // table does — those two cases look identical from `!members` alone.
+  if (!loading && !error && (!members || members.length === 0)) return null;
 
   return (
     // bg-cream-50 (pure white) instead of the cream-100 every neighboring
@@ -130,8 +134,10 @@ export default function BoardMembers({ members, loading }) {
           <p className="max-w-xl text-sm leading-relaxed text-ink-700 sm:text-base ">{t("home.boardSubtitle")}</p>
         </Reveal>
 
-        {loading || !members ? (
+        {loading || (!members && !error) ? (
           <Skeleton count={5} />
+        ) : error ? (
+          <LoadFailed error={error} />
         ) : (
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
             {members.map((member, i) => {

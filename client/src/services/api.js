@@ -10,6 +10,14 @@ export const API = (import.meta.env.VITE_API_TARGET || "").replace(/\/+$/, "");
 const api = axios.create({
   baseURL: `${API}/api`,
   withCredentials: true, // send httpOnly cookies (refreshToken)
+  // Without this, a request that hangs (dropped connection, server never
+  // responds) never settles at all -- useContent.js's `loading` state stays
+  // true forever, which a bare `loading || !data` render check shows as an
+  // endless skeleton with no way to recover short of a manual page reload.
+  // 20s gives real margin over the slowest cold-start responses seen in
+  // practice (5-10s) while still eventually surfacing a hung request as a
+  // retryable error instead of hanging silently.
+  timeout: 20000,
 });
 
 let accessToken = null;

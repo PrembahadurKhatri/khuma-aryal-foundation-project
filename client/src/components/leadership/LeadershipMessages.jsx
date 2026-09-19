@@ -3,6 +3,7 @@ import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import Container from "../Container.jsx";
 import Reveal from "../Reveal.jsx";
 import Skeleton from "../Skeleton.jsx";
+import LoadFailed from "../LoadFailed.jsx";
 import FounderFeature from "./FounderFeature.jsx";
 import PresidentFeature from "./PresidentFeature.jsx";
 import LeaderCard from "./LeaderCard.jsx";
@@ -44,7 +45,7 @@ function RoleBadge({ children }) {
  * the rest, including full-message modals. Reusable anywhere that array is
  * available.
  */
-export default function LeadershipMessages({ messages, loading }) {
+export default function LeadershipMessages({ messages, loading, error }) {
   const { t } = useLanguage();
   const [activeLeader, setActiveLeader] = useState(null);
 
@@ -69,8 +70,10 @@ export default function LeadershipMessages({ messages, loading }) {
           <p className="max-w-xl text-sm leading-relaxed text-ink-700 sm:text-base">{t("home.leadershipSubtitle")}</p>
         </Reveal>
 
-        {loading || !messages ? (
+        {loading || (!messages && !error) ? (
           <Skeleton count={4} />
+        ) : error ? (
+          <LoadFailed error={error} />
         ) : (
           <>
             {/* Founder — highest hierarchy */}

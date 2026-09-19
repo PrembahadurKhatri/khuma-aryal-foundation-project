@@ -9,6 +9,7 @@ import Hero from "../components/Hero.jsx";
 import Reveal from "../components/Reveal.jsx";
 import LeadershipMessages from "../components/leadership/LeadershipMessages.jsx";
 import BoardMembers from "../components/BoardMembers.jsx";
+import LoadFailed from "../components/LoadFailed.jsx";
 import NewsCard from "../components/NewsCard.jsx";
 import NoticeCard from "../components/NoticeCard.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
@@ -108,20 +109,6 @@ function ThumbsUpIcon() {
   );
 }
 
-// Surfaces a failed fetch instead of leaving the section stuck on its
-// skeleton forever (data stays null on error, so a bare `!data` loading
-// check never resolves) — visible proof-on-page of what went wrong, so a
-// visitor (or admin) can screenshot the actual reason without needing
-// devtools, which matters a lot on mobile / in-app browsers.
-function LoadFailed({ error }) {
-  const reason = error?.response?.status ? `Server responded with status ${error.response.status}.` : error?.message || "Network error.";
-  return (
-    <p className="rounded-xl2 border border-red-200 bg-red-50 py-8 text-center font-body text-sm text-red-700 shadow-card">
-      Couldn't load this section right now. ({reason})
-    </p>
-  );
-}
-
 const PILLARS = [
   { key: "pillarEducation", descKey: "pillarEducationDesc",  },
   { key: "pillarHealth", descKey: "pillarHealthDesc",  },
@@ -138,8 +125,8 @@ const EXPLORE_LINKS = [
 
 export default function Home() {
   const { t } = useLanguage();
-  const { data: messages, loading } = useContent(getMessages);
-  const { data: boardMembers, loading: boardLoading } = useContent(getBoardMembers);
+  const { data: messages, loading, error: messagesError } = useContent(getMessages);
+  const { data: boardMembers, loading: boardLoading, error: boardError } = useContent(getBoardMembers);
   const { data: projects, loading: projectsLoading, error: projectsError } = useContent(getProjects);
   const { data: news, loading: newsLoading, error: newsError } = useContent(getNews);
   const { data: notices, loading: noticesLoading, error: noticesError } = useContent(getNotices);
@@ -172,11 +159,11 @@ export default function Home() {
           homepage stats folded into it) — see Hero.jsx. */}
       <Hero siteInfo={siteInfo} />
       {/* Leadership messages */}
-      <LeadershipMessages messages={messages} loading={loading} />
+      <LeadershipMessages messages={messages} loading={loading} error={messagesError} />
 
       {/* Board Members — plain photo directory, separate from the
           Founder/President/leadership "Messages" section above. */}
-      <BoardMembers members={boardMembers} loading={boardLoading} />
+      <BoardMembers members={boardMembers} loading={boardLoading} error={boardError} />
 
       {/* Latest News / Notices / Projects — three separate teaser sections,
           each using the exact same card component as its own full page
