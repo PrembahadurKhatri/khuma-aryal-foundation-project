@@ -100,7 +100,6 @@ export default function LeadershipMessages({ messages, loading, error }) {
             {others.length > 0 && (
               <div className="flex flex-col gap-10">
                 <Reveal className="flex flex-col items-center gap-3 text-center">
-                  <span aria-hidden="true" className="h-1 w-12 rounded-full bg-gradient-to-r from-gilt-400 to-[#FF8C00]" />
                   <h3 className="font-body text-3xl font-bold text-forest-900 sm:text-4xl">
                     {t("home.otherLeadershipTitle")}
                   </h3>
