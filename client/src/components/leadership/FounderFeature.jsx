@@ -35,12 +35,21 @@ export default function FounderFeature({ leader, onRead }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 shadow-lift sm:p-8 lg:p-10"
+      className="group relative overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 shadow-lift transition-shadow duration-500 hover:shadow-2xl sm:p-8 lg:p-10"
     >
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-12">
+      <div
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-gilt-400/10 blur-3xl transition-transform duration-700 group-hover:scale-110"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-forest-500/5 blur-3xl"
+        aria-hidden="true"
+      />
+
+      <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-12">
         {/* Portrait */}
         <div className="mx-auto w-full max-w-sm">
-          <div className="aspect-[4/5] overflow-hidden rounded-xl2 border-2 border-gilt-400/70 shadow-card">
+          <div className="aspect-[4/5] overflow-hidden rounded-xl2 border-2 border-gilt-400/70 shadow-card transition-transform duration-500 group-hover:scale-[1.02]">
             {/* Falls back to a real placeholder photo, not PlaceholderImage's
                 gradient card — an admin who hasn't uploaded the Founder's
                 photo yet still gets a proper-looking portrait silhouette. */}
