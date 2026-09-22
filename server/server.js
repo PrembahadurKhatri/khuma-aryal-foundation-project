@@ -159,13 +159,21 @@ app.use("/api", limiter);
 // route is relaxed to "cross-origin" -- the actual JSON API responses stay
 // under the stricter default, since they're never meant to be embedded as
 // a sub-resource on another page the way these files are.
+// Long-lived + immutable: middleware/upload.js names every file
+// `${timestamp}-${random}.ext`, so a given URL's content never changes once
+// created (an edit uploads a new file under a new name rather than
+// overwriting this one) -- safe to tell browsers to never re-check it. A
+// repeat visitor's browser then skips the request entirely instead of
+// re-reading the file off this account's disk every single page load,
+// which matters now that these are served from local disk (counting
+// against the cPanel account's I/O quota) instead of Cloudinary.
 app.use(
   "/uploads",
   (req, res, next) => {
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     next();
   },
-  express.static(path.join(__dirname, "uploads"))
+  express.static(path.join(__dirname, "uploads"), { maxAge: "30d", immutable: true })
 );
 
 // Health check
