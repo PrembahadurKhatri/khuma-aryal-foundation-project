@@ -68,7 +68,11 @@ export default function FounderFeature({ leader, onRead }) {
             </span>
           </div>
 
-          <p className="font-body text-lg leading-relaxed text-forest-900 sm:text-xl">
+          {/* Clamped to match LeaderCard's mobile treatment (the "Read Full
+              Message" button below is the whole point of not showing the
+              entire essay-length message on a small screen) — un-clamped
+              from sm: up, where this card already reads well in full. */}
+          <p className="line-clamp-4 font-body text-lg leading-relaxed text-forest-900 sm:line-clamp-none sm:text-xl">
             &ldquo;{message}&rdquo;
           </p>
 
