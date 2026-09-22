@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import News from "../models/News.js";
+import { clearCache } from "../middleware/cache.js";
 
 // Admin forms submit bilingual fields as flat keys (titleEn/titleNe/...)
 // rather than nested "title[en]" — multipart/form-data (multer) doesn't
@@ -24,7 +25,7 @@ const fromFlatFields = (body) => ({
 // @desc   List news/notices, newest first
 // @route  GET /api/news
 export const getNews = asyncHandler(async (req, res) => {
-  const news = await News.find().sort("-date");
+  const news = await News.find().select("-__v").sort("-date").lean();
   res.json({ success: true, count: news.length, data: news });
 });
 
@@ -50,6 +51,7 @@ export const createNews = asyncHandler(async (req, res) => {
   if (req.user?._id && req.user._id !== "local-fallback-admin") payload.createdBy = req.user._id;
 
   const item = await News.create(payload);
+  clearCache("news");
   res.status(201).json({ success: true, data: item });
 });
 
@@ -80,6 +82,7 @@ export const updateNews = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("News item not found");
   }
+  clearCache("news");
   res.json({ success: true, data: item });
 });
 
@@ -91,5 +94,6 @@ export const deleteNews = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("News item not found");
   }
+  clearCache("news");
   res.json({ success: true, message: "News item deleted" });
 });

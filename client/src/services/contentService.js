@@ -41,9 +41,23 @@ function resolveUploadPaths(value) {
 
 const withId = (doc) => resolveUploadPaths({ ...doc, id: doc._id });
 
-export async function getSiteInfo() {
-  const { data } = await api.get("/settings");
-  return data.data;
+// Deduped: multiple callers within the same page load (or a StrictMode-style
+// double-invoke) share one in-flight/resolved request instead of each firing
+// their own /settings call -- this is what was showing up as two identical
+// "settings" entries in the Network tab. Reset on failure so a later retry
+// isn't permanently stuck on a rejected promise.
+let siteInfoPromise = null;
+export function getSiteInfo() {
+  if (!siteInfoPromise) {
+    siteInfoPromise = api
+      .get("/settings")
+      .then(({ data }) => data.data)
+      .catch((err) => {
+        siteInfoPromise = null;
+        throw err;
+      });
+  }
+  return siteInfoPromise;
 }
 
 export async function getMessages() {

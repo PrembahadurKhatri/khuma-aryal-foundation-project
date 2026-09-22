@@ -25,4 +25,7 @@ const leaderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Matches getLeaders' .sort("order createdAt") exactly.
+leaderSchema.index({ order: 1, createdAt: 1 });
+
 export default mongoose.model("Leader", leaderSchema);

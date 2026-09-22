@@ -21,4 +21,7 @@ const boardMemberSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Matches getBoardMembers' .sort("order createdAt") exactly.
+boardMemberSchema.index({ order: 1, createdAt: 1 });
+
 export default mongoose.model("BoardMember", boardMemberSchema);

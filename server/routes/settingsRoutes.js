@@ -3,10 +3,11 @@ import { body } from "express-validator";
 import { getSettings, updateSettings } from "../controllers/settingsController.js";
 import { protect, authorize } from "../middleware/auth.js";
 import validate from "../middleware/validate.js";
+import { cacheGet } from "../middleware/cache.js";
 
 const router = express.Router();
 
-router.get("/", getSettings);
+router.get("/", cacheGet("settings"), getSettings);
 router.put(
   "/",
   protect,

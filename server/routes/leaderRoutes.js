@@ -4,6 +4,7 @@ import { getLeaders, getLeader, createLeader, updateLeader, deleteLeader } from 
 import { protect, authorize } from "../middleware/auth.js";
 import upload from "../middleware/upload.js";
 import validate from "../middleware/validate.js";
+import { cacheGet } from "../middleware/cache.js";
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ const updateValidators = [
   body("messageNe").optional().trim().notEmpty().withMessage("Nepali message cannot be empty"),
 ];
 
-router.get("/", getLeaders);
+router.get("/", cacheGet("leaders"), getLeaders);
 router.get("/:id", getLeader);
 router.post("/", protect, authorize("admin", "editor"), upload.single("photo"), createValidators, validate, createLeader);
 router.put("/:id", protect, authorize("admin", "editor"), upload.single("photo"), updateValidators, validate, updateLeader);

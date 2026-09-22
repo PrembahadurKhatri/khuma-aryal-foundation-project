@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Leader from "../models/Leader.js";
+import { clearCache } from "../middleware/cache.js";
 
 // Guarded partial update: only rebuilds a bilingual field if the caller
 // actually sent something for it, so a partial PUT (e.g. just changing the
@@ -17,7 +18,10 @@ const fromFlatFields = (body) => {
 // @desc   List leadership team members, ordered for display
 // @route  GET /api/leaders
 export const getLeaders = asyncHandler(async (req, res) => {
-  const leaders = await Leader.find().sort("order createdAt");
+  // .select("-__v") drops the one field this list never uses;
+  // .lean() skips building full Mongoose documents since this response is
+  // read-only JSON -- no .save()/virtuals needed on the way out.
+  const leaders = await Leader.find().select("-__v").sort("order createdAt").lean();
   res.json({ success: true, count: leaders.length, data: leaders });
 });
 
@@ -48,6 +52,7 @@ export const createLeader = asyncHandler(async (req, res) => {
     photo: req.file ? req.file.path : "/images/blank.avif",
   };
   const leader = await Leader.create(payload);
+  clearCache("leaders");
   res.status(201).json({ success: true, data: leader });
 });
 
@@ -62,6 +67,7 @@ export const updateLeader = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Leader not found");
   }
+  clearCache("leaders");
   res.json({ success: true, data: leader });
 });
 
@@ -73,5 +79,6 @@ export const deleteLeader = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Leader not found");
   }
+  clearCache("leaders");
   res.json({ success: true, message: "Leader deleted" });
 });

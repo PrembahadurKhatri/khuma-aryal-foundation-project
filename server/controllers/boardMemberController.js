@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import BoardMember from "../models/BoardMember.js";
+import { clearCache } from "../middleware/cache.js";
 
 // Guarded partial update: only rebuilds a bilingual field if the caller
 // actually sent something for it, so a partial PUT (e.g. just changing the
@@ -17,7 +18,7 @@ const fromFlatFields = (body) => {
 // @desc   List board members, ordered for display
 // @route  GET /api/board-members
 export const getBoardMembers = asyncHandler(async (req, res) => {
-  const members = await BoardMember.find().sort("order createdAt");
+  const members = await BoardMember.find().select("-__v").sort("order createdAt").lean();
   res.json({ success: true, count: members.length, data: members });
 });
 
@@ -46,6 +47,7 @@ export const createBoardMember = asyncHandler(async (req, res) => {
     photo: req.file ? req.file.path : "/images/blank.avif",
   };
   const member = await BoardMember.create(payload);
+  clearCache("board-members");
   res.status(201).json({ success: true, data: member });
 });
 
@@ -60,6 +62,7 @@ export const updateBoardMember = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Board member not found");
   }
+  clearCache("board-members");
   res.json({ success: true, data: member });
 });
 
@@ -71,5 +74,6 @@ export const deleteBoardMember = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Board member not found");
   }
+  clearCache("board-members");
   res.json({ success: true, message: "Board member deleted" });
 });

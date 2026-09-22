@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Notice from "../models/Notice.js";
+import { clearCache } from "../middleware/cache.js";
 
 const fromFlatFields = (body) => ({
   ...(body.titleEn !== undefined || body.titleNe !== undefined ? { title: { en: body.titleEn, ne: body.titleNe } } : {}),
@@ -16,7 +17,7 @@ const fromFlatFields = (body) => ({
 // @desc   List notices, newest first
 // @route  GET /api/notices
 export const getNotices = asyncHandler(async (req, res) => {
-  const notices = await Notice.find().sort("-date");
+  const notices = await Notice.find().select("-__v").sort("-date").lean();
   res.json({ success: true, count: notices.length, data: notices });
 });
 
@@ -42,6 +43,7 @@ export const createNotice = asyncHandler(async (req, res) => {
   if (req.user?._id && req.user._id !== "local-fallback-admin") payload.createdBy = req.user._id;
 
   const notice = await Notice.create(payload);
+  clearCache("notices");
   res.status(201).json({ success: true, data: notice });
 });
 
@@ -72,6 +74,7 @@ export const updateNotice = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Notice not found");
   }
+  clearCache("notices");
   res.json({ success: true, data: notice });
 });
 
@@ -83,5 +86,6 @@ export const deleteNotice = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Notice not found");
   }
+  clearCache("notices");
   res.json({ success: true, message: "Notice deleted" });
 });

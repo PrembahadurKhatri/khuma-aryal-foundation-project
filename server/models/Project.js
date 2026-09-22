@@ -50,4 +50,7 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Matches getProjects' filter (status/category) + sort (createdAt) shape.
+projectSchema.index({ status: 1, category: 1, createdAt: -1 });
+
 export default mongoose.model("Project", projectSchema);

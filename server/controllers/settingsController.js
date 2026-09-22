@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Settings from "../models/Settings.js";
+import { clearCache } from "../middleware/cache.js";
 
 // Settings is a singleton — there is always exactly one document.
 const getOrCreate = async () => {
@@ -11,7 +12,10 @@ const getOrCreate = async () => {
 // @desc   Get site settings
 // @route  GET /api/settings  (public)
 export const getSettings = asyncHandler(async (req, res) => {
-  const settings = await getOrCreate();
+  // .lean() here specifically -- unlike getOrCreate()'s other uses in this
+  // file, this result is only ever serialized to JSON, never .save()d.
+  let settings = await Settings.findOne().select("-__v").lean();
+  if (!settings) settings = (await getOrCreate()).toObject();
   res.json({ success: true, data: settings });
 });
 
@@ -69,5 +73,6 @@ export const updateSettings = asyncHandler(async (req, res) => {
   }
 
   await settings.save();
+  clearCache("settings");
   res.json({ success: true, data: settings });
 });

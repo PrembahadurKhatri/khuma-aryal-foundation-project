@@ -10,6 +10,7 @@ import {
 import { protect, authorize } from "../middleware/auth.js";
 import upload from "../middleware/upload.js";
 import validate from "../middleware/validate.js";
+import { cacheGet } from "../middleware/cache.js";
 
 const router = express.Router();
 
@@ -26,7 +27,7 @@ const updateValidators = [
   body("designationNe").optional().trim().notEmpty().withMessage("Nepali designation cannot be empty"),
 ];
 
-router.get("/", getBoardMembers);
+router.get("/", cacheGet("board-members"), getBoardMembers);
 router.get("/:id", getBoardMember);
 router.post("/", protect, authorize("admin", "editor"), upload.single("photo"), createValidators, validate, createBoardMember);
 router.put("/:id", protect, authorize("admin", "editor"), upload.single("photo"), updateValidators, validate, updateBoardMember);

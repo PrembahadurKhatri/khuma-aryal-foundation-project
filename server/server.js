@@ -18,6 +18,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import compression from "compression";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
@@ -25,6 +26,7 @@ import xss from "xss-clean";
 
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
+import requestTimer from "./middleware/requestTimer.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import newsRoutes from "./routes/newsRoutes.js";
@@ -55,6 +57,11 @@ const app = express();
 // for both the rate limiter below and the login-attempt limiter in
 // authRoutes.js.
 app.set("trust proxy", 1);
+
+// Measures server-side processing time only (not network/queueing time the
+// browser sees) -- registered first so its timer wraps the entire request,
+// including body parsing/multer for uploads.
+app.use(requestTimer);
 
 // Security & parsing middleware
 app.use(
@@ -111,6 +118,11 @@ app.use(
     credentials: true,
   })
 );
+// Gzips JSON responses -- /api/news and /api/projects run 17.6kB/8.4kB
+// uncompressed (see the DevTools captures from earlier), which compresses
+// down substantially and cuts real transfer time on top of the server-side
+// speedups above.
+app.use(compression());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -19,7 +19,19 @@ const startKeepAlive = () => {
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    // The driver's own default (maxPoolSize: 100) is far more than this
+    // app's traffic ever needs and holds more idle connections open than a
+    // small shared-hosting box benefits from; 10 is comfortably above the
+    // ~9 concurrent requests a single page load fires. minPoolSize keeps a
+    // couple of connections pre-established rather than opened on demand,
+    // so the very first requests of a burst don't each pay connection-setup
+    // cost -- complements, not replaces, the keep-alive ping below (that
+    // ping is what stops the pool from going idle-stale in the first place;
+    // this just sizes the pool sensibly once it's up).
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      maxPoolSize: 10,
+      minPoolSize: 2,
+    });
     console.log(`MongoDB connected: ${conn.connection.host}`);
     startKeepAlive();
   } catch (error) {

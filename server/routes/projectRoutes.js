@@ -5,6 +5,7 @@ import { protect, authorize } from "../middleware/auth.js";
 import upload from "../middleware/upload.js";
 import validate from "../middleware/validate.js";
 import { ALBUM_CATEGORIES } from "../models/Album.js";
+import { cacheGet } from "../middleware/cache.js";
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ const updateValidators = [
   body("category").optional({ checkFalsy: true }).isIn(ALBUM_CATEGORIES).withMessage("Invalid category"),
 ];
 
-router.get("/", getProjects);
+router.get("/", cacheGet("projects"), getProjects);
 router.get("/:id", getProject);
 router.post("/", protect, authorize("admin", "editor"), projectUpload, createValidators, validate, createProject);
 router.put("/:id", protect, authorize("admin", "editor"), projectUpload, updateValidators, validate, updateProject);

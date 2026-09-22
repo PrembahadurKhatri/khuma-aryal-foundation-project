@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Project from "../models/Project.js";
+import { clearCache } from "../middleware/cache.js";
 
 // `title` and `description` are both always required on Project (the schema
 // enforces it) and the admin form always submits both together on every
@@ -47,7 +48,10 @@ export const getProjects = asyncHandler(async (req, res) => {
   if (status) query.status = status;
   if (category && category !== "All") query.category = category;
 
-  const projects = await Project.find(query).sort(sort === "oldest" ? "createdAt" : "-createdAt");
+  const projects = await Project.find(query)
+    .select("-__v")
+    .sort(sort === "oldest" ? "createdAt" : "-createdAt")
+    .lean();
   res.json({ success: true, count: projects.length, data: projects });
 });
 
@@ -76,6 +80,7 @@ export const createProject = asyncHandler(async (req, res) => {
   if (req.user?._id && req.user._id !== "local-fallback-admin") payload.createdBy = req.user._id;
 
   const project = await Project.create(payload);
+  clearCache("projects");
   res.status(201).json({ success: true, data: project });
 });
 
@@ -115,6 +120,7 @@ export const updateProject = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Project not found");
   }
+  clearCache("projects");
   res.json({ success: true, data: project });
 });
 
@@ -126,5 +132,6 @@ export const deleteProject = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Project not found");
   }
+  clearCache("projects");
   res.json({ success: true, message: "Project deleted" });
 });

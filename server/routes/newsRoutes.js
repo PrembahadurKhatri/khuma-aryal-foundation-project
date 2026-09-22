@@ -5,6 +5,7 @@ import { protect, authorize } from "../middleware/auth.js";
 import upload from "../middleware/upload.js";
 import validate from "../middleware/validate.js";
 import { NEWS_CATEGORIES } from "../models/News.js";
+import { cacheGet } from "../middleware/cache.js";
 
 const router = express.Router();
 
@@ -38,7 +39,7 @@ const updateValidators = [
   body("date").optional({ checkFalsy: true }).isISO8601().withMessage("Invalid date"),
 ];
 
-router.get("/", getNews);
+router.get("/", cacheGet("news"), getNews);
 router.get("/:id", getNewsItem);
 router.post("/", protect, authorize("admin", "editor"), newsUpload, createValidators, validate, createNews);
 router.put("/:id", protect, authorize("admin", "editor"), newsUpload, updateValidators, validate, updateNews);
