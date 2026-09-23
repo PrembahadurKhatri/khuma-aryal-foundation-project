@@ -10,6 +10,7 @@ import {
   noticeStorage as cloudinaryNoticeStorage,
   isCloudinaryConfigured,
 } from "../config/cloudinary.js";
+import compressUploadedImages from "./compressImage.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadsDir = path.join(__dirname, "../uploads");
@@ -152,13 +153,13 @@ const normalizePaths = (req, res, next) => {
 };
 
 const upload = {
-  single: (field) => [baseUpload.single(field), normalizePaths],
-  array: (field, maxCount) => [baseUpload.array(field, maxCount), normalizePaths],
-  fields: (fieldsConfig) => [baseUpload.fields(fieldsConfig), normalizePaths],
+  single: (field) => [baseUpload.single(field), compressUploadedImages, normalizePaths],
+  array: (field, maxCount) => [baseUpload.array(field, maxCount), compressUploadedImages, normalizePaths],
+  fields: (fieldsConfig) => [baseUpload.fields(fieldsConfig), compressUploadedImages, normalizePaths],
   document: (field) => [baseDocumentUpload.single(field), normalizePaths],
-  notice: (fieldsConfig) => [baseNoticeUpload.fields(fieldsConfig), normalizePaths],
-  media: (fieldsConfig) => [baseMediaUpload.fields(fieldsConfig), normalizePaths],
-  application: (fieldsConfig) => [baseApplicationUpload.fields(fieldsConfig), normalizePaths],
+  notice: (fieldsConfig) => [baseNoticeUpload.fields(fieldsConfig), compressUploadedImages, normalizePaths],
+  media: (fieldsConfig) => [baseMediaUpload.fields(fieldsConfig), compressUploadedImages, normalizePaths],
+  application: (fieldsConfig) => [baseApplicationUpload.fields(fieldsConfig), compressUploadedImages, normalizePaths],
 };
 
 export default upload;
