@@ -8,7 +8,12 @@
 // requester would leak it to the next caller who hits the same URL.
 const store = new Map(); // `${namespace}:${originalUrl}` -> { body, expiresAt }
 
-const DEFAULT_TTL_MS = 5 * 60 * 1000;
+// Admin writes already clear the relevant namespace immediately (see
+// clearCache below), so a long TTL costs nothing in staleness -- it only
+// cuts how often a visitor's request has to fall through to a real Mongo
+// query. That matters on this host: a cold cache hit during a CloudLinux
+// I/O throttle window is what turned into multi-second/timeout delays.
+const DEFAULT_TTL_MS = 30 * 60 * 1000;
 
 // Keyed by the full originalUrl (not just the path) so query-string
 // variations -- /api/projects?status=ongoing vs ?status=completed -- each
