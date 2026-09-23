@@ -128,7 +128,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(xss());
-app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
+// Every access-log line morgan writes is a real disk write on this host --
+// on shared hosting with a metered I/O quota, that adds up over a full day
+// of the 60-second internal cron ping and 5-minute UptimeRobot checks
+// running whether or not any real visitor is around. Skip logging those
+// specific automated, successful hits (still logging everything else,
+// including any failure from them -- an UptimeRobot check starting to
+// error is exactly the kind of thing worth keeping).
+const AUTOMATED_USER_AGENTS = /uptimerobot|curl\//i;
+app.use(
+  morgan(process.env.NODE_ENV === "production" ? "combined" : "dev", {
+    skip: (req, res) =>
+      res.statusCode < 400 && (req.path === "/api/health" || AUTOMATED_USER_AGENTS.test(req.get("user-agent") || "")),
+  })
+);
 
 // Rate limiting -- a general abuse/DDoS guard, not auth-specific (login
 // already has its own stricter, dedicated limiter in authRoutes.js, and is
