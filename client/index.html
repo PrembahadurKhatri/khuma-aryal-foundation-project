@@ -14,11 +14,14 @@
       gtag("js", new Date());
       gtag("config", "G-0X62WNHB7F");
     </script>
-    <!-- haha.png is a clean, transparent-background export of the KAF
-         emblem at 1254x1254 -- swapped in for logo.jpg (which had a
-         visible light-blue background box around the same logo). -->
-    <link rel="icon" type="image/png" href="/images/haha.png" />
-    <link rel="apple-touch-icon" href="/images/haha.png" />
+    <!-- haha.webp is a clean, transparent-background export of the KAF
+         emblem -- swapped in for logo.jpg (which had a visible light-blue
+         background box around the same logo). These pointed at a
+         "haha.png" that was never actually in public/images/ -- every
+         single page load was firing a 404 favicon request (a real disk
+         read + miss, on every visitor, forever) until this was caught. -->
+    <link rel="icon" type="image/webp" href="/images/haha.webp" />
+    <link rel="apple-touch-icon" href="/images/haha.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"

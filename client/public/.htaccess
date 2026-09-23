@@ -1,0 +1,60 @@
+# No .htaccess existed for this site before -- every static asset
+# (JS/CSS bundles, images, fonts) was being served with zero cache headers
+# and no compression, meaning every visitor's browser re-downloaded
+# everything from this account's disk on every single visit. This site and
+# the API (api.khumaaryalfoundation.org.np) share the same cPanel/CloudLinux
+# account, so uncached frontend traffic counts against the same I/O quota
+# the backend has been hitting faults on.
+
+# --- Compression ---------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE application/xml application/rss+xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- Caching ---------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Vite names every JS/CSS file with a content hash (e.g.
+  # index-C9OU2grb.js) -- a file at a given URL never changes; a code
+  # change ships under a brand-new filename instead. Safe to cache
+  # "forever" (1 year, the practical max) with zero staleness risk.
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+
+  # Images/fonts in /images and /fonts aren't content-hashed, but they
+  # change rarely (a manual replace, not a normal deploy) -- 30 days
+  # balances real caching benefit against not needing a hard cache-bust
+  # step if one is ever swapped.
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/avif "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+  ExpiresByType font/woff2 "access plus 1 year"
+
+  # index.html itself must NEVER be cached -- it's the one file that
+  # references the current build's hashed JS/CSS filenames. Caching it
+  # would serve visitors a stale page pointing at bundle files from a
+  # previous deploy that may no longer exist.
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-cache, must-revalidate" "expr=%{CONTENT_TYPE} =~ m#text/html#"
+</IfModule>
+
+# --- Single-page app routing -----------------------------------------------
+# React Router handles routes like /about or /gallery client-side --
+# without this, reloading or directly opening one of those URLs 404s,
+# because no actual /about file exists on disk. Anything that isn't a real
+# file or directory falls through to index.html instead.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
