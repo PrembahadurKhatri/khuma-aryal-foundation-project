@@ -10,6 +10,7 @@ import AlbumCard from "../components/gallery/AlbumCard.jsx";
 import FeaturedAlbumCard from "../components/gallery/FeaturedAlbumCard.jsx";
 import VideoCard from "../components/gallery/VideoCard.jsx";
 import VideoLightbox from "../components/gallery/VideoLightbox.jsx";
+import useSeo from "../hooks/useSeo.js";
 
 // Real photos of the Foundation's work, cycling in the hero the same way
 // the Home page's hero slides through HERO_IMAGES (see components/Hero.jsx).
@@ -98,6 +99,7 @@ function FilterBar({ category, onCategory, sort, onSort, sortLabels, allLabel })
 
 export default function Gallery() {
   const { t } = useLanguage();
+  useSeo({ title: t("gallery.title"), description: t("gallery.subtitle"), path: "/gallery" });
   // Which tab is showing is driven entirely by the URL (?tab=videos) now —
   // reached via the "Photo Gallery" / "Video Gallery" options under the
   // Gallery item in Navbar.jsx, rather than an on-page toggle. Reading it
@@ -162,7 +164,7 @@ export default function Gallery() {
 
   return (
     <>
-      <PageHero label={t("gallery.title")} images={GALLERY_HERO_IMAGES} />
+      <PageHero label={t("gallery.title")} images={GALLERY_HERO_IMAGES} labelIsHeading />
 
       <section className="pb-20 pt-10 sm:pb-24 sm:pt-14">
         <Container>

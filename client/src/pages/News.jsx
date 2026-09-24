@@ -13,6 +13,7 @@ import EventCard from "../components/EventCard.jsx";
 import StoryCard from "../components/StoryCard.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
 import VacancyCard from "../components/VacancyCard.jsx";
+import useSeo from "../hooks/useSeo.js";
 
 // Icons for the hero's badge row — one per section further down the page.
 function NewsIcon() {
@@ -162,6 +163,7 @@ function ViewAllLink({ to, label }) {
 
 export default function News() {
   const { t } = useLanguage();
+  useSeo({ title: t("news.title"), description: t("news.subtitle"), path: "/news" });
   const { data: news, loading: newsLoading } = useContent(getNews);
   const { data: notices, loading: noticesLoading } = useContent(getNotices);
   const { data: events, loading: eventsLoading } = useContent(getEvents);
@@ -237,6 +239,7 @@ export default function News() {
         images={["/images/newz.webp"]}
         mobileImage="/images/nz.webp"
         strongOverlay
+        labelIsHeading
         badges={[
           { icon: <NewsIcon />, label: t("news.sectionLatestNews") },
           { icon: <BellIcon />, label: t("news.sectionNotices") },

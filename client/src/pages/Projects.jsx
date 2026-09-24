@@ -9,6 +9,7 @@ import Reveal from "../components/Reveal.jsx";
 import ProjectCard from "../components/ProjectCard.jsx";
 import FeaturedProjectCard from "../components/FeaturedProjectCard.jsx";
 import Skeleton from "../components/Skeleton.jsx";
+import useSeo from "../hooks/useSeo.js";
 
 // Real photos of the Foundation's work, cycling in the hero the same way
 // the Gallery page's hero does (see GALLERY_HERO_IMAGES in Gallery.jsx).
@@ -67,6 +68,7 @@ const statusLabelKey = { all: "projects.filterAll", ongoing: "projects.filterOng
 
 export default function Projects() {
   const { t, language } = useLanguage();
+  useSeo({ title: t("projects.title"), description: t("projects.subtitle"), path: "/projects" });
   const { data: projects, loading } = useContent(getProjects);
   const [category, setCategory] = useState("All");
   const [status, setStatus] = useState("all");
@@ -114,7 +116,7 @@ export default function Projects() {
 
   return (
     <>
-      <PageHero label={t("projects.title")} images={PROJECTS_HERO_IMAGES} />
+      <PageHero label={t("projects.title")} images={PROJECTS_HERO_IMAGES} labelIsHeading />
 
       <section className="pb-20 pt-10 sm:pb-24 sm:pt-14">
         <Container className="flex flex-col gap-8">

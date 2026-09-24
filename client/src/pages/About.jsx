@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { useSiteInfo } from "../contexts/SiteInfoContext.jsx";
+import useSeo from "../hooks/useSeo.js";
 import { submitMessage } from "../services/messageService.js";
 import Container from "../components/Container.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -111,6 +112,7 @@ const SOCIAL_ICONS = {
 export default function About() {
   const { t, language } = useLanguage();
   const siteInfo = useSiteInfo();
+  useSeo({ title: t("about.title"), description: t("about.subtitle"), path: "/about" });
   const [contactStatus, setContactStatus] = useState("idle"); // idle | sending | sent | error
 
   const handleContactSubmit = async (e) => {
@@ -135,7 +137,7 @@ export default function About() {
   return (
     <>
       {/* ================= HERO ================= */}
-      <PageHero label={t("about.title")} />
+      <PageHero label={t("about.title")} labelIsHeading />
 
       {/* ================= FOUNDATION PROFILE ================= */}
       <section className="relative overflow-hidden bg-gradient-to-br from-cream-100 via-cream to-cream-100 pb-24 pt-10 sm:pt-14">

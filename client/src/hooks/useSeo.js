@@ -21,14 +21,21 @@ const META_SELECTORS = {
   twitterImage: 'meta[name="twitter:image"]',
 };
 
+const CANONICAL_SELECTOR = 'link[rel="canonical"]';
+
 function setMetaContent(selector, value) {
   const el = document.querySelector(selector);
   if (el) el.setAttribute("content", value);
 }
 
+function setCanonicalHref(value) {
+  const el = document.querySelector(CANONICAL_SELECTOR);
+  if (el) el.setAttribute("href", value);
+}
+
 /**
- * Per-page <title> + <meta name="description"> + Open Graph/Twitter tags,
- * restoring whatever was there before on unmount (i.e. when the visitor
+ * Per-page <title> + <meta name="description"> + Open Graph/Twitter tags +
+ * <link rel="canonical">, restoring whatever was there before on unmount (i.e. when the visitor
  * navigates away) so a page that doesn't call this hook never inherits a
  * stale article title left over from the previous route.
  *
@@ -64,6 +71,8 @@ export default function useSeo({ title, description, image, path } = {}) {
       const el = document.querySelector(selector);
       prevMeta[key] = el ? el.getAttribute("content") : null;
     }
+    const canonicalEl = document.querySelector(CANONICAL_SELECTOR);
+    const prevCanonical = canonicalEl ? canonicalEl.getAttribute("href") : null;
 
     const fullTitle = `${title} | ${SITE_NAME}`;
     const desc = description?.trim() || DEFAULT_DESCRIPTION;
@@ -79,12 +88,18 @@ export default function useSeo({ title, description, image, path } = {}) {
     setMetaContent(META_SELECTORS.twitterTitle, fullTitle);
     setMetaContent(META_SELECTORS.twitterDescription, desc);
     setMetaContent(META_SELECTORS.twitterImage, img);
+    // Every route (including query-string variants like /projects?status=
+    // ongoing) canonicalizes to its plain path — this app has no meaningful
+    // separate content behind a query string, so there's nothing worth
+    // treating as a distinct indexable URL.
+    setCanonicalHref(url);
 
     return () => {
       document.title = prevTitle;
       for (const [key, selector] of Object.entries(META_SELECTORS)) {
         if (prevMeta[key] != null) setMetaContent(selector, prevMeta[key]);
       }
+      if (prevCanonical != null) setCanonicalHref(prevCanonical);
     };
   }, [title, description, image, path]);
 }
