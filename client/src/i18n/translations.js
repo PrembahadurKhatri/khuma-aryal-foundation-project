@@ -41,8 +41,11 @@ const translations = {
       heroCtaPrimary: "Our Projects",
       heroCtaSecondary: "About the Foundation",
       trustBadge1: "Registered Non-Profit",
+      trustBadge1Desc: "Working for a better tomorrow",
       trustBadge2: "Rooted in Syangja, Growing Our Impact",
+      trustBadge2Desc: "Local roots, broader vision",
       trustBadge3: "Empowering Youth & Communities",
+      trustBadge3Desc: "Education · Health · Sports · Employment",
       ourAimKicker: "Our Aim",
       aimText:
         "Our aim is to support young people through Education, Healthcare, Sports & Employment and help them overcome challenges through good counselling, guidance and meaningful opportunities.",
@@ -380,8 +383,11 @@ const translations = {
       heroCtaPrimary: "हाम्रा परियोजनाहरू",
       heroCtaSecondary: "फाउन्डेशनको बारेमा",
       trustBadge1: "दर्ता भएको गैर-नाफामुखी संस्था",
+      trustBadge1Desc: "राम्रो भविष्यका लागि काम",
       trustBadge2: "नेपालभर कार्यक्रम",
+      trustBadge2Desc: "स्थानीय जरा, फराकिलो दृष्टिकोण",
       trustBadge3: "परामर्शलाई प्राथमिकता",
+      trustBadge3Desc: "शिक्षा · स्वास्थ्य · खेलकुद · रोजगार",
       ourAimKicker: "हाम्रो लक्ष्य",
       aimText:
         "हाम्रो लक्ष्य शिक्षा, स्वास्थ्य, खेलकुद र रोजगारी मार्फत युवाहरूलाई सहयोग गर्नु र असल परामर्श, मार्गदर्शन र सार्थक अवसरहरूको माध्यमबाट चुनौतीहरू पार गर्न मद्दत गर्नु हो।",

@@ -254,7 +254,17 @@ export default function Hero({ siteInfo }) {
                   >
                     <Icon />
                   </motion.span>
-                  <span className="text-sm font-semibold leading-snug text-forest-900">{t(`home.${key}`)}</span>
+                  <span className="flex flex-col">
+                    <span className="text-sm font-semibold leading-snug text-forest-900">{t(`home.${key}`)}</span>
+                    {/* Desktop only -- the badge row is already tight on
+                        mobile (icon + single line, 3 stacked rows), and a
+                        second line there would make each row noticeably
+                        taller for not much payoff at that width. Part of
+                        the same motion.div as the label above, so it
+                        animates in together with the exact same transition,
+                        not a separate one. */}
+                    <span className="hidden text-xs text-ink-500 sm:block">{t(`home.${key}Desc`)}</span>
+                  </span>
                 </motion.div>
               );
             })}
