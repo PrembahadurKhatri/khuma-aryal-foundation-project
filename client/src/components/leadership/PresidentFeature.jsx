@@ -69,11 +69,15 @@ export default function PresidentFeature({ leader, onRead }) {
             </span>
           </div>
 
-          {/* Clamped to match LeaderCard's mobile treatment (the "Read Full
-              Message" button below is the whole point of not showing the
-              entire essay-length message on a small screen) — un-clamped
-              from sm: up, where this card already reads well in full. */}
-          <p className="line-clamp-4 font-body text-lg leading-relaxed text-forest-900 sm:line-clamp-none sm:text-xl">
+          {/* Clamped at every breakpoint now, not just mobile -- previously
+              un-clamped from sm: up, but that let the Founder and President
+              cards (each with a different-length message) end up visibly
+              different heights on desktop. The "Read Full Message" button
+              below is the whole point of not needing the entire
+              essay-length message rendered inline. min-h reserves the same
+              space a full clamp would take even for a shorter message, so
+              a short bio doesn't shrink the card either. */}
+          <p className="line-clamp-4 min-h-[7.3rem] font-body text-lg leading-relaxed text-forest-900 sm:min-h-[8.2rem] sm:text-xl">
             &ldquo;{message}&rdquo;
           </p>
 
