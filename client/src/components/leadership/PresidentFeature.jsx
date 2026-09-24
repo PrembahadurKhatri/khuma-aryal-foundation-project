@@ -77,7 +77,7 @@ export default function PresidentFeature({ leader, onRead }) {
               essay-length message rendered inline. min-h reserves the same
               space a full clamp would take even for a shorter message, so
               a short bio doesn't shrink the card either. */}
-          <p className="line-clamp-4 min-h-[7.3rem] font-body text-lg leading-relaxed text-forest-900 sm:min-h-[8.2rem] sm:text-xl">
+          <p className="line-clamp-5 min-h-[9.15rem] font-body text-lg leading-relaxed text-forest-900 sm:min-h-[10.2rem] sm:text-xl">
             &ldquo;{message}&rdquo;
           </p>
 
