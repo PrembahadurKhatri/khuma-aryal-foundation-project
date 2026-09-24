@@ -4,6 +4,8 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getNotice } from "../services/contentService.js";
 import useSeo from "../hooks/useSeo.js";
+import useJsonLd from "../hooks/useJsonLd.js";
+import { buildBreadcrumbSchema } from "../utils/breadcrumbSchema.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -67,6 +69,23 @@ export default function NoticeDetail() {
   const photos = notice?.images ? notice.images.map((src, i) => ({ id: `${notice.id}-${i}`, src, alt: title })) : [];
 
   useSeo({ title, description, image: notice?.images?.[0], path: `/notices/${id}` });
+  useJsonLd(
+    notice && {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: title,
+      description,
+      image: notice.images?.length ? notice.images : undefined,
+      datePublished: notice.createdAt,
+      dateModified: notice.updatedAt || notice.createdAt,
+      publisher: {
+        "@type": "Organization",
+        name: "Khuma Aryal Foundation",
+        logo: { "@type": "ImageObject", url: "https://khumaaryalfoundation.org.np/images/og-share.jpg" },
+      },
+    }
+  );
+  useJsonLd(title && buildBreadcrumbSchema([{ name: t("news.sectionNotices"), path: "/news" }, { name: title, path: `/notices/${id}` }]));
 
   let formatted = notice?.date;
   try {

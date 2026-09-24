@@ -4,6 +4,8 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getProject } from "../services/contentService.js";
 import useSeo from "../hooks/useSeo.js";
+import useJsonLd from "../hooks/useJsonLd.js";
+import { buildBreadcrumbSchema } from "../utils/breadcrumbSchema.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -138,6 +140,23 @@ export default function ProjectDetail() {
   const heroImage = project?.thumbnail || project?.images?.[0];
 
   useSeo({ title, description, image: heroImage, path: `/projects/${id}` });
+  useJsonLd(
+    project && {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: title,
+      description,
+      image: heroImage ? [heroImage] : undefined,
+      datePublished: project.createdAt,
+      dateModified: project.updatedAt || project.createdAt,
+      publisher: {
+        "@type": "Organization",
+        name: "Khuma Aryal Foundation",
+        logo: { "@type": "ImageObject", url: "https://khumaaryalfoundation.org.np/images/og-share.jpg" },
+      },
+    }
+  );
+  useJsonLd(title && buildBreadcrumbSchema([{ name: t("projects.title"), path: "/projects" }, { name: title, path: `/projects/${id}` }]));
 
   // GalleryGrid/Lightbox render { id, src, alt } objects — a project's
   // `images` is just an array of URL strings, so wrap each one here rather

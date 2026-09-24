@@ -4,6 +4,8 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getStory } from "../services/contentService.js";
 import useSeo from "../hooks/useSeo.js";
+import useJsonLd from "../hooks/useJsonLd.js";
+import { buildBreadcrumbSchema } from "../utils/breadcrumbSchema.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -48,6 +50,23 @@ export default function StoryDetail() {
   const photos = story?.images ? story.images.map((src, i) => ({ id: `${story.id}-${i}`, src, alt: name })) : [];
 
   useSeo({ title: name, description: summary || description, image: story?.photo, path: `/stories/${id}` });
+  useJsonLd(
+    story && {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: name,
+      description: summary || description,
+      image: story.photo ? [story.photo] : undefined,
+      datePublished: story.createdAt,
+      dateModified: story.updatedAt || story.createdAt,
+      publisher: {
+        "@type": "Organization",
+        name: "Khuma Aryal Foundation",
+        logo: { "@type": "ImageObject", url: "https://khumaaryalfoundation.org.np/images/og-share.jpg" },
+      },
+    }
+  );
+  useJsonLd(name && buildBreadcrumbSchema([{ name: t("news.sectionStories"), path: "/news" }, { name, path: `/stories/${id}` }]));
 
   return (
     <>

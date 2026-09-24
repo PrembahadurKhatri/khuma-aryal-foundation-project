@@ -5,6 +5,7 @@ import { pick } from "../utils/localize.js";
 import { getEvent } from "../services/contentService.js";
 import useSeo from "../hooks/useSeo.js";
 import useJsonLd from "../hooks/useJsonLd.js";
+import { buildBreadcrumbSchema } from "../utils/breadcrumbSchema.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -94,6 +95,7 @@ export default function EventDetail() {
       },
     }
   );
+  useJsonLd(name && buildBreadcrumbSchema([{ name: t("news.sectionEvents"), path: "/news" }, { name, path: `/events/${id}` }]));
 
   let formatted = event?.date;
   try {

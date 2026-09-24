@@ -6,6 +6,7 @@ import { getVacancy } from "../services/contentService.js";
 import { submitApplication } from "../services/applicationService.js";
 import useSeo from "../hooks/useSeo.js";
 import useJsonLd from "../hooks/useJsonLd.js";
+import { buildBreadcrumbSchema } from "../utils/breadcrumbSchema.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -216,6 +217,7 @@ export default function VacancyDetail() {
         : undefined,
     }
   );
+  useJsonLd(title && buildBreadcrumbSchema([{ name: t("news.sectionVacancies"), path: "/news" }, { name: title, path: `/vacancies/${id}` }]));
 
   let deadline = vacancy?.deadline;
   try {

@@ -4,6 +4,8 @@ import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import { getGalleryAlbum } from "../services/contentService.js";
 import useSeo from "../hooks/useSeo.js";
+import useJsonLd from "../hooks/useJsonLd.js";
+import { buildBreadcrumbSchema } from "../utils/breadcrumbSchema.js";
 import Container from "../components/Container.jsx";
 import PageHero from "../components/PageHero.jsx";
 import Reveal from "../components/Reveal.jsx";
@@ -75,6 +77,21 @@ export default function AlbumDetail() {
   const photos = album ? album.photos.map((src, i) => ({ id: `${album.id}-${i}`, src, alt: title })) : [];
 
   useSeo({ title, description, image: album?.photos?.[0], path: `/gallery/${id}` });
+  useJsonLd(
+    // ImageGallery, not Article -- an album is a set of photos with a
+    // caption, not a written piece, so this is the more accurate
+    // schema.org type for what this page actually is.
+    album && {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      name: title,
+      description,
+      image: album.photos,
+      datePublished: album.createdAt,
+      dateModified: album.updatedAt || album.createdAt,
+    }
+  );
+  useJsonLd(title && buildBreadcrumbSchema([{ name: t("gallery.title"), path: "/gallery" }, { name: title, path: `/gallery/${id}` }]));
 
   return (
     <>
