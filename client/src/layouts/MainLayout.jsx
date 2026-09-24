@@ -51,7 +51,11 @@ function MainLayoutContent() {
     <div className="flex min-h-screen flex-col bg-cream-100">
       <RouteSweep />
       <Navbar />
-      <main className="flex-1">
+      {/* overflow-x-hidden lives here, not on html/body (see index.css) --
+          same defense-in-depth clip against an accidentally-too-wide child,
+          without breaking Navbar's position: sticky (Navbar is main's
+          sibling, so it's never inside this clipped box). */}
+      <main className="flex-1 overflow-x-hidden">
         {/* mode="wait" so the outgoing page fully finishes its exit
             animation before the next one mounts and animates in — a
             same-time crossfade instead reads as a jarring double-flash. */}
