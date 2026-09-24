@@ -263,7 +263,7 @@ export default function Hero({ siteInfo }) {
                         the same motion.div as the label above, so it
                         animates in together with the exact same transition,
                         not a separate one. */}
-                    <span className="hidden text-xs text-ink-500 sm:block">{t(`home.${key}Desc`)}</span>
+                    <span className="hidden text-sm text-ink-500 sm:block">{t(`home.${key}Desc`)}</span>
                   </span>
                 </motion.div>
               );
