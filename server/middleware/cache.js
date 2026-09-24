@@ -26,11 +26,23 @@ const DEFAULT_TTL_MS = 30 * 60 * 1000;
 // Keyed by the full originalUrl (not just the path) so query-string
 // variations -- /api/projects?status=ongoing vs ?status=completed -- each
 // get their own cache entry instead of colliding.
+// This app never sent its own Cache-Control on these routes, which let
+// Cloudflare's zone-wide Browser Cache TTL setting (set long, for images)
+// leak onto these dynamic JSON responses too -- a visitor's own browser was
+// holding onto month-old API data, which a Cloudflare edge purge on an
+// admin write can't reach (that only clears Cloudflare's cache, not
+// browsers already holding a copy). An explicit short value here overrides
+// that. Cloudflare's Edge TTL (set separately in the Cache Rule, currently
+// ignoring this header) still caches for its own longer duration -- this
+// only shortens what the *browser* holds onto.
+const BROWSER_CACHE_CONTROL = "public, max-age=120";
+
 export const cacheGet = (namespace, ttlMs = DEFAULT_TTL_MS) => (req, res, next) => {
   const key = `${namespace}:${req.originalUrl}`;
   const hit = store.get(key);
   if (hit && hit.expiresAt > Date.now()) {
     res.set("X-Cache", "HIT");
+    res.set("Cache-Control", BROWSER_CACHE_CONTROL);
     return res.json(hit.body);
   }
 
@@ -40,6 +52,7 @@ export const cacheGet = (namespace, ttlMs = DEFAULT_TTL_MS) => (req, res, next) 
       store.set(key, { body, expiresAt: Date.now() + ttlMs });
     }
     res.set("X-Cache", "MISS");
+    res.set("Cache-Control", BROWSER_CACHE_CONTROL);
     return originalJson(body);
   };
   next();
