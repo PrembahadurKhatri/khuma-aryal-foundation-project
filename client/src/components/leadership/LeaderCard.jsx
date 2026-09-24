@@ -44,7 +44,15 @@ export default function LeaderCard({ leader, onRead, delay = 0 }) {
         </div>
       </div>
 
-      <p className="relative line-clamp-4 font-body text-sm leading-relaxed text-ink-900">&ldquo;{message}&rdquo;</p>
+      {/* min-h reserves the same space a full 4-line clamp would take, even
+          when a leader's message is short enough not to need clamping --
+          without it, cards next to (or stacked above/below, on mobile)
+          each other end up visibly different sizes based purely on how
+          long each leader's bio happens to be. The "Read Full Message"
+          button below already covers seeing the rest either way. */}
+      <p className="relative line-clamp-4 min-h-[5.7rem] font-body text-sm leading-relaxed text-ink-900">
+        &ldquo;{message}&rdquo;
+      </p>
 
       <button
         type="button"
