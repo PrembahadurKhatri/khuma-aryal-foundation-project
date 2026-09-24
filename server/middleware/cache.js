@@ -1,3 +1,5 @@
+import { purgeCloudflareUrls } from "../config/cloudflare.js";
+
 // A minimal in-memory TTL cache for public, rarely-changing GET routes
 // (leaders, projects, news, notices, board-members, settings). Cheap and
 // process-local by design -- this app runs a single Node process, so there's
@@ -7,6 +9,12 @@
 // no concept of per-user data, so caching a response tied to a specific
 // requester would leak it to the next caller who hits the same URL.
 const store = new Map(); // `${namespace}:${originalUrl}` -> { body, expiresAt }
+
+// Every one of these namespaces matches its route path exactly
+// (/api/leaders, /api/projects, ...) -- see server.js's route registrations
+// -- so the namespace alone is enough to build the public URL Cloudflare's
+// edge cache rule would have cached it under.
+const API_ORIGIN = process.env.API_ORIGIN || "https://api.khumaaryalfoundation.org.np";
 
 // Admin writes already clear the relevant namespace immediately (see
 // clearCache below), so a long TTL costs nothing in staleness -- it only
@@ -38,10 +46,17 @@ export const cacheGet = (namespace, ttlMs = DEFAULT_TTL_MS) => (req, res, next) 
 };
 
 // Called from a namespace's create/update/delete controllers so an admin
-// edit is visible immediately instead of waiting out the TTL.
+// edit is visible immediately instead of waiting out the TTL -- both this
+// process's own in-memory cache AND (if configured) Cloudflare's edge cache
+// for the same namespace's plain URL (no query string). A cached query-string
+// variant (e.g. /api/projects?status=ongoing) is deliberately left for
+// Cloudflare's short Edge TTL to expire on its own rather than tracked and
+// purged individually -- the Edge TTL on that rule is short specifically so
+// this bounded staleness is an acceptable tradeoff.
 export const clearCache = (namespace) => {
   const prefix = `${namespace}:`;
   for (const key of store.keys()) {
     if (key.startsWith(prefix)) store.delete(key);
   }
+  purgeCloudflareUrls([`${API_ORIGIN}/api/${namespace}`]);
 };
