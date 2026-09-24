@@ -48,8 +48,12 @@ export default function PresidentFeature({ leader, onRead }) {
       />
 
       <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-12">
-        {/* Portrait — first in the DOM (so it's on top on mobile), pushed to the right on desktop */}
-        <div className="order-1 mx-auto w-full max-w-sm lg:order-2">
+        {/* Portrait — first in the DOM (so it's on top on mobile), pushed to
+            the right on desktop. Capped smaller on mobile than the
+            sm:/desktop size (max-w-sm/384px read as oversized on a narrow
+            phone screen, dwarfing the message text below it). Unchanged
+            from sm: up. */}
+        <div className="order-1 mx-auto w-full max-w-[220px] sm:max-w-sm lg:order-2">
           <div className="aspect-[4/5] overflow-hidden rounded-xl2 border-2 border-gilt-400/70 shadow-card transition-transform duration-500 group-hover:scale-[1.02]">
             {/* Falls back to a real placeholder photo, not PlaceholderImage's
                 gradient card — an admin who hasn't uploaded the President's
