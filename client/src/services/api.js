@@ -26,7 +26,22 @@ export const setAccessToken = (token) => {
 };
 
 api.interceptors.request.use((config) => {
-  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+    // Cloudflare's Cache Rule for the public JSON routes (leaders/news/...)
+    // matches on exact URI path only -- it has no concept of the
+    // Authorization header, so an admin's own GET request was being served
+    // straight from Cloudflare's shared edge cache, same as any public
+    // visitor's, even right after the admin's own write. The server already
+    // skips its own cache for an authenticated request (see
+    // middleware/cache.js), but that logic never even runs if Cloudflare
+    // answers from the edge before the request reaches origin. A random
+    // query param makes every admin GET a unique URL that can never match
+    // the Cache Rule's exact-path condition, so it always reaches origin.
+    if ((config.method || "get").toLowerCase() === "get") {
+      config.params = { ...config.params, _admin: Date.now() };
+    }
+  }
   return config;
 });
 
