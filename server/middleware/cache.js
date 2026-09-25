@@ -38,6 +38,20 @@ const DEFAULT_TTL_MS = 30 * 60 * 1000;
 const BROWSER_CACHE_CONTROL = "public, max-age=120";
 
 export const cacheGet = (namespace, ttlMs = DEFAULT_TTL_MS) => (req, res, next) => {
+  // Admin panel calls this exact same GET endpoint (leaderService.js etc. all
+  // hit plain /api/leaders, not a separate admin route) with an
+  // Authorization: Bearer header the public site never sends. Without this
+  // check, an admin who just created/edited something could still see stale
+  // data in their own management list for up to BROWSER_CACHE_CONTROL's
+  // max-age -- clearCache() purges the *server's* cache immediately, but a
+  // browser that already cached the previous response doesn't know to
+  // re-check just because the admin made a write in a different request.
+  // no-store here means every admin view is always genuinely live.
+  if (req.headers.authorization) {
+    res.set("Cache-Control", "no-store");
+    return next();
+  }
+
   const key = `${namespace}:${req.originalUrl}`;
   const hit = store.get(key);
   if (hit && hit.expiresAt > Date.now()) {
