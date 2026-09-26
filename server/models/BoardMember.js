@@ -17,6 +17,17 @@ const boardMemberSchema = new mongoose.Schema(
     photo: { type: String, default: "/images/blank.avif" },
     // Display order within the Board Members grid (ascending).
     order: { type: Number, default: 0 },
+    // All optional — the public site only renders an icon for whichever of
+    // these a member actually has (see components/SocialLinks.jsx). `email`
+    // and `whatsapp` are this person's own contact, separate from the
+    // site-wide ones in Settings.
+    social: {
+      facebook: { type: String, trim: true, default: "" },
+      instagram: { type: String, trim: true, default: "" },
+      whatsapp: { type: String, trim: true, default: "" },
+      email: { type: String, trim: true, default: "" },
+      tiktok: { type: String, trim: true, default: "" },
+    },
   },
   { timestamps: true }
 );

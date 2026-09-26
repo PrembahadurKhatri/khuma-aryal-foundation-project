@@ -23,6 +23,11 @@ const emptyForm = {
   titleNe: "",
   messageEn: "",
   messageNe: "",
+  socialFacebook: "",
+  socialInstagram: "",
+  socialWhatsapp: "",
+  socialEmail: "",
+  socialTiktok: "",
   photoFile: null,
 };
 
@@ -87,6 +92,11 @@ const LeadersManage = () => {
       titleNe: item.title?.ne || "",
       messageEn: item.message?.en || "",
       messageNe: item.message?.ne || "",
+      socialFacebook: item.social?.facebook || "",
+      socialInstagram: item.social?.instagram || "",
+      socialWhatsapp: item.social?.whatsapp || "",
+      socialEmail: item.social?.email || "",
+      socialTiktok: item.social?.tiktok || "",
       photoFile: null,
     });
     setShowForm(true);
@@ -267,6 +277,43 @@ const LeadersManage = () => {
               onChange={(e) => setForm({ ...form, messageNe: e.target.value })}
               className={inputClass}
             />
+
+            <div>
+              <label className={`mb-1 block text-xs font-medium ${mutedClass}`}>Social Links (all optional)</label>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <input
+                  placeholder="Facebook URL"
+                  value={form.socialFacebook}
+                  onChange={(e) => setForm({ ...form, socialFacebook: e.target.value })}
+                  className={inputClass}
+                />
+                <input
+                  placeholder="Instagram URL"
+                  value={form.socialInstagram}
+                  onChange={(e) => setForm({ ...form, socialInstagram: e.target.value })}
+                  className={inputClass}
+                />
+                <input
+                  placeholder="WhatsApp number e.g. 9779800000000"
+                  value={form.socialWhatsapp}
+                  onChange={(e) => setForm({ ...form, socialWhatsapp: e.target.value })}
+                  className={inputClass}
+                />
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={form.socialEmail}
+                  onChange={(e) => setForm({ ...form, socialEmail: e.target.value })}
+                  className={inputClass}
+                />
+                <input
+                  placeholder="TikTok URL"
+                  value={form.socialTiktok}
+                  onChange={(e) => setForm({ ...form, socialTiktok: e.target.value })}
+                  className={inputClass}
+                />
+              </div>
+            </div>
 
             <ImageSourceField
               theme={theme}

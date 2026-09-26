@@ -12,6 +12,24 @@ const fromFlatFields = (body) => {
   if (body.nameEn !== undefined || body.nameNe !== undefined) payload.name = { en: body.nameEn, ne: body.nameNe };
   if (body.designationEn !== undefined || body.designationNe !== undefined)
     payload.designation = { en: body.designationEn, ne: body.designationNe };
+  // Rebuilt as a whole whenever any one social field is sent — admin's
+  // form always submits all five together, so this also correctly clears
+  // whichever of the five were left blank rather than leaving stale values.
+  if (
+    body.socialFacebook !== undefined ||
+    body.socialInstagram !== undefined ||
+    body.socialWhatsapp !== undefined ||
+    body.socialEmail !== undefined ||
+    body.socialTiktok !== undefined
+  ) {
+    payload.social = {
+      facebook: body.socialFacebook || "",
+      instagram: body.socialInstagram || "",
+      whatsapp: body.socialWhatsapp || "",
+      email: body.socialEmail || "",
+      tiktok: body.socialTiktok || "",
+    };
+  }
   return payload;
 };
 
@@ -44,6 +62,13 @@ export const createBoardMember = asyncHandler(async (req, res) => {
     order: Number(req.body.order) || 0,
     name: { en: req.body.nameEn, ne: req.body.nameNe },
     designation: { en: req.body.designationEn, ne: req.body.designationNe },
+    social: {
+      facebook: req.body.socialFacebook || "",
+      instagram: req.body.socialInstagram || "",
+      whatsapp: req.body.socialWhatsapp || "",
+      email: req.body.socialEmail || "",
+      tiktok: req.body.socialTiktok || "",
+    },
     photo: req.file ? req.file.path : "/images/blank.avif",
   };
   const member = await BoardMember.create(payload);

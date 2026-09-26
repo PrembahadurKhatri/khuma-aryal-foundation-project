@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import { pick } from "../../utils/localize.js";
 import Avatar from "../Avatar.jsx";
+import SocialLinks from "../SocialLinks.jsx";
 
 /** Supporting leadership voice — deliberately quieter than the Founder/President features. */
 export default function LeaderCard({ leader, onRead, delay = 0 }) {
@@ -41,6 +42,7 @@ export default function LeaderCard({ leader, onRead, delay = 0 }) {
         <div>
           <p className="font-body text-lg font-bold text-forest-900">{name}</p>
           <p className="font-body text-xs font-semibold uppercase tracking-wide text-[#FF8C00]">{title}</p>
+          <SocialLinks social={leader.social} className="mt-2" />
         </div>
       </div>
 

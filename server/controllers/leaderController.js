@@ -12,6 +12,24 @@ const fromFlatFields = (body) => {
   if (body.nameEn !== undefined || body.nameNe !== undefined) payload.name = { en: body.nameEn, ne: body.nameNe };
   if (body.titleEn !== undefined || body.titleNe !== undefined) payload.title = { en: body.titleEn, ne: body.titleNe };
   if (body.messageEn !== undefined || body.messageNe !== undefined) payload.message = { en: body.messageEn, ne: body.messageNe };
+  // Rebuilt as a whole whenever any one social field is sent — admin's
+  // form always submits all five together, so this also correctly clears
+  // whichever of the five were left blank rather than leaving stale values.
+  if (
+    body.socialFacebook !== undefined ||
+    body.socialInstagram !== undefined ||
+    body.socialWhatsapp !== undefined ||
+    body.socialEmail !== undefined ||
+    body.socialTiktok !== undefined
+  ) {
+    payload.social = {
+      facebook: body.socialFacebook || "",
+      instagram: body.socialInstagram || "",
+      whatsapp: body.socialWhatsapp || "",
+      email: body.socialEmail || "",
+      tiktok: body.socialTiktok || "",
+    };
+  }
   return payload;
 };
 
@@ -49,6 +67,13 @@ export const createLeader = asyncHandler(async (req, res) => {
     name: { en: req.body.nameEn, ne: req.body.nameNe },
     title: { en: req.body.titleEn, ne: req.body.titleNe },
     message: { en: req.body.messageEn, ne: req.body.messageNe },
+    social: {
+      facebook: req.body.socialFacebook || "",
+      instagram: req.body.socialInstagram || "",
+      whatsapp: req.body.socialWhatsapp || "",
+      email: req.body.socialEmail || "",
+      tiktok: req.body.socialTiktok || "",
+    },
     photo: req.file ? req.file.path : "/images/blank.avif",
   };
   const leader = await Leader.create(payload);

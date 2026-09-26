@@ -5,6 +5,7 @@ import Reveal from "./Reveal.jsx";
 import Skeleton from "./Skeleton.jsx";
 import LoadFailed from "./LoadFailed.jsx";
 import Avatar from "./Avatar.jsx";
+import SocialLinks from "./SocialLinks.jsx";
 
 function CrownIcon() {
   return (
@@ -181,6 +182,7 @@ export default function BoardMembers({ members, loading, error }) {
                       {designationIcon(member.designation?.en)}
                       {designation}
                     </span>
+                    <SocialLinks social={member.social} className="mt-2 justify-center" />
                   </div>
                 </Reveal>
               );

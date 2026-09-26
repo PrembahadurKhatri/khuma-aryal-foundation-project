@@ -4,6 +4,7 @@ import { pick } from "../../utils/localize.js";
 import { useSiteInfo } from "../../contexts/SiteInfoContext.jsx";
 import PlaceholderImage from "../PlaceholderImage.jsx";
 import Button from "../Button.jsx";
+import SocialLinks from "../SocialLinks.jsx";
 
 function BookIcon() {
   return (
@@ -88,6 +89,7 @@ export default function FounderFeature({ leader, onRead }) {
             <p className="font-body text-lg font-bold text-forest-900">{name}</p>
             <p className="text-sm text-ink-600">{title}</p>
             <p className="text-sm text-ink-600">{pick(siteInfo.name, language)}</p>
+            <SocialLinks social={leader.social} className="mt-3" />
           </div>
 
           <Button type="button" onClick={onRead} variant="primary" className="mt-1 w-fit">
