@@ -42,13 +42,21 @@ function TikTokIcon() {
 // Order matches the request this was built for: Facebook, Instagram,
 // WhatsApp, Email, TikTok. `href` turns each raw stored value (a plain
 // phone number for WhatsApp, a plain address for email) into a clickable
-// link the same way WhatsAppButton.jsx and Footer.jsx already do.
+// link the same way WhatsAppButton.jsx and Footer.jsx already do. `color`
+// is each platform's own brand color (tint background + brand-colored icon
+// at rest, solid brand fill on hover) instead of one uniform site-green
+// circle for all five.
 const PLATFORMS = [
-  { key: "facebook", Icon: FacebookIcon, href: (v) => v },
-  { key: "instagram", Icon: InstagramIcon, href: (v) => v },
-  { key: "whatsapp", Icon: WhatsAppIcon, href: (v) => `https://wa.me/${v.replace(/\D/g, "")}` },
-  { key: "email", Icon: EmailIcon, href: (v) => `mailto:${v}` },
-  { key: "tiktok", Icon: TikTokIcon, href: (v) => v },
+  { key: "facebook", Icon: FacebookIcon, href: (v) => v, color: "bg-blue-50 text-blue-600 hover:bg-blue-600" },
+  { key: "instagram", Icon: InstagramIcon, href: (v) => v, color: "bg-pink-50 text-pink-600 hover:bg-pink-600" },
+  {
+    key: "whatsapp",
+    Icon: WhatsAppIcon,
+    href: (v) => `https://wa.me/${v.replace(/\D/g, "")}`,
+    color: "bg-emerald-50 text-emerald-600 hover:bg-emerald-500",
+  },
+  { key: "email", Icon: EmailIcon, href: (v) => `mailto:${v}`, color: "bg-red-50 text-red-600 hover:bg-red-500" },
+  { key: "tiktok", Icon: TikTokIcon, href: (v) => v, color: "bg-slate-100 text-slate-900 hover:bg-slate-900" },
 ];
 
 /**
@@ -65,7 +73,7 @@ export default function SocialLinks({ social, className = "" }) {
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      {active.map(({ key, Icon, href }) => (
+      {active.map(({ key, Icon, href, color }) => (
         <a
           key={key}
           href={href(social[key])}
@@ -73,7 +81,7 @@ export default function SocialLinks({ social, className = "" }) {
           rel="noopener noreferrer"
           aria-label={key}
           onClick={(e) => e.stopPropagation()}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-forest-50 text-forest-700 transition-colors duration-300 hover:bg-forest-600 hover:text-white"
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors duration-300 hover:text-white ${color}`}
         >
           <Icon />
         </a>
