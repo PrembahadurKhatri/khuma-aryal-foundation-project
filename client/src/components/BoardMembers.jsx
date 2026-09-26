@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
 import { pick } from "../utils/localize.js";
 import Container from "./Container.jsx";
@@ -143,22 +144,36 @@ export default function BoardMembers({ members, loading, error }) {
             {members.map((member, i) => {
               const name = pick(member.name, language);
               const designation = pick(member.designation, language);
+              // Alternating tilt direction per card (same trick Hero.jsx's
+              // trust badges use) so the entrance reads as a lively little
+              // "pop" into place rather than every card sliding in
+              // identically -- a spring, not a linear fade, is what makes
+              // it feel eye-catching instead of just present.
+              const tilt = i % 2 === 0 ? -8 : 8;
               return (
-                <Reveal
+                <motion.div
                   key={member.id}
-                  delay={(i % 5) * 0.06}
-                  variant="scale"
+                  initial={{ opacity: 0, y: 28, scale: 0.8, rotate: tilt }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ type: "spring", stiffness: 120, damping: 16, delay: (i % 5) * 0.08 }}
                   className="group flex flex-col items-center gap-3  rounded-2xl border border-transparent p-3 text-center font-body transition-all duration-500 hover:-translate-y-2 hover:border-forest-100 hover:bg-white hover:shadow-lift"
                 >
                   {/* Photo — a permanent gold-to-orange "story ring" (like
                       the reference design) instead of only appearing on
                       hover: the gradient ring is a padded outer circle, a
                       thin cream gap sits between it and the photo, and
-                      Avatar itself renders inside untouched. A soft glow
-                      blooms behind it and the whole ring scales up
-                      slightly on hover for a bit of life. */}
+                      Avatar itself renders inside untouched. The glow behind
+                      it breathes gently even at rest (a slow, subtle
+                      scale/opacity pulse) instead of only reacting to
+                      hover, so the grid feels a little alive on its own --
+                      and still blooms brighter on hover same as before. */}
                   <div className="relative">
-                    <div className="absolute inset-0 -z-10 rounded-full bg-gilt-400/20 blur-xl transition-colors duration-500 group-hover:bg-gilt-400/40" />
+                    <motion.div
+                      className="absolute inset-0 -z-10 rounded-full bg-gilt-400/20 blur-xl transition-colors duration-500 group-hover:bg-gilt-400/40"
+                      animate={{ scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }}
+                      transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: (i % 5) * 0.15 }}
+                    />
                     <div className="rounded-full bg-gradient-to-br from-gilt-300 via-[#FFA53D] to-[#FF6B00] p-[3px] shadow-card transition-transform duration-500 group-hover:scale-105">
                       <div className="rounded-full bg-cream-50 p-[3px]">
                         <div className="overflow-hidden rounded-full transition-transform duration-500 ease-out group-hover:scale-110">
@@ -182,7 +197,7 @@ export default function BoardMembers({ members, loading, error }) {
                       {designation}
                     </span>
                   </div>
-                </Reveal>
+                </motion.div>
               );
             })}
           </div>
