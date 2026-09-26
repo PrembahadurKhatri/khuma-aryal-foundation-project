@@ -126,7 +126,7 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav
-          className="hidden items-center gap-1 rounded-full border border-forest-100/70 bg-white/50 p-1 shadow-[0_1px_2px_rgba(31,55,45,0.04),0_8px_24px_-8px_rgba(31,55,45,0.10)] backdrop-blur-sm lg:flex"
+          className="hidden items-center gap-1 rounded-full border border-forest-200/80 bg-white/50 p-1 shadow-[0_2px_5px_rgba(31,55,45,0.08),0_14px_32px_-8px_rgba(31,55,45,0.24)] backdrop-blur-sm lg:flex"
           aria-label="Primary"
         >
           {links.map((link) =>
