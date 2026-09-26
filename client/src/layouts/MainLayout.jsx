@@ -3,7 +3,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
-import EmailButton from "../components/EmailButton.jsx";
 import PageTransition from "../components/PageTransition.jsx";
 import RouteSweep from "../components/RouteSweep.jsx";
 import useTrackVisit from "../hooks/useTrackVisit.js";
@@ -67,7 +66,6 @@ function MainLayoutContent() {
         </AnimatePresence>
       </main>
       <Footer />
-      <EmailButton />
     </div>
   );
 }
