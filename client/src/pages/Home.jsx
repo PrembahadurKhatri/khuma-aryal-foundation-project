@@ -377,8 +377,12 @@ export default function Home() {
                 {/* The live embed itself — kept flat/unrotated so the real
                     Facebook scroll, clicks and links inside it stay usable;
                     all the tilt/depth is confined to the purely decorative
-                    elements around it. */}
-                <div className="relative overflow-hidden rounded-xl3 border border-forest-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
+                    elements around it. A visibly heavier border/shadow than
+                    the site's usual card treatment on purpose, so this reads
+                    as its own distinct boxed panel (per the reference
+                    screenshot) rather than blending into the section
+                    background. */}
+                <div className="relative flex overflow-hidden rounded-xl3 border-2 border-forest-200/80 bg-white shadow-[0_24px_60px_-16px_rgba(31,55,45,0.3)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_-14px_rgba(31,55,45,0.36)]">
                   {/* Meta's plugin isn't fully fluid past ~500px, so it's
                       given a fixed reference width and adapt_container_width
                       shrinks it cleanly to fit on mobile. */}
@@ -392,7 +396,31 @@ export default function Home() {
                     scrolling="yes"
                     loading="lazy"
                     allow="encrypted-media"
+                    className="flex-1"
                   />
+
+                  {/* Decorative scroll rail — the timeline inside the iframe
+                      is Facebook's own cross-origin document, so its native
+                      scrollbar can't be restyled or driven from here (see
+                      the note above the card). This rail is a visual cue
+                      only: an up/down chevron and a thumb sitting near the
+                      top, making "this panel scrolls" obvious on its own
+                      even where a browser hides or thins its real scrollbar. */}
+                  <div className="relative flex w-6 shrink-0 flex-col items-center border-l border-forest-100 bg-forest-50 py-2">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center text-forest-400">
+                      <svg viewBox="0 0 24 24" fill="none" className="h-3 w-3" aria-hidden="true">
+                        <path d="M6 15l6-6 6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    <span className="relative my-1 w-1.5 flex-1 rounded-full bg-forest-200">
+                      <span className="absolute left-0 top-0 h-14 w-full rounded-full bg-forest-400" />
+                    </span>
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center text-forest-400">
+                      <svg viewBox="0 0 24 24" fill="none" className="h-3 w-3" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </div>
                 </div>
 
                 {/* Floating "Like · Share · Support" pill, bottom-right —
