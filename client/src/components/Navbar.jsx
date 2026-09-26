@@ -7,6 +7,26 @@ import Container from "./Container.jsx";
 import { Shine } from "./Button.jsx";
 import { useSiteInfo } from "../contexts/SiteInfoContext.jsx";
 
+// Same icon set as Footer.jsx's SOCIAL_ICONS (kept separate rather than
+// shared, matching how About.jsx already has its own copy in this codebase).
+const SOCIAL_ICONS = {
+  facebook: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+      <path d="M13.5 21v-8.2h2.75l.41-3.2H13.5V7.4c0-.93.26-1.56 1.6-1.56h1.7V2.98A22.7 22.7 0 0 0 14.5 2.85c-2.42 0-4.08 1.48-4.08 4.2v2.55H7.65v3.2h2.77V21h3.08Z" />
+    </svg>
+  ),
+  instagram: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+      <path d="M12 2.2c2.7 0 3 .01 4.1.06 1.06.05 1.79.22 2.43.47.66.26 1.22.6 1.77 1.15.55.55.9 1.11 1.15 1.77.25.64.42 1.37.47 2.43.05 1.1.06 1.4.06 4.1s-.01 3-.06 4.1c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.64.25-1.37.42-2.43.47-1.1.05-1.4.06-4.1.06s-3-.01-4.1-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.25-.64-.42-1.37-.47-2.43C2.21 15 2.2 14.7 2.2 12s.01-3 .06-4.1c.05-1.06.22-1.79.47-2.43.26-.66.6-1.22 1.15-1.77A4.9 4.9 0 0 1 5.65 2.55c.64-.25 1.37-.42 2.43-.47C9.18 2.03 9.48 2.02 12 2.02Zm0 1.8c-2.66 0-2.97.01-4.02.06-.86.04-1.33.18-1.64.3-.41.16-.71.35-1.02.66-.31.31-.5.61-.66 1.02-.12.31-.26.78-.3 1.64-.05 1.05-.06 1.36-.06 4.02s.01 2.97.06 4.02c.04.86.18 1.33.3 1.64.16.41.35.71.66 1.02.31.31.61.5 1.02.66.31.12.78.26 1.64.3 1.05.05 1.36.06 4.02.06s2.97-.01 4.02-.06c.86-.04 1.33-.18 1.64-.3.41-.16.71-.35 1.02-.66.31-.31.5-.61.66-1.02.12-.31.26-.78.3-1.64.05-1.05.06-1.36.06-4.02s-.01-2.97-.06-4.02c-.04-.86-.18-1.33-.3-1.64a2.76 2.76 0 0 0-.66-1.02 2.76 2.76 0 0 0-1.02-.66c-.31-.12-.78-.26-1.64-.3C14.97 4.01 14.66 4 12 4Zm0 3.38A4.62 4.62 0 1 1 7.38 12 4.62 4.62 0 0 1 12 7.38Zm0 1.8A2.82 2.82 0 1 0 14.82 12 2.82 2.82 0 0 0 12 9.18Zm4.8-2.02a1.08 1.08 0 1 1-1.08-1.08 1.08 1.08 0 0 1 1.08 1.08Z" />
+    </svg>
+  ),
+  youtube: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+      <path d="M21.6 7.2s-.21-1.48-.86-2.14c-.82-.86-1.74-.87-2.16-.92C15.6 4 12 4 12 4h-.01s-3.6 0-6.58.14c-.42.05-1.34.06-2.16.92-.65.66-.86 2.14-.86 2.14S2.18 8.94 2.18 10.68v1.53c0 1.74.21 3.48.21 3.48s.21 1.48.86 2.14c.82.86 1.9.83 2.38.92 1.72.16 7.37.21 7.37.21s3.6 0 6.58-.15c.42-.05 1.34-.06 2.16-.92.65-.66.86-2.14.86-2.14s.21-1.74.21-3.48v-1.53c0-1.74-.21-3.48-.21-3.48ZM9.98 14.5v-5.4l4.9 2.71-4.9 2.69Z" />
+    </svg>
+  ),
+};
+
 export default function Navbar() {
   const { t, language } = useLanguage();
   const siteInfo = useSiteInfo();
@@ -63,13 +83,67 @@ export default function Navbar() {
      }`;
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full border-b border-transparent transition-all duration-500 ${
-        scrolled
-          ? "bg-cream-50/75 shadow-[0_10px_40px_-8px_rgba(31,55,45,0.12)] backdrop-blur-2xl"
-          : "bg-cream-50"
-      }`}
-    >
+    <>
+      {/* Contact strip — sits above the sticky header in normal document
+          flow (not sticky itself), so it simply scrolls out of view once
+          the page moves past it and the header (position: sticky) takes
+          over the top of the viewport on its own; no extra scroll-hide
+          logic needed for "only the navbar shows once you scroll". */}
+      <div className="hidden bg-forest-600 lg:block">
+        <Container className="flex items-center justify-between gap-6 py-2 font-body text-xs text-white">
+          <div className="flex min-w-0 items-center gap-4">
+            <div className="flex shrink-0 items-center gap-2.5">
+              {Object.entries(siteInfo.social).map(([key, url]) => (
+                <a
+                  key={key}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={key}
+                  className="text-white/75 transition-colors hover:text-white"
+                >
+                  {SOCIAL_ICONS[key]}
+                </a>
+              ))}
+            </div>
+            <span className="h-3.5 w-px shrink-0 bg-white/25" />
+            <span className="truncate font-medium tracking-wide text-white/90">
+              {pick(siteInfo.tagline, language)}
+            </span>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-5">
+            <a href={`tel:${siteInfo.phone}`} className="flex items-center gap-1.5 text-white/90 transition-colors hover:text-white">
+              <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 shrink-0">
+                <path d="M4 5.5C4 4.67 4.67 4 5.5 4h2.19c.5 0 .93.35 1.03.84l.77 3.68a1.05 1.05 0 0 1-.29 1L7.9 10.8a12.6 12.6 0 0 0 5.3 5.3l1.28-1.3a1.05 1.05 0 0 1 1-.29l3.68.77c.49.1.84.53.84 1.03V18.5c0 .83-.67 1.5-1.5 1.5h-.25C9.4 20 4 14.6 4 7.75V5.5Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {siteInfo.phone}
+            </a>
+            <a href={`mailto:${siteInfo.email}`} className="flex items-center gap-1.5 text-white/90 transition-colors hover:text-white">
+              <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 shrink-0">
+                <path d="M4.5 6.5h15a.5.5 0 0 1 .5.5v10a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1V7a.5.5 0 0 1 .5-.5Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                <path d="M4.5 7l7.5 6 7.5-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {siteInfo.email}
+            </a>
+            <span className="flex items-center gap-1.5 text-white/90">
+              <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 shrink-0">
+                <path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                <circle cx="12" cy="9.5" r="2.3" stroke="currentColor" strokeWidth="1.6" />
+              </svg>
+              {pick(siteInfo.address, language)}
+            </span>
+          </div>
+        </Container>
+      </div>
+
+      <header
+        className={`sticky top-0 z-50 w-full border-b border-transparent transition-all duration-500 ${
+          scrolled
+            ? "bg-cream-50/75 shadow-[0_10px_40px_-8px_rgba(31,55,45,0.12)] backdrop-blur-2xl"
+            : "bg-cream-50"
+        }`}
+      >
       {/* Hairline gold accent */}
       <div
         className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gilt-400/50 to-transparent transition-opacity duration-500 ${
@@ -342,5 +416,6 @@ export default function Navbar() {
         </Container>
       </div>
     </header>
+    </>
   );
 }
