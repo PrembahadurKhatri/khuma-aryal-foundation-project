@@ -26,10 +26,10 @@ const TRUST_KEYS = ["trustBadge1", "trustBadge2", "trustBadge3"];
 // "Homepage Stats") — `fallback` covers a freshly-created Settings document
 // or a field the admin hasn't filled in yet.
 const STATS = [
-  { key: "statYears", statField: "years", fallback: "10+", icon: "clock" },
-  { key: "statBeneficiaries", statField: "beneficiaries", fallback: "5,000+", icon: "grad" },
-  { key: "statProjects", statField: "projects", fallback: "40+", icon: "flag" },
-  { key: "statVolunteers", statField: "volunteers", fallback: "120+", icon: "heart" },
+  { key: "statYears", statField: "years", fallback: "10+", icon: "clock", color: "bg-rose-50 text-rose-600" },
+  { key: "statBeneficiaries", statField: "beneficiaries", fallback: "5,000+", icon: "grad", color: "bg-blue-50 text-blue-600" },
+  { key: "statProjects", statField: "projects", fallback: "40+", icon: "flag", color: "bg-emerald-50 text-emerald-600" },
+  { key: "statVolunteers", statField: "volunteers", fallback: "120+", icon: "heart", color: "bg-violet-50 text-violet-600" },
 ];
 
 function ShieldIcon() {
@@ -326,7 +326,7 @@ export default function Hero({ siteInfo }) {
                   return (
                     <Reveal key={stat.key} delay={i * 0.08} variant="scale" className="h-full">
                       <div className="flex h-full flex-col gap-2 rounded-2xl border border-forest-100 bg-white p-5 text-center shadow-card">
-                        <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-forest-50 text-forest-700">
+                        <span className={`mx-auto flex h-11 w-11 items-center justify-center rounded-full ${stat.color}`}>
                           <Icon />
                         </span>
                         <span className="font-body text-2xl font-semibold text-forest-900 sm:text-3xl">
