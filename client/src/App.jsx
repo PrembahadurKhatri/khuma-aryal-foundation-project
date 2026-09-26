@@ -1,5 +1,4 @@
-// (no-op edit: retriggers the client deploy workflow after a transient FTP failure)
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout.jsx";
 import AdminLayout from "./layouts/AdminLayout.jsx";
@@ -48,13 +47,28 @@ const ApplicationsManage = lazy(() => import("./pages/admin/ApplicationsManage.j
 const LeadersManage = lazy(() => import("./pages/admin/LeadersManage.jsx"));
 const BoardMembersManage = lazy(() => import("./pages/admin/BoardMembersManage.jsx"));
 
-// Small, unbranded fallback — shown only for the fraction of a second a
-// lazy chunk takes to download on a route change (and only past the first
-// visit, since the browser caches each chunk after that).
+// Branded fallback — the site's own logo, sitting still, with a ring
+// spinning around it rather than the generic bare circle this used to be.
+// Held back behind a short delay (nothing rendered for the first 250ms) so
+// a chunk that's already cached or loads instantly never flashes this at
+// all -- it only actually appears when a page genuinely takes a moment,
+// which is exactly when "page is loading" feedback earns its place.
 function RouteLoading() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(true), 250);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!show) return null;
+
   return (
     <div className="flex min-h-[40vh] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-forest-200 border-t-forest-600" />
+      <div className="relative flex h-16 w-16 items-center justify-center">
+        <div className="absolute inset-0 animate-spin rounded-full border-[3px] border-forest-100 border-t-forest-600" />
+        <img src="/images/haha.webp" alt="" className="h-10 w-10 rounded-full object-cover" />
+      </div>
     </div>
   );
 }
