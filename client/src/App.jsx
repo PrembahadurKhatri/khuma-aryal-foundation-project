@@ -1,4 +1,3 @@
-// (no-op edit: retriggers the client deploy workflow after a transient FTP failure)
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout.jsx";

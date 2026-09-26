@@ -25,11 +25,16 @@ const TRUST_KEYS = ["trustBadge1", "trustBadge2", "trustBadge3"];
 // `statField` maps to Settings.stats.<field> (see admin's Settings page,
 // "Homepage Stats") — `fallback` covers a freshly-created Settings document
 // or a field the admin hasn't filled in yet.
+// `image` picks a real photo whose subject matches what each stat is
+// actually counting (an AGM/anniversary photo for years of service, a
+// classroom session for youth supported, a distribution event for
+// projects, the young field team for volunteers) rather than a generic
+// stock backdrop repeated four times.
 const STATS = [
-  { key: "statYears", statField: "years", fallback: "10+", icon: "clock" },
-  { key: "statBeneficiaries", statField: "beneficiaries", fallback: "5,000+", icon: "grad" },
-  { key: "statProjects", statField: "projects", fallback: "40+", icon: "flag" },
-  { key: "statVolunteers", statField: "volunteers", fallback: "120+", icon: "heart" },
+  { key: "statYears", statField: "years", fallback: "10+", icon: "clock", image: "/images/aboutus.webp" },
+  { key: "statBeneficiaries", statField: "beneficiaries", fallback: "5,000+", icon: "grad", image: "/images/education.webp" },
+  { key: "statProjects", statField: "projects", fallback: "40+", icon: "flag", image: "/images/projectt.webp" },
+  { key: "statVolunteers", statField: "volunteers", fallback: "120+", icon: "heart", image: "/images/selfemp.webp" },
 ];
 
 function ShieldIcon() {
@@ -325,14 +330,17 @@ export default function Hero({ siteInfo }) {
                   const Icon = STAT_ICONS[stat.icon];
                   return (
                     <Reveal key={stat.key} delay={i * 0.08} variant="scale" className="h-full">
-                      <div className="flex h-full flex-col gap-2 rounded-2xl border border-forest-100 bg-white p-5 text-center shadow-card">
-                        <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-forest-50 text-forest-700">
+                      <div className="relative flex h-full flex-col gap-2 overflow-hidden rounded-2xl border border-forest-100 p-5 text-center shadow-card">
+                        <img src={stat.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-forest-950/88 via-forest-950/55 to-forest-950/30" aria-hidden="true" />
+
+                        <span className="relative mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm">
                           <Icon />
                         </span>
-                        <span className="font-body text-2xl font-semibold text-forest-900 sm:text-3xl">
+                        <span className="relative font-body text-2xl font-semibold text-white sm:text-3xl">
                           <CountUpStat value={siteInfo?.stats?.[stat.statField] || stat.fallback} />
                         </span>
-                        <span className="text-[11px] font-medium leading-snug text-ink-600 sm:text-xs">{t(`home.${stat.key}`)}</span>
+                        <span className="relative text-[11px] font-medium leading-snug text-white/85 sm:text-xs">{t(`home.${stat.key}`)}</span>
                       </div>
                     </Reveal>
                   );
