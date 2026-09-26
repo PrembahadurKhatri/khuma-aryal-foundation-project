@@ -374,6 +374,17 @@ export default function Home() {
                   </svg>
                 </motion.div>
 
+                {/* Soft, slow-drifting glow behind the card border -- purely
+                    additive (nothing existing changed/removed), a subtle
+                    "premium frame" touch rather than a static flat edge.
+                    Sits behind the card (-z-10) so it never interferes with
+                    the real embed's clicks/scroll. */}
+                <div
+                  className="pointer-events-none absolute -inset-1 -z-10 rounded-[1.75rem] bg-gradient-to-r from-blue-400/30 via-gilt-400/30 to-blue-400/30 opacity-70 blur-xl"
+                  aria-hidden="true"
+                  style={{ backgroundSize: "200% 200%", animation: "socialGlowDrift 8s ease-in-out infinite" }}
+                />
+
                 {/* The live embed itself — kept flat/unrotated so the real
                     Facebook scroll, clicks and links inside it stay usable;
                     all the tilt/depth is confined to the purely decorative

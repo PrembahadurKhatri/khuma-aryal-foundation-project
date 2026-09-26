@@ -88,3 +88,16 @@ html[lang="ne"] .text-base {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Slow gradient-position drift behind the Home page's Facebook embed card
+   (see Home.jsx) -- a soft light appearing to move across the frame rather
+   than a static glow, at a slow enough pace to read as ambient/premium
+   instead of distracting. */
+@keyframes socialGlowDrift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
