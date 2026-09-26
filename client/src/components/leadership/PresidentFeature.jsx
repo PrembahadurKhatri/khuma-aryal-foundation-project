@@ -36,7 +36,7 @@ export default function PresidentFeature({ leader, onRead }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative overflow-hidden rounded-xl3 border border-forest-100 bg-gradient-to-bl from-white via-cream-50/60 to-white p-6 px-7 shadow-lift ring-1 ring-gilt-400/10 transition-shadow duration-500 hover:shadow-2xl sm:p-8 lg:p-10"
+      className="group relative overflow-hidden rounded-xl3 border border-forest-100 bg-white p-6 px-7 shadow-lift transition-shadow duration-500 hover:shadow-2xl sm:p-8 lg:p-10"
     >
       <div
         className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gilt-400/10 blur-3xl transition-transform duration-700 group-hover:scale-110"
@@ -46,28 +46,15 @@ export default function PresidentFeature({ leader, onRead }) {
         className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-forest-500/5 blur-3xl"
         aria-hidden="true"
       />
-      {/* Large watermark quote mark, mirrored to the left to match this
-          card's flipped layout -- same treatment as FounderFeature.jsx. */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-2 top-6 select-none font-body text-[10rem] font-bold leading-none text-gilt-500/[0.06] sm:text-[13rem]"
-      >
-        &ldquo;
-      </span>
 
       <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-12">
         {/* Portrait — first in the DOM (so it's on top on mobile), pushed to
             the right on desktop. Capped smaller on mobile than the
             sm:/desktop size (max-w-sm/384px read as oversized on a narrow
             phone screen, dwarfing the message text below it). Unchanged
-            from sm: up. A soft gold glow ring behind the frame lifts it off
-            the card background instead of sitting flush against it. */}
-        <div className="relative order-1 mx-auto w-full max-w-[220px] sm:max-w-sm lg:order-2">
-          <div
-            className="pointer-events-none absolute -inset-3 rounded-[1.75rem] bg-gradient-to-bl from-gilt-400/25 via-gilt-300/10 to-transparent blur-xl"
-            aria-hidden="true"
-          />
-          <div className="relative aspect-[4/5] overflow-hidden rounded-xl2 border-2 border-gilt-400/70 shadow-card transition-transform duration-500 group-hover:scale-[1.02]">
+            from sm: up. */}
+        <div className="order-1 mx-auto w-full max-w-[220px] sm:max-w-sm lg:order-2">
+          <div className="aspect-[4/5] overflow-hidden rounded-xl2 border-2 border-gilt-400/70 shadow-card transition-transform duration-500 group-hover:scale-[1.02]">
             {/* Falls back to a real placeholder photo, not PlaceholderImage's
                 gradient card — an admin who hasn't uploaded the President's
                 photo yet still gets a proper-looking portrait silhouette. */}
@@ -76,14 +63,12 @@ export default function PresidentFeature({ leader, onRead }) {
         </div>
 
         {/* Message */}
-        <div className="relative order-2 flex flex-col gap-5 font-body lg:order-1">
-          {/* Kicker as a proper badge (border + soft fill) instead of plain
-              uppercase text -- matches FounderFeature.jsx's treatment. */}
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-gilt-400/40 bg-gilt-50/80 px-4 py-1.5 shadow-sm">
-            <span aria-hidden="true" className="font-body text-xl leading-none text-gilt-600">
+        <div className="order-2 flex flex-col gap-5 font-body lg:order-1">
+          <div className="flex items-start gap-3">
+            <span aria-hidden="true" className="font-body text-5xl leading-none text-[#FF8C00]">
               &ldquo;
             </span>
-            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gilt-700">
+            <span className="mt-2 text-sm font-semibold font-body uppercase tracking-[0.25em] text-[#FF8C00]">
               {t("home.messageFromPresident")}
             </span>
           </div>
@@ -100,17 +85,14 @@ export default function PresidentFeature({ leader, onRead }) {
             &ldquo;{message}&rdquo;
           </p>
 
-          {/* Gold gradient divider -- separates the quote from its
-              attribution instead of relying on gap spacing alone. */}
-          <div className="h-px w-16 bg-gradient-to-r from-gilt-400 to-transparent" aria-hidden="true" />
-
+        
           <div>
             <p className="font-body text-lg font-bold text-forest-900">{name}</p>
             <p className="text-sm text-ink-600">{title}</p>
             <p className="text-sm text-ink-600">{pick(siteInfo.name, language)}</p>
           </div>
 
-          <Button type="button" onClick={onRead} variant="primary" className="mt-1 w-fit shadow-[0_8px_24px_-8px_rgba(31,55,45,0.45)]">
+          <Button type="button" onClick={onRead} variant="primary" className="mt-1 w-fit">
             <BookIcon />
             {t("home.readFullMessage")}
             <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
