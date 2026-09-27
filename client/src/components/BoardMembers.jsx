@@ -4,7 +4,7 @@ import Container from "./Container.jsx";
 import Reveal from "./Reveal.jsx";
 import Skeleton from "./Skeleton.jsx";
 import LoadFailed from "./LoadFailed.jsx";
-import Avatar from "./Avatar.jsx";
+import PlaceholderImage from "./PlaceholderImage.jsx";
 import SocialLinks from "./SocialLinks.jsx";
 
 function CrownIcon() {
@@ -149,24 +149,14 @@ export default function BoardMembers({ members, loading, error }) {
                   key={member.id}
                   delay={(i % 5) * 0.06}
                   variant="scale"
-                  className="group flex flex-col items-center gap-3  rounded-2xl border border-transparent p-3 text-center font-body transition-all duration-500 hover:-translate-y-2 hover:border-forest-100 hover:bg-white hover:shadow-lift"
+                  className="group flex flex-col gap-3 rounded-2xl border border-forest-100 bg-white p-3 text-center font-body shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-lift"
                 >
-                  {/* Photo — a permanent gold-to-orange "story ring" (like
-                      the reference design) instead of only appearing on
-                      hover: the gradient ring is a padded outer circle, a
-                      thin cream gap sits between it and the photo, and
-                      Avatar itself renders inside untouched. A soft glow
-                      blooms behind it and the whole ring scales up
-                      slightly on hover for a bit of life. */}
-                  <div className="relative">
-                    <div className="absolute inset-0 -z-10 rounded-full bg-gilt-400/20 blur-xl transition-colors duration-500 group-hover:bg-gilt-400/40" />
-                    <div className="rounded-full bg-gradient-to-br from-gilt-300 via-[#FFA53D] to-[#FF6B00] p-[3px] shadow-card transition-transform duration-500 group-hover:scale-105">
-                      <div className="rounded-full bg-cream-50 p-[3px]">
-                        <div className="overflow-hidden rounded-full transition-transform duration-500 ease-out group-hover:scale-110">
-                          <Avatar name={name} src={member.photo} fallbackSrc="/images/blank.avif" size="lg" />
-                        </div>
-                      </div>
-                    </div>
+                  {/* Plain rectangular photo, not the circular treatment
+                      this used to have — same colors/palette as before,
+                      just a square-cropped card image instead of an avatar
+                      ring. */}
+                  <div className="aspect-square w-full overflow-hidden rounded-xl">
+                    <PlaceholderImage src={member.photo} alt={name} label={name} />
                   </div>
 
                   <div className="flex w-full flex-col items-center">
