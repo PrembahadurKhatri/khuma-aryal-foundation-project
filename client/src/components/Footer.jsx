@@ -34,12 +34,8 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-br from-forest-950 via-forest-850 to-forest-700 text-forest-100">
-      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gilt-500/15 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-forest-400/20 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-0 bg-grain" aria-hidden="true" />
-
-      <Container className="relative grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="bg-forest-950 text-forest-100">
+      <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <img src="/images/logo.jpg" alt={`${pick(siteInfo.name, language)} logo`} className="h-10 w-10 rounded-full bg-white p-0.5" />
@@ -103,7 +99,7 @@ export default function Footer() {
         </div>
       </Container>
 
-      <div className="relative border-t border-white/10 py-5">
+      <div className="border-t border-white/10 py-5">
         <Container className="flex flex-col items-center justify-between gap-2 text-xs text-forest-300 sm:flex-row">
           <span>
             © {new Date().getFullYear()} {pick(siteInfo.name, language)}. {t("footer.rights")}
