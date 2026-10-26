@@ -54,6 +54,17 @@
 # file or directory falls through to index.html instead.
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # Force HTTPS. The site used to load fine over plain http:// (e.g. from
+  # the website link on the Facebook page), but the API only allows the
+  # https:// origins in CLIENT_URL, so every API call from an http:// page
+  # was blocked by CORS -- the page shell rendered with no content.
+  # Cloudflare sits in front, so the origin can't trust %{HTTPS} (it may be
+  # "off" even for https visitors depending on the SSL mode, which would
+  # loop); CF-Visitor carries the scheme the visitor actually used.
+  RewriteCond %{HTTP:CF-Visitor} "\"scheme\":\"http\""
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
